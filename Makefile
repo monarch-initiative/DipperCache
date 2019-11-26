@@ -9,7 +9,7 @@ all:  animalqtldb bgee clinvar ctd flybase genereviews go gwascatalog \
 ##########################################
 # animalqtldb
 AQDL = https://www.animalgenome.org/QTLdb
-GENEINFO = ftp://ftp.ncbi.nih.gov/gene/DATA/GENE_INFO
+
 
 animalqtldb: animalqtldb/ \
 	animalqtldb/Bos_taurus.gene_info.gz \
@@ -61,22 +61,23 @@ animalqtldb/sheep_QTLdata.txt:
 	$(CDAQL) $(WGET) $(AQDL)/$(AQLV)/sheep_QTLdata.txt
 
 # GENEINFO_FILES
-animalqtldb/Gallus_gallus.gene_info.gz:
-	$(CDAQL) $(WGET) $(GENEINFO)/Non-mammalian_vertebrates/Gallus_gallus.gene_info.gz
-animalqtldb/Sus_scrofa.gene_info.gz:
-	$(CDAQL) $(WGET) $(GENEINFO)/Mammalia/Sus_scrofa.gene_info.gz
-animalqtldb/Bos_taurus.gene_info.gz:
-	$(CDAQL) $(WGET) $(GENEINFO)/Mammalia/Bos_taurus.gene_info.gz
+# these are created under ncbigene and will be linked to aninalqtldb/
 
+animalqtldb/Gallus_gallus.gene_info.gz: ncbigene/Gallus_gallus.gene_info.gz
+	unlink $@; $(CDAQL) ln -s ../$< $(subst animalqtldb/,,$@)
+animalqtldb/Sus_scrofa.gene_info.gz: ncbigene/Sus_scrofa.gene_info.gz
+	unlink $@; $(CDAQL) ln -s ../$< $(subst animalqtldb/,,$@)
+animalqtldb/Bos_taurus.gene_info.gz: ncbigene/Bos_taurus.gene_info.gz
+	unlink $@; $(CDAQL) ln -s ../$< $(subst animalqtldb/,,$@)
 # GENEINFO_LOCAL_FILES	
 animalqtldb/Equus_caballus.gene_info.gz: animalqtldb/gene_info.gz
-	$(CDAQL) /bin/zgrep "^9796[^0-9]" gene_info.gz | /bin/gzip > Equus_caballus.gene_info.gz
+	unlink $@; $(CDAQL) ln -s ../$< $(subst animalqtldb/,,$@)
 animalqtldb/Ovis_aries.gene_info.gz: animalqtldb/gene_info.gz
-	$(CDAQL) /bin/zgrep "^9940[^0-9]" gene_info.gz | /bin/gzip > Ovis_aries.gene_info.gz
+	unlink $@; $(CDAQL) ln -s ../$< $(subst animalqtldb/,,$@)
 animalqtldb/Oncorhynchus_mykiss.gene_info.gz: animalqtldb/gene_info.gz
-	$(CDAQL) /bin/zgrep "^8022[^0-9]" gene_info.gz | /bin/gzip > Oncorhynchus_mykiss.gene_info.gz
+	unlink $@; $(CDAQL) ln -s ../$< $(subst animalqtldb/,,$@)
 animalqtldb/gene_info.gz:
-	$(CDAQL) $(WGET) ftp://ftp.ncbi.nih.gov/gene/DATA/gene_info.gz
+	unlink $@; $(CDAQL) ln -s ../$< $(subst animalqtldb/,,$@)
 
 animalqtldb_clean: ; rm -fr animalqtldb/*
 
@@ -131,7 +132,7 @@ clinvar: clinvar/ \
 clinvar/: ; mkdir $@
 
 clinvar/ClinVarFullRelease_00-latest.xml.gz:
-	cd clinvar; $(WGET) $(CVFTP)/ClinVarFullRelease_00-latest.xml.gz
+	cd clinvar; $(WGET) $(CVFTP)/xml/ClinVarFullRelease_00-latest.xml.gz
 clinvar/gene_condition_source_id:
 	cd clinvar; $(WGET) $(CVFTP)/gene_condition_source_id
 
@@ -533,7 +534,13 @@ ncbigene: ncbigene/ \
 	ncbigene/gene_info.gz \
 	ncbigene/gene_history.gz \
 	ncbigene/gene2pubmed.gz \
-	ncbigene/gene_group.gz
+	ncbigene/gene_group.gz \
+	ncbigene/Gallus_gallus.gene_info.gz \
+	ncbigene/Sus_scrofa.gene_info.gz \
+	ncbigene/Bos_taurus.gene_info.gz \
+	ncbigene/Equus_caballus.gene_info.gz \
+	ncbigene/Ovis_aries.gene_info.gz \
+	ncbigene/Oncorhynchus_mykiss.gene_info.gz
 
 ncbigene/: ; mkdir $@
 
@@ -545,7 +552,23 @@ ncbigene/gene2pubmed.gz:
 	cd ncbigene/ ; $(WGET) $(NCBIFTP)/gene2pubmed.gz
 ncbigene/gene_group.gz:
 	cd ncbigene/ ; $(WGET) $(NCBIFTP)/gene_group.gz
-# TODO maybe move the generation of other sub sets here as well
+
+GENEINFO = $(NCBIFTP)/GENE_INFO
+
+ncbigene/Gallus_gallus.gene_info.gz:
+	$(CDAQL) $(WGET) $(GENEINFO)/Non-mammalian_vertebrates/Gallus_gallus.gene_info.gz
+ncbigene/Sus_scrofa.gene_info.gz:
+	$(CDAQL) $(WGET) $(GENEINFO)/Mammalia/Sus_scrofa.gene_info.gz
+ncbigene/Bos_taurus.gene_info.gz:
+	$(CDAQL) $(WGET) $(GENEINFO)/Mammalia/Bos_taurus.gene_info.gz
+
+# GENEINFO_LOCAL_FILES	(maybe partion out more if they could help with other ingests)
+ncbigene/Equus_caballus.gene_info.gz: ncbigene/gene_info.gz
+	$(CDAQL) /bin/zgrep "^9796[^0-9]" gene_info.gz | /bin/gzip > Equus_caballus.gene_info.gz
+ncbigene/Ovis_aries.gene_info.gz: ncbigene/gene_info.gz
+	$(CDAQL) /bin/zgrep "^9940[^0-9]" gene_info.gz | /bin/gzip > Ovis_aries.gene_info.gz
+ncbigene/Oncorhynchus_mykiss.gene_info.gz: ncbigene/gene_info.gz
+	$(CDAQL) /bin/zgrep "^8022[^0-9]" gene_info.gz | /bin/gzip > Oncorhynchus_mykiss.gene_info.gz
 
 ncbigene_clean: ; rm -fr ncbigene/*
 ##########################################
