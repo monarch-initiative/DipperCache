@@ -1,6 +1,6 @@
 DIPPER = $$HOME/Projects/Monarch/dipper
 WGET = /usr/bin/wget --timestamping
-CDAQL = @ cd animalqtldb;
+
 all:  animalqtldb bgee clinvar ctd flybase genereviews go gwascatalog \
 	hgnc hpoa impc kegg  mmrrc  monochrom mpd ncbigene omia  orphanet \
 	panther reactome rgd sgd string  wormbase zfin zfinslim
@@ -9,9 +9,9 @@ all:  animalqtldb bgee clinvar ctd flybase genereviews go gwascatalog \
 ##########################################
 # animalqtldb
 AQDL = https://www.animalgenome.org/QTLdb
+CDAQL = cd animalqtldb;
 
-
-animalqtldb: animalqtldb/ \
+animalqtldb: ncbigene animalqtldb/ \
 	animalqtldb/Bos_taurus.gene_info.gz \
 	animalqtldb/Sus_scrofa.gene_info.gz \
 	animalqtldb/Gallus_gallus.gene_info.gz \
@@ -33,7 +33,7 @@ animalqtldb: animalqtldb/ \
 
 animalqtldb/: ; mkdir $@
 
-# AQTL_T_FILES	
+# AQTL_T_FILES
 animalqtldb/QTL_Btau_4.6.gff.txt.gz:
 	$(CDAQL) $(WGET) $(AQDL)/tmp/QTL_Btau_4.6.gff.txt.gz
 animalqtldb/QTL_EquCab2.0.gff.txt.gz:
@@ -62,21 +62,20 @@ animalqtldb/sheep_QTLdata.txt:
 
 # GENEINFO_FILES
 # these are created under ncbigene and will be linked to aninalqtldb/
-
+animalqtldb/gene_info.gz: ncbigene/gene_info.gz
+	unlink $@; $(CDAQL) ln -s ../$< $(subst animalqtldb/,,$@)
 animalqtldb/Gallus_gallus.gene_info.gz: ncbigene/Gallus_gallus.gene_info.gz
 	unlink $@; $(CDAQL) ln -s ../$< $(subst animalqtldb/,,$@)
 animalqtldb/Sus_scrofa.gene_info.gz: ncbigene/Sus_scrofa.gene_info.gz
 	unlink $@; $(CDAQL) ln -s ../$< $(subst animalqtldb/,,$@)
 animalqtldb/Bos_taurus.gene_info.gz: ncbigene/Bos_taurus.gene_info.gz
 	unlink $@; $(CDAQL) ln -s ../$< $(subst animalqtldb/,,$@)
-# GENEINFO_LOCAL_FILES	
-animalqtldb/Equus_caballus.gene_info.gz: animalqtldb/gene_info.gz
+# GENEINFO_LOCAL_FILES
+animalqtldb/Equus_caballus.gene_info.gz: ncbigene/Equus_caballus.gene_info.gz
 	unlink $@; $(CDAQL) ln -s ../$< $(subst animalqtldb/,,$@)
-animalqtldb/Ovis_aries.gene_info.gz: animalqtldb/gene_info.gz
+animalqtldb/Ovis_aries.gene_info.gz: ncbigene/Ovis_aries.gene_info.gz
 	unlink $@; $(CDAQL) ln -s ../$< $(subst animalqtldb/,,$@)
-animalqtldb/Oncorhynchus_mykiss.gene_info.gz: animalqtldb/gene_info.gz
-	unlink $@; $(CDAQL) ln -s ../$< $(subst animalqtldb/,,$@)
-animalqtldb/gene_info.gz:
+animalqtldb/Oncorhynchus_mykiss.gene_info.gz: ncbigene/Oncorhynchus_mykiss.gene_info.gz
 	unlink $@; $(CDAQL) ln -s ../$< $(subst animalqtldb/,,$@)
 
 animalqtldb_clean: ; rm -fr animalqtldb/*
@@ -87,7 +86,7 @@ bgee/: ; mkdir $@
 bgee/bgee.sqlite3.gz: bgee/bgee.sqlite3 ; gzip -f $@
 bgee/bgee.sqlite3: bgee/bgee_sqlite3.sql
 	@ cd bgee ;\
-	/usr/bin/sqlite3 -mmap 3G bgee.sqlite3 < bgee_sqlite3.sql 
+	/usr/bin/sqlite3 -mmap 3G bgee.sqlite3 < bgee_sqlite3.sql
 
 bgee/bgee_sqlite3.sql:  bgee/sql_lite_dump.sql
 	$(DIPPER)/scripts/mysql2sqlite $? > $@ ;\
@@ -144,7 +143,7 @@ clinvar_clean: ; rm -fr clinvar/*
 ##########################################
 ctd: ctd/ ctd/CTD_chemicals_diseases.tsv.gz
 
-# (depreciated) CTD_genes_pathways.tsv.gz CTD_genes_diseases.tsv.gz 
+# (depreciated) CTD_genes_pathways.tsv.gz CTD_genes_diseases.tsv.gz
 # there is an API not called here
 # http://ctdbase.org/tools/batchQuery.go?q
 
@@ -159,14 +158,14 @@ ctd_clean: ; rm -fr ctd/*
 #ENSURL = https://uswest.ensembl.org
 # alternativly slower www.ensembl.org
 # they provide per species turtle ensembl to external id mappings
-#ENSTTL = ftp://ftp.ensembl.org/pub/current_rdf/ 
-# and database dumps ...   
-#ENSDMP = ftp://ftp.ensembl.org/pub/current_mysql/ 
+#ENSTTL = ftp://ftp.ensembl.org/pub/current_rdf/
+# and database dumps ...
+#ENSDMP = ftp://ftp.ensembl.org/pub/current_mysql/
 # TODO Consider transplanting dipper python api fetch code to here?
-#ENSMRT = $(ENSURL)/biomart/martservice?query= 
+#ENSMRT = $(ENSURL)/biomart/martservice?query=
 #ensembl: ensembl/ \
 #	ensembl/ensembl_9606.txt \
-#	ensembl/ensembl_7955.txt \ 
+#	ensembl/ensembl_7955.txt \
 #	ensembl/ensembl_10090.txt \
 #	ensembl/ensembl_28377.txt \
 #	ensembl/ensembl_3702.txt \
@@ -185,10 +184,10 @@ ctd_clean: ; rm -fr ctd/*
 #	ensembl/ensembl_4896.txt \
 #	ensembl/ensembl_31033.txt \
 #	ensembl/ensembl_8364.txt \
-#	ensembl/ensembl_4932.txt 
+#	ensembl/ensembl_4932.txt
 #ensembl/: ; mkdir $@
 #ensembl/ensembl_9606.txt:
-#ensembl_clean: ; rm -fr ensembl/*	
+#ensembl_clean: ; rm -fr ensembl/*
 ##########################################
 #eom: eom/ ; mkdir $@
 # a dead end fron the 'disco' days?
@@ -226,7 +225,7 @@ flybase/fbal_to_fbgn_fb.tsv.gz: flybase/md5sum.txt
 	ln -s $$fname fbal_to_fbgn_fb.tsv.gz
 
 flybase/fbrf_pmid_pmcid_doi_fb.tsv.gz: flybase/md5sum.txt
-	$(CDFLY) 
+	$(CDFLY)
 	fname=$$(fgrep "references/fbrf_pmid_pmcid_doi_fb" md5sum.txt| cut -f2- -d'/') ; \
 	$(WGET) $(FLYFTP)/$$fname ; \
 	unlink fbrf_pmid_pmcid_doi_fb.tsv.gz ; \
@@ -246,7 +245,7 @@ genereviews/NBKid_shortname_OMIM.txt:
 genereviews/GRtitle_shortname_NBKid.txt:
 	cd genereviews; $(WGET) $(GRDL)/GRtitle_shortname_NBKid.txt
 
-genereviews_clean: ; rm -fr genereviews/*	
+genereviews_clean: ; rm -fr genereviews/*
 
 ##########################################
 GOGA = http://current.geneontology.org/annotations
@@ -272,7 +271,7 @@ go: go/ \
 	go/idmapping_selected.tab.gz \
 	go/gaf-eco-mapping.txt
 
-	
+
 go/: ; mkdir $@
 
 go/goa_dog.gaf.gz:
@@ -290,8 +289,8 @@ go/pombase.gaf.gz:
 go/dictibase.gaf.gz:
 go/aspgd.gaf.gz:
 
-go/go-refs.json: 	
-	cd go; $(WGET) http://current.geneontology.org/metadata/go-refs.json 
+go/go-refs.json:
+	cd go; $(WGET) http://current.geneontology.org/metadata/go-refs.json
 go/GO.references:  # TODO depreicated in favor of go-refs.json
 	cd go; $(WGET) http://www.geneontology.org/doc/GO.references
 go/idmapping_selected.tab.gz:  # expensive
@@ -301,12 +300,12 @@ go/gaf-eco-mapping.txt:
 
 
 
-go_clean: ; rm -fr go/* 
+go_clean: ; rm -fr go/*
 ##########################################
 GWASFTP = ftp://ftp.ebi.ac.uk/pub/databases/gwas/releases/latest
 GWASFILE = gwas-catalog-associations_ontology-annotated.tsv
 gwascatalog: gwascatalog/ gwascatalog/$(GWASFILE)
-	
+
 gwascatalog/: ; mkdir $@
 gwascatalog/$(GWASFILE):
 	cd gwascatalog; $(WGET) $(GWASFTP)/$(GWASFILE)
@@ -325,7 +324,7 @@ hgnc_clean:  ; rm -fr  hgnc/*
 
 PNR = http://compbio.charite.de/jenkins/job/hpo.annotations.current
 HPOADL2 = $(PNR)/lastSuccessfulBuild/artifact/misc_2018
-hpoa: hpoa/ 
+hpoa: hpoa/
 hpoa/: ; mkdir $@
 hpoa/phenotype.hpoa:
 	cd hgnc; $(WGET) $(HPOADL2)/phenotype.hpoa
@@ -339,7 +338,7 @@ impc/: ; mkdir $@
 impc/checksum.md5:
 	cd impc; $(WGET) $(IMPCDL)/checksum.md5
 impc/ALL_genotype_phenotype.csv.gz: impc/checksum.md5
-	cd impc; $(WGET) $(IMPCDL)/ALL_genotype_phenotype.csv.gz 
+	cd impc; $(WGET) $(IMPCDL)/ALL_genotype_phenotype.csv.gz
 
 impc_clean:  ; rm -fr  impc/*
 ##########################################
@@ -372,11 +371,11 @@ kegg/disease:
 	cd kegg; $(WGET) $(KEGGG)/list/disease
 kegg/pathway:
 	cd kegg; $(WGET) $(KEGGG)/list/pathway
-kegg/hsa_genes:           
+kegg/hsa_genes:
 	cd kegg; $(WGET) $(KEGGG)/list/hsa -O hsa_genes
 kegg/orthology:
 	cd kegg; $(WGET) $(KEGGG)/list/orthology
-kegg/disease_gene:            
+kegg/disease_gene:
 	cd kegg; $(WGET) $(KEGGK)/link/disease/hsa -O disease_gene
 kegg/omim:
 	cd kegg; $(WGET) $(KEGGG)/link/disease/omim
@@ -398,7 +397,7 @@ kegg/dre:
 	cd kegg; $(WGET) $(KEGGK)/link/orthology/dre
 kegg/cel:
 	cd kegg; $(WGET) $(KEGGK)/link/orthology/cel
-kegg/pubmed:            
+kegg/pubmed:
 	cd kegg; $(WGET) $(KEGGK)/link/pathway/pubmed
 kegg/ds:
 	cd kegg; $(WGET) $(KEGGK)/link/pathway/ds
@@ -408,7 +407,7 @@ kegg/ko:
 kegg_clean:  ; rm -fr  kegg/*
 ##########################################
 # pulls via sql queries
-#mgi: mgi/ 
+#mgi: mgi/
 #mgi/; mkdir $@
 #mgi_clean: ; rm -fr mgi/*
 ##########################################
@@ -424,9 +423,9 @@ mmrrc_clean:  ; rm -fr  mmrrc/*
 #monarch/: ; mkdir $@
 #monarch_clean:  ; rm -fr  monarch/*
 ##########################################
-# TODO reconsider layout 
+# TODO reconsider layout
 MCDL = http://hgdownload.cse.ucsc.edu/goldenPath
-CDMC = cd monochrom/ ; 
+CDMC = cd monochrom/ ;
 CBI = cytoBandIdeo.txt.gz
 monochrom: monochrom/ \
 	monochrom/9606cytoBand.txt.gz \
@@ -452,7 +451,7 @@ monochrom/10090cytoBand.txt.gz: monochrom/mm10/ monochrom/mm10/$(CBI)
 	$(CDMC) unlink 10090cytoBand.txt.gz ;\
 	ln -s mm10/$(CBI) 10090cytoBand.txt.gz  # note dropping 'Ideo' (to fix)
 monochrom/mm10/: ; mkdir $@
-monochrom/mm10/$(CBI): 
+monochrom/mm10/$(CBI):
 	cd monochrom/mm10/ ; $(WGET) $(MCDL)/mm10/database/$(CBI)
 
 monochrom/7955cytoBand.txt.gz: monochrom/danRer10/ monochrom/danRer10/$(CBI)
@@ -484,14 +483,14 @@ monochrom/galGal4/: ; mkdir $@
 monochrom/galGal4/$(CBI):
 	cd monochrom/galGal4/; $(WGET) $(MCDL)/galGal4/database/$(CBI)
 
-monochrom/susScr3cytoBand.txt.gz: monochrom/susScr3/ monochrom/susScr3/$(CBI)	
+monochrom/susScr3cytoBand.txt.gz: monochrom/susScr3/ monochrom/susScr3/$(CBI)
 	$(CDMC) unlink susScr3cytoBand.txt.gz ; \
 	ln -s susScr3/$(CBI) susScr3cytoBand.txt.gz
 monochrom/susScr3/: ; mkdir $@
 monochrom/susScr3/$(CBI):
 	cd monochrom/susScr3/; $(WGET) $(MCDL)/susScr3/database/$(CBI)
 
-monochrom/oviAri3cytoBand.txt.gz: monochrom/oviAri3/ monochrom/oviAri3/$(CBI)		
+monochrom/oviAri3cytoBand.txt.gz: monochrom/oviAri3/ monochrom/oviAri3/$(CBI)
 	$(CDMC) unlink oviAri3cytoBand.txt.gz ; \
 	ln -s oviAri3/$(CBI) oviAri3cytoBand.txt.gz
 monochrom/oviAri3/: ; mkdir $@
@@ -505,7 +504,7 @@ monochrom/equCab2/: ; mkdir $@
 monochrom/equCab2/$(CBI):
 	cd monochrom/equCab2/; $(WGET) $(MCDL)/equCab2/database/$(CBI)
 
-monochrom_clean: ; rm -fr monochrom/* 
+monochrom_clean: ; rm -fr monochrom/*
 ##########################################
 MPDDL = http://phenomedoc.jax.org/MPD_downloads
 mpd: mpd/ \
@@ -544,8 +543,10 @@ ncbigene: ncbigene/ \
 
 ncbigene/: ; mkdir $@
 
-ncbigene/gene_info.gz:            # TODO unify usage
+ncbigene/gene_info.gz:
 	cd ncbigene/ ; $(WGET) $(NCBIFTP)/gene_info.gz
+	@ # test if in the future (GMT?)
+	@ # touch -r "gene_info.gz" -d '-8 hour' "gene_info.gz"
 ncbigene/gene_history.gz:
 	cd ncbigene/ ; $(WGET) $(NCBIFTP)/gene_history.gz
 ncbigene/gene2pubmed.gz:
@@ -575,7 +576,7 @@ ncbigene_clean: ; rm -fr ncbigene/*
 #
 omia: omia/ \
 	omia/omia.xml.gz
-#	causal_mutations.tab   # TODO not in use	
+#	causal_mutations.tab   # TODO not in use
 
 omia/: ; mkdir $@
 omia/omia.xml.gz:
@@ -590,7 +591,7 @@ omia_clean: ; rm -fr omia/*
 orphanet: orphanet/ orphanet/en_product6.xml
 
 orphanet/: ; mkdir $@
-orphanet/en_product6.xml: 
+orphanet/en_product6.xml:
 	ce orphanet/; $(WGET) http://www.orphadata.org/data/xml/en_product6.xml
 
 orphanet_clean: rm -fr orphanet/*
@@ -667,7 +668,7 @@ string/version:
 # 6239.protein.links.detailed.v11.0.txt.gz
 # 7227.protein.links.detailed.v11.0.txt.gz
 # 7955.protein.links.detailed.v11.0.txt.gz
-# 9606.protein.links.detailed.v11.0.txt.gz	
+# 9606.protein.links.detailed.v11.0.txt.gz
 
 
 #string/$(foreach species, $(STRSPC), $(species).entrez_2_string.$(YEAR).tsv.gz):
@@ -688,7 +689,7 @@ string/version:
 
 string_clean: ; rm -fr string
 ##########################################
-# this data is shared  with Monochrom. 
+# this data is shared  with Monochrom.
 # need to choose one (this one) and make the other symlinks
 #
 #HGGP = http://hgdownload.cse.ucsc.edu/goldenPath
@@ -726,7 +727,7 @@ wormbase: wormbase/ \
 		wormbase/phenotype_association.wb \
 		wormbase/rnai_phenotypes.wb \
 		wormbase/disease_association.wb \
-		wormbase/pub_xrefs.txt 
+		wormbase/pub_xrefs.txt
 
 wormbase/: ; mkdir $@
 wormbase/CHECKSUMS:
@@ -763,11 +764,11 @@ wormbase/disease_association.wb: wormbase/CHECKSUMS
 	$(WGET) --force-directories ftp://$(WBPROD)/ONTOLOGY/rnai_phenotypes.$$wsnum.wb;\
 	ln -s $(WBPROD)/ONTOLOGY/rnai_phenotypes.$$wsnum.wb $(subst wormbase/,,$@)
 # api call so no date or file version
-wormbase/pub_xrefs.txt:  
+wormbase/pub_xrefs.txt:
 	$(CDWB) $(WGET) -O $(subst wormbase/,,$@) \
 	http://tazendra.caltech.edu/~azurebrd/cgi-bin/forms/generic.cgi?action=WpaXref
 
-wormbase_clean: rm -fr wormbase/*	
+wormbase_clean: rm -fr wormbase/*
 ##########################################
 ZFDL = http://zfin.org/downloads
 ZPCURATION = http://purl.obolibrary.org/obo/zp/src/curation
