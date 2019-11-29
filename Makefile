@@ -65,7 +65,7 @@ animalqtldb/sheep_QTLdata.txt:
 	$(CDAQL) $(WGET) $(AQDL)/$(AQLV)/sheep_QTLdata.txt
 
 # GENEINFO_FILES
-# these are created under ncbigene and will be linked to aninalqtldb/
+# these are created under ncbigene and linked here
 animalqtldb/gene_info.gz: ncbigene/gene_info.gz
 	unlink $@; $(CDAQL) ln -s ../$< $(subst animalqtldb/,,$@)
 animalqtldb/Gallus_gallus.gene_info.gz: ncbigene/Gallus_gallus.gene_info.gz
@@ -85,30 +85,30 @@ animalqtldb/Oncorhynchus_mykiss.gene_info.gz: ncbigene/Oncorhynchus_mykiss.gene_
 animalqtldb_clean: ;  $(RM) animalqtldb/*
 
 ##########################################
-CDBG = cd bgee/ ;
+CDBGE = cd bgee/ ;
 bgee: dipper bgee/ \
 		bgee/bgee.sqlite3.gz
 
 bgee/: ; mkdir $@
 bgee/bgee.sqlite3.gz: bgee/bgee.sqlite3 ; $(CDBG) gzip --force $<
 bgee/bgee.sqlite3: bgee/bgee_sqlite3.sql
-	$(CDBG)
-	/usr/bin/sqlite3 -mmap 3G bgee.sqlite3 < bgee_sqlite3.sql
+	$(CDBGE) /usr/bin/sqlite3 -mmap 3G bgee.sqlite3 < bgee_sqlite3.sql
 
 bgee/bgee_sqlite3.sql:  bgee/sql_lite_dump.sql
-	$(CDBG) ../dipper/scripts/mysql2sqlite $? > $@ ;\
+	$(CDBGE) ../dipper/scripts/mysql2sqlite $? > $@ ;\
 	echo -e "\nvacuum;analyze;" >> $@
 
 bgee/sql_lite_dump.sql:  bgee/sql_lite_dump.tar.gz
-	@ cd bgee ; /bin/tar -xzf sql_lite_dump.tar.gz
+	$(CDBGE) /bin/tar -xzf sql_lite_dump.tar.gz
 
 bgee/sql_lite_dump.tar.gz:
-	@ cd bgee ; $(WGET) ftp://ftp.bgee.org/current/sql_lite_dump.tar.gz
+	$(CDBG)  $(WGET) ftp://ftp.bgee.org/current/sql_lite_dump.tar.gz
 
 bgee_clean: ; $(RM) bgee/*
 
 ########################################
 BGDL = https://downloads.thebiogrid.org/Download/BioGRID/Latest-Release
+CDBOG = cd biogrid ;
 biogrid: biogrid/ \
 	biogrid/BIOGRID-ALL-LATEST.mitab.zip \
 	biogrid/BIOGRID-IDENTIFIERS-LATEST.tab.zip
@@ -116,16 +116,16 @@ biogrid: biogrid/ \
 biogrid/: ; mkdir $@
 
 biogrid/BIOGRID-ALL-LATEST.mitab.zip:
-	cd biogrid ; $(WGET) $(BGDL)/BIOGRID-ALL-LATEST.mitab.zip
+	$(CDBOG) $(WGET) $(BGDL)/BIOGRID-ALL-LATEST.mitab.zip
 biogrid/BIOGRID-IDENTIFIERS-LATEST.tab.zip:
-	cd biogrid ; $(WGET) $(BGDL)/BIOGRID-IDENTIFIERS-LATEST.tab.zip
+	$(CDBOG) $(WGET) $(BGDL)/BIOGRID-IDENTIFIERS-LATEST.tab.zip
 
 # TODO get rid of obsuscating  name changes in py (then delete here too)
 biogrid/identifiers.tab.zip:  biogrid/BIOGRID-IDENTIFIERS-LATEST.tab.zip
-	unlink $@; cd biogrid ; \
+	unlink $@; $(CDBOG) \
 	ln -s BIOGRID-IDENTIFIERS-LATEST.tab.zip identifiers.tab.zip
 biogrid/interactions.mitab.zip: biogrid/BIOGRID-ALL-LATEST.mitab.zip
-	unlink $@; cd biogrid ; \
+	unlink $@; $(CDBOG) \
 	ln -s BIOGRID-ALL-LATEST.mitab.zip interactions.mitab.zip
 
 biogrid_clean: ;  $(RM) biogrid/*
@@ -162,13 +162,15 @@ ctd/CTD_chemicals_diseases.tsv.gz:
 ctd_clean: ; $(RM) ctd/*
 
 ##########################################
-# for scripts
+# included here for dipper/scripts/
+# TODO need update mechanism
 dipper: dipper/
 dipper/: ; git clone https://github.com/monarch-initiative/dipper.git
 
 dipper_clean: ; $(RM) dipper
 
 ##########################################
+# used in more than one ingest
 OBO = http://purl.obolibrary.org/obo
 eco: eco/ \
 	eco/gaf-eco-mapping.txt
@@ -184,10 +186,36 @@ eco_clean: ; $(RM) eco/*
 # Lots to reconsider here ...
 #ENSURL = https://uswest.ensembl.org
 # alternativly slower www.ensembl.org
+
 # they provide per species turtle ensembl to external id mappings
-#ENSTTL = ftp://ftp.ensembl.org/pub/current_rdf/
-# and database dumps ...
-#ENSDMP = ftp://ftp.ensembl.org/pub/current_mysql/
+# ftp.ensembl.org/pub/current_rdf/  species
+#------------------------------------------------------------------------
+# (cheap) favorite species in dipper can be found in the QC Readmes on M4
+# (cheap) species available in ensembl
+# curl ftp://ftp.ensembl.org/pub/current_rdf/ > ensembl_species_name
+# for ds in $(cat dipper_species_name); do grep -E " $ds$" ensembl_species_name ; done | cut -c57- > names_to_fetch
+
+# ordered by "popularity"
+ENSSPC = mus_musculus homo_sapiens drosophila_melanogaster bos_taurus danio_rerio
+#	caenorhabditis_elegans sus_scrofa rattus_norvegicus gallus_gallus \
+#	canis_lupus_familiaris pan_troglodytes macaca_mulatta monodelphis_domestica \
+#	equus_caballus felis_catus ornithorhynchus_anatinus	arabidopsis_thaliana \
+#	xenopus_(silurana)_tropicalis anolis_carolinensis takifugu_rubripe \
+#	saccharomyces_cerevisiae_s288c schizosaccharomyces_pombe dictyostelium_discoideum \
+#	ovis_aries escherichia_coli oncorhynchus_mykiss mus_setulosus mus \
+#	mus_musculus_molossinus	mus_spretus	mus_musculus_musculus mus_musculus_castaneus \
+#	sus_scrofa_domestica mus_musculus_musculus_x_m._m._domesticus capra_hircus \
+#	macaca_nemestrina mus_musculus_bactrianus
+ENSRDF := ftp://ftp.ensembl.org/pub/current_rdf
+ENSRDF_TARGET := $(foreach species, $(ENSSPC), ensrdf/$(species).ttl.gz)
+ensrdf:  ensrdf/ \
+		$(ENSRDF_TARGET)
+
+ensrdf/: ; mkdir $@
+$(ENSRDF_TARGET):
+	cd ensrdf; $(WGET) $(ENSRDF)/$(subst ensrdf/,,$(subst .ttl.gz,,$@))/$(subst ensrdf/,,$@)
+
+
 # TODO Consider transplanting dipper python api fetch code to here?
 #ENSMRT = $(ENSURL)/biomart/martservice?query=
 #ensembl: ensembl/ \
@@ -323,7 +351,7 @@ go/GO.references:  # TODO depreicated in favor of go-refs.json
 go/idmapping_selected.tab.gz:  # expensive
 	cd go; $(WGET)  $(FTPEBI)/$(UPCRKB)/idmapping/idmapping_selected.tab.gz
 go/gaf-eco-mapping.txt: eco/gaf-eco-mapping.txt
-	unlink $@;cd go; ln -s ../$< $(substr go/,,$@)
+	unlink $@;cd go; ln -s ../$< gaf-eco-mapping.txt
 
 go_clean: ; $(RM) go/*
 ##########################################
@@ -689,7 +717,7 @@ string/version:
 	#	echo "NEW VERSION of STRING!" ; fi
 
 #$(foreach $(prefix string/, txid), $(STRTAX), $(txid).protein.links.detailed.v$(VERSION).txt.gz):
-	cd string; $(WGET) $(STRING_DWN)/$(subst string/,,$@)
+#	cd string; $(WGET) $(STRING_DWN)/$(subst string/,,$@)
 # 10090.protein.links.detailed.v11.0.txt.gz
 # 4932.protein.links.detailed.v11.0.txt.gz
 # 6239.protein.links.detailed.v11.0.txt.gz
