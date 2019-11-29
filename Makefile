@@ -83,7 +83,6 @@ animalqtldb/Oncorhynchus_mykiss.gene_info.gz: ncbigene/Oncorhynchus_mykiss.gene_
 	unlink $@; $(CDAQL) ln -s ../$< $(subst animalqtldb/,,$@)
 
 animalqtldb_clean: ;  $(RM) animalqtldb/*
-
 ##########################################
 CDBGE = cd bgee/ ;
 bgee: dipper bgee/ \
@@ -105,7 +104,6 @@ bgee/sql_lite_dump.tar.gz:
 	$(CDBG)  $(WGET) ftp://ftp.bgee.org/current/sql_lite_dump.tar.gz
 
 bgee_clean: ; $(RM) bgee/*
-
 ########################################
 BGDL = https://downloads.thebiogrid.org/Download/BioGRID/Latest-Release
 CDBOG = cd biogrid ;
@@ -129,7 +127,6 @@ biogrid/interactions.mitab.zip: biogrid/BIOGRID-ALL-LATEST.mitab.zip
 	ln -s BIOGRID-ALL-LATEST.mitab.zip interactions.mitab.zip
 
 biogrid_clean: ;  $(RM) biogrid/*
-
 ##########################################
 CVFTP = ftp://ftp.ncbi.nlm.nih.gov/pub/clinvar
 clinvar: clinvar/ \
@@ -160,7 +157,6 @@ ctd/CTD_chemicals_diseases.tsv.gz:
 	cd ctd; $(WGET) http://ctdbase.org/reports/CTD_chemicals_diseases.tsv.gz
 
 ctd_clean: ; $(RM) ctd/*
-
 ##########################################
 # included here for dipper/scripts/
 # TODO need update mechanism
@@ -168,7 +164,6 @@ dipper: dipper/
 dipper/: ; git clone https://github.com/monarch-initiative/dipper.git
 
 dipper_clean: ; $(RM) dipper
-
 ##########################################
 # used in more than one ingest
 OBO = http://purl.obolibrary.org/obo
@@ -181,7 +176,6 @@ eco/gaf-eco-mapping.txt:
 	cd eco/; $(WGET) $(OBO)/eco/gaf-eco-mapping.txt
 
 eco_clean: ; $(RM) eco/*
-
 ##########################################
 # Lots to reconsider here ...
 #ENSURL = https://uswest.ensembl.org
@@ -242,6 +236,7 @@ $(ENSRDF_TARGET):
 #	ensembl/ensembl_4932.txt
 #ensembl/: ; mkdir $@
 #ensembl/ensembl_9606.txt:
+
 #ensembl_clean: ;  $(RM) ensembl
 ##########################################
 #eom: eom/ ; mkdir $@
@@ -303,53 +298,46 @@ genereviews/GRtitle_shortname_NBKid.txt:
 genereviews_clean: ;  $(RM) genereviews/*
 
 ##########################################
-GOGA = http://current.geneontology.org/annotations
-FTPEBI = ftp://ftp.uniprot.org/pub/databases     # best for North America
+GOGA = :http://current.geneontology.org/annotations
+FTPEBI := ftp://ftp.uniprot.org/pub/databases
 UPCRKB = uniprot/current_release/knowledgebase
+
+GOASPC = dog \
+		fb \
+		zfin \
+		mgi \
+		rgd \
+		wb \
+		goa_pig \
+		goa_chicken \
+		goa_human \
+		goa_cow \
+		sgd \
+		pombase \
+		dictibase \
+		aspgd
+
+GOASPC_TARGET = $(foreach species, $(GOASPC), go/$(species).gaf.gz)
+
 go: eco go/ \
-	go/goa_dog.gaf.gz \
-	go/fb.gaf.gz  \
-	go/zfin.gaf.gz \
-	go/mgi.gaf.gz \
-	go/rgd.gaf.gz  \
-	go/wb.gaf.gz  \
-	go/goa_pig.gaf.gz \
-	go/goa_chicken.gaf.gz \
-	go/goa_human.gaf.gz \
-	go/goa_cow.gaf.gz \
-	go/sgd.gaf.gz \
-	go/pombase.gaf.gz \
-	go/dictibase.gaf.gz \
-	go/aspgd.gaf.gz \
+	$(GOASPC_TARGET) \
 	go/go-refs.json \
 	go/GO.references \
 	go/idmapping_selected.tab.gz \
 	go/gaf-eco-mapping.txt
 
-
 go/: ; mkdir $@
 
-go/goa_dog.gaf.gz:
-go/fb.gaf.gz:
-go/zfin.gaf.gz:
-go/mgi.gaf.gz:
-go/rgd.gaf.gz:
-go/wb.gaf.gz:
-go/goa_pig.gaf.gz:
-go/goa_chicken.gaf.gz:
-go/goa_human.gaf.gz:
-go/goa_cow.gaf.gz:
-go/sgd.gaf.gz:
-go/pombase.gaf.gz:
-go/dictibase.gaf.gz:
-go/aspgd.gaf.gz:
+$(GOASPC_TARGET):
+	cd go/; $(WGET) $(GOGA)/$(subst go/,,$@)
 
 go/go-refs.json:
 	cd go; $(WGET) http://current.geneontology.org/metadata/go-refs.json
 go/GO.references:  # TODO depreicated in favor of go-refs.json
 	cd go; $(WGET) http://www.geneontology.org/doc/GO.references
+
 go/idmapping_selected.tab.gz:  # expensive
-	cd go; $(WGET)  $(FTPEBI)/$(UPCRKB)/idmapping/idmapping_selected.tab.gz
+	cd go; $(WGET) $(FTPEBI)/$(UPCRKB)/idmapping/idmapping_selected.tab.gz
 go/gaf-eco-mapping.txt: eco/gaf-eco-mapping.txt
 	unlink $@;cd go; ln -s ../$< gaf-eco-mapping.txt
 
@@ -374,7 +362,7 @@ hgnc/hgnc_complete_set.txt:
 
 hgnc_clean:  ;  $(RM) hgnc/*
 ##########################################
-
+# fragile
 PNR = http://compbio.charite.de/jenkins/job/hpo.annotations.current
 HPOADL2 = $(PNR)/lastSuccessfulBuild/artifact/misc_2018
 hpoa: hpoa/
