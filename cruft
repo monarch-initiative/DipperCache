@@ -35,12 +35,11 @@ unlink animalqtldb/Equus_caballus.gene_info.gz;  ln -s ../ncbigene/animalqtldb/E
 git clone https://github.com/monarch-initiative/dipper.git
 
 mkdir bgee/
-/usr/bin/wget --timestamping ftp://ftp.bgee.org/current/sql_lite_dump.tar.gz
+cd bgee/ ; /usr/bin/wget --timestamping ftp://ftp.bgee.org/current/sql_lite_dump.tar.gz
 cd bgee/ ; /bin/tar -xzf sql_lite_dump.tar.gz
 cd bgee/ ; ../dipper/scripts/mysql2sqlite bgee/sql_lite_dump.sql > bgee/bgee_sqlite3.sql ;\
 echo -e "\nvacuum;analyze;" >> bgee/bgee_sqlite3.sql
-cd bgee/ ; /usr/bin/sqlite3 -mmap 3G bgee.sqlite3 < bgee_sqlite3.sql
-gzip --force bgee/bgee.sqlite3
+gzip --force bgee.sqlite3  # appends .gz,  caused reindexing
 
 mkdir clinvar/
 cd clinvar; /usr/bin/wget --timestamping ftp://ftp.ncbi.nlm.nih.gov/pub/clinvar/xml/ClinVarFullRelease_00-latest.xml.gz
@@ -76,20 +75,20 @@ mkdir eco/
 cd eco/; /usr/bin/wget --timestamping http://purl.obolibrary.org/obo/eco/gaf-eco-mapping.txt
 
 mkdir go/
-cd go/; /usr/bin/wget --timestamping :http://current.geneontology.org/annotations/dog.gaf.gz
-cd go/; /usr/bin/wget --timestamping :http://current.geneontology.org/annotations/fb.gaf.gz
-cd go/; /usr/bin/wget --timestamping :http://current.geneontology.org/annotations/zfin.gaf.gz
-cd go/; /usr/bin/wget --timestamping :http://current.geneontology.org/annotations/mgi.gaf.gz
-cd go/; /usr/bin/wget --timestamping :http://current.geneontology.org/annotations/rgd.gaf.gz
-cd go/; /usr/bin/wget --timestamping :http://current.geneontology.org/annotations/wb.gaf.gz
-cd go/; /usr/bin/wget --timestamping :http://current.geneontology.org/annotations/goa_pig.gaf.gz
-cd go/; /usr/bin/wget --timestamping :http://current.geneontology.org/annotations/goa_chicken.gaf.gz
-cd go/; /usr/bin/wget --timestamping :http://current.geneontology.org/annotations/goa_human.gaf.gz
-cd go/; /usr/bin/wget --timestamping :http://current.geneontology.org/annotations/goa_cow.gaf.gz
-cd go/; /usr/bin/wget --timestamping :http://current.geneontology.org/annotations/sgd.gaf.gz
-cd go/; /usr/bin/wget --timestamping :http://current.geneontology.org/annotations/pombase.gaf.gz
-cd go/; /usr/bin/wget --timestamping :http://current.geneontology.org/annotations/dictibase.gaf.gz
-cd go/; /usr/bin/wget --timestamping :http://current.geneontology.org/annotations/aspgd.gaf.gz
+cd go/; /usr/bin/wget --timestamping http://current.geneontology.org/annotations/dog.gaf.gz
+cd go/; /usr/bin/wget --timestamping http://current.geneontology.org/annotations/fb.gaf.gz
+cd go/; /usr/bin/wget --timestamping http://current.geneontology.org/annotations/zfin.gaf.gz
+cd go/; /usr/bin/wget --timestamping http://current.geneontology.org/annotations/mgi.gaf.gz
+cd go/; /usr/bin/wget --timestamping http://current.geneontology.org/annotations/rgd.gaf.gz
+cd go/; /usr/bin/wget --timestamping http://current.geneontology.org/annotations/wb.gaf.gz
+cd go/; /usr/bin/wget --timestamping http://current.geneontology.org/annotations/goa_pig.gaf.gz
+cd go/; /usr/bin/wget --timestamping http://current.geneontology.org/annotations/goa_chicken.gaf.gz
+cd go/; /usr/bin/wget --timestamping http://current.geneontology.org/annotations/goa_human.gaf.gz
+cd go/; /usr/bin/wget --timestamping http://current.geneontology.org/annotations/goa_cow.gaf.gz
+cd go/; /usr/bin/wget --timestamping http://current.geneontology.org/annotations/sgd.gaf.gz
+cd go/; /usr/bin/wget --timestamping http://current.geneontology.org/annotations/pombase.gaf.gz
+cd go/; /usr/bin/wget --timestamping http://current.geneontology.org/annotations/dictibase.gaf.gz
+cd go/; /usr/bin/wget --timestamping http://current.geneontology.org/annotations/aspgd.gaf.gz
 cd go/; /usr/bin/wget --timestamping http://current.geneontology.org/metadata/go-refs.json
 cd go/; /usr/bin/wget --timestamping http://www.geneontology.org/doc/GO.references
 cd go/; /usr/bin/wget --timestamping ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/idmapping/idmapping_selected.tab.gz
@@ -250,30 +249,30 @@ cd wormbase/ ; /usr/bin/wget --timestamping -O pub_xrefs.txt \
 http://tazendra.caltech.edu/~azurebrd/cgi-bin/forms/generic.cgi?action=WpaXref
 
 mkdir zfin/
-cd zfin/; /usr/bin/wget --timestamping http://zfin.org/downloads/zfin/genotype_features.txt
-cd zfin/; /usr/bin/wget --timestamping http://zfin.org/downloads/zfin/phenotype_fish.txt
-cd zfin/; /usr/bin/wget --timestamping http://zfin.org/downloads/zfin/zfinpubs.txt
-cd zfin/; /usr/bin/wget --timestamping http://zfin.org/downloads/zfin/Morpholinos.txt
-cd zfin/; /usr/bin/wget --timestamping http://zfin.org/downloads/zfin/pheno_environment.txt
-cd zfin/; /usr/bin/wget --timestamping http://zfin.org/downloads/zfin/pheno_environment_fish.txt
-cd zfin/; /usr/bin/wget --timestamping http://zfin.org/downloads/zfin/stage_ontology.txt
-cd zfin/; /usr/bin/wget --timestamping http://zfin.org/downloads/zfin/mappings.txt
-cd zfin/; /usr/bin/wget --timestamping http://zfin.org/downloads/zfin/genotype_backgrounds.txt
-cd zfin/; /usr/bin/wget --timestamping http://zfin.org/downloads/zfin/genbank.txt
-cd zfin/; /usr/bin/wget --timestamping http://zfin.org/downloads/zfin/uniprot.txt
-cd zfin/; /usr/bin/wget --timestamping http://zfin.org/downloads/zfin/gene.txt
-cd zfin/; /usr/bin/wget --timestamping http://zfin.org/downloads/zfin/wildtypes.txt
-cd zfin/; /usr/bin/wget --timestamping http://zfin.org/downloads/zfin/human_orthos.txt
-cd zfin/; /usr/bin/wget --timestamping http://zfin.org/downloads/zfin/features.txt
-cd zfin/; /usr/bin/wget --timestamping http://zfin.org/downloads/zfin/features-affected-genes.txt
-cd zfin/; /usr/bin/wget --timestamping http://zfin.org/downloads/zfin/gene_marker_relationship.txt
-cd zfin/; /usr/bin/wget --timestamping http://zfin.org/downloads/zfin/CRISPR.txt
-cd zfin/; /usr/bin/wget --timestamping http://zfin.org/downloads/zfin/TALEN.txt
-cd zfin/; /usr/bin/wget --timestamping http://zfin.org/downloads/zfin/pub_to_pubmed_id_translation.txt
-cd zfin/; /usr/bin/wget --timestamping http://zfin.org/downloads/zfin/E_zfin_gene_alias.gff3
-cd zfin/; /usr/bin/wget --timestamping http://zfin.org/downloads/zfin/fish_model_disease.txt
-cd zfin/; /usr/bin/wget --timestamping http://zfin.org/downloads/zfin/fish_components_fish.txt
-cd zfin/; /usr/bin/wget --timestamping http://zfin.org/downloads/zfin/phenoGeneCleanData_fish.txt
+cd zfin/; /usr/bin/wget --timestamping http://zfin.org/downloads/genotype_features.txt
+cd zfin/; /usr/bin/wget --timestamping http://zfin.org/downloads/phenotype_fish.txt
+cd zfin/; /usr/bin/wget --timestamping http://zfin.org/downloads/zfinpubs.txt
+cd zfin/; /usr/bin/wget --timestamping http://zfin.org/downloads/Morpholinos.txt
+cd zfin/; /usr/bin/wget --timestamping http://zfin.org/downloads/pheno_environment.txt
+cd zfin/; /usr/bin/wget --timestamping http://zfin.org/downloads/pheno_environment_fish.txt
+cd zfin/; /usr/bin/wget --timestamping http://zfin.org/downloads/stage_ontology.txt
+cd zfin/; /usr/bin/wget --timestamping http://zfin.org/downloads/mappings.txt
+cd zfin/; /usr/bin/wget --timestamping http://zfin.org/downloads/genotype_backgrounds.txt
+cd zfin/; /usr/bin/wget --timestamping http://zfin.org/downloads/genbank.txt
+cd zfin/; /usr/bin/wget --timestamping http://zfin.org/downloads/uniprot.txt
+cd zfin/; /usr/bin/wget --timestamping http://zfin.org/downloads/gene.txt
+cd zfin/; /usr/bin/wget --timestamping http://zfin.org/downloads/wildtypes.txt
+cd zfin/; /usr/bin/wget --timestamping http://zfin.org/downloads/human_orthos.txt
+cd zfin/; /usr/bin/wget --timestamping http://zfin.org/downloads/features.txt
+cd zfin/; /usr/bin/wget --timestamping http://zfin.org/downloads/features-affected-genes.txt
+cd zfin/; /usr/bin/wget --timestamping http://zfin.org/downloads/gene_marker_relationship.txt
+cd zfin/; /usr/bin/wget --timestamping http://zfin.org/downloads/CRISPR.txt
+cd zfin/; /usr/bin/wget --timestamping http://zfin.org/downloads/TALEN.txt
+cd zfin/; /usr/bin/wget --timestamping http://zfin.org/downloads/pub_to_pubmed_id_translation.txt
+cd zfin/; /usr/bin/wget --timestamping http://zfin.org/downloads/E_zfin_gene_alias.gff3
+cd zfin/; /usr/bin/wget --timestamping http://zfin.org/downloads/fish_model_disease.txt
+cd zfin/; /usr/bin/wget --timestamping http://zfin.org/downloads/fish_components_fish.txt
+cd zfin/; /usr/bin/wget --timestamping http://zfin.org/downloads/phenoGeneCleanData_fish.txt
 cd zfin/; /usr/bin/wget --timestamping http://purl.obolibrary.org/obo/zp/src/curation/id_map_zfin.tsv ;\
 ln -s id_map_zfin.tsv zp-mapping-2019.txt
 # coriell ensembl eom mgi monarch mychem mychem omim ucscbands
