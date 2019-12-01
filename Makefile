@@ -1,15 +1,24 @@
 DIPPER = $$HOME/Projects/Monarch/dipper
 WGET = /usr/bin/wget --timestamping
-RM = rm --force --recursive --verbose
+FULLPTH := --force-directories --no-host
+RM := rm --force --recursive --verbose
 
-# .SECONDEXPANSION:
-# CLEAN = $(RM) $$(substr _clean,/*,$$@)  -- only in pre-reqs not within recipies
+.PHONY: cruft recent clean
 
 all:  animalqtldb bgee clinvar ctd flybase genereviews go gwascatalog \
 	hgnc hpoa impc kegg  mmrrc  monochrom mpd ncbigene omia  orphanet \
 	panther reactome rgd sgd string  wormbase zfin zfinslim
-	# ommited for cause
+
+# ommited for cause
 	# coriell ensembl eom mgi monarch mychem mychem omim ucscbands
+
+# newish updates
+recent:
+	find ./*/ -mtime -5 -ls
+
+cruft:
+	make -n | sed 's|^mkdir |\nmkdir |g' > $@
+
 ##########################################
 # animalqtldb
 AQTLDL = https://www.animalgenome.org/QTLdb
@@ -307,14 +316,14 @@ $(GOASPC_TARGET):
 	cd go/; $(WGET) $(GOGA)/$(subst go/,,$@)
 
 go/go-refs.json:
-	cd go; $(WGET) http://current.geneontology.org/metadata/go-refs.json
+	cd go/; $(WGET) http://current.geneontology.org/metadata/go-refs.json
 go/GO.references:  # TODO depreicated in favor of go-refs.json
-	cd go; $(WGET) http://www.geneontology.org/doc/GO.references
+	cd go/; $(WGET) http://www.geneontology.org/doc/GO.references
 
 go/idmapping_selected.tab.gz:  # expensive
-	cd go; $(WGET) $(FTPEBI)/$(UPCRKB)/idmapping/idmapping_selected.tab.gz
+	cd go/; $(WGET) $(FTPEBI)/$(UPCRKB)/idmapping/idmapping_selected.tab.gz
 go/gaf-eco-mapping.txt: eco/gaf-eco-mapping.txt
-	unlink $@;cd go; ln -s ../$< gaf-eco-mapping.txt
+	unlink $@;cd go/; ln -s ../$< gaf-eco-mapping.txt
 
 go_clean: ; $(RM) go/*
 ##########################################
@@ -340,10 +349,13 @@ hgnc_clean:  ;  $(RM) hgnc/*
 # fragile
 PNR = http://compbio.charite.de/jenkins/job/hpo.annotations.current
 HPOADL2 = $(PNR)/lastSuccessfulBuild/artifact/misc_2018
-hpoa: hpoa/
+hpoa: hpoa/ \
+	hpoa/phenotype.hpoa
+
 hpoa/: ; mkdir $@
 hpoa/phenotype.hpoa:
 	cd hgnc; $(WGET) $(HPOADL2)/phenotype.hpoa
+
 hpoa_clean:  ; $(RM) hpoa/*
 ##########################################
 IMPCDL = ftp://ftp.ebi.ac.uk/pub/databases/impc/latest/csv
@@ -358,8 +370,10 @@ impc/ALL_genotype_phenotype.csv.gz: impc/checksum.md5
 
 impc_clean:  ;  $(RM) impc/*
 ##########################################
-KEGGG = http://rest.genome.jp   #/list
-KEGGK = http://rest.kegg.jp     #/link
+#/list
+KEGGG = http://rest.genome.jp
+# link
+KEGGK = http://rest.kegg.jp
 
 kegg: kegg/ \
 	kegg/disease \
@@ -454,7 +468,7 @@ monochrom: monochrom/ \
 	monochrom/equCab2cytoBand.txt.gz
 
 monochrom/: ; mkdir $@
-# accomadate existing ingest given nemes
+# accomadate existing ingest given names
 monochrom/9606cytoBand.txt.gz: monochrom/hg19/ monochrom/hg19/cytoBand.txt.gz
 	$(CDMC) unlink 9606cytoBand.txt.gz ;\
 	ln -s hg19/cytoBand.txt.gz 9606cytoBand.txt.gz
@@ -487,6 +501,7 @@ monochrom/bosTau7cytoBand.txt.gz: monochrom/bosTau7/ monochrom/bosTau7/$(CBI)
 	$(CDMC) unlink bosTau7cytoBand.txt.gz; \
 	ln -s bosTau7/$(CBI) bosTau7cytoBand.txt.gz
 monochrom/bosTau7/: ; mkdir $@
+
 monochrom/bosTau7/$(CBI):
 	cd monochrom/bosTau7/; $(WGET) $(MCDL)/bosTau7/database/$(CBI)
 
@@ -495,28 +510,28 @@ monochrom/galGal4cytoBand.txt.gz: monochrom/galGal4/ monochrom/galGal4/$(CBI)
 	$(CDMC) unlink galGal4cytoBand.txt.gz; \
 	ln -s galGal4/$(CBI) galGal4cytoBand.txt.gz
 monochrom/galGal4/: ; mkdir $@
-monochrom/galGal4/$(CBI):
+monochrom/galGal4/cytoBandIdeo.txt.gz:
 	cd monochrom/galGal4/; $(WGET) $(MCDL)/galGal4/database/$(CBI)
 
 monochrom/susScr3cytoBand.txt.gz: monochrom/susScr3/ monochrom/susScr3/$(CBI)
 	$(CDMC) unlink susScr3cytoBand.txt.gz ; \
 	ln -s susScr3/$(CBI) susScr3cytoBand.txt.gz
 monochrom/susScr3/: ; mkdir $@
-monochrom/susScr3/$(CBI):
+monochrom/susScr3/cytoBandIdeo.txt.gz:
 	cd monochrom/susScr3/; $(WGET) $(MCDL)/susScr3/database/$(CBI)
 
 monochrom/oviAri3cytoBand.txt.gz: monochrom/oviAri3/ monochrom/oviAri3/$(CBI)
 	$(CDMC) unlink oviAri3cytoBand.txt.gz ; \
 	ln -s oviAri3/$(CBI) oviAri3cytoBand.txt.gz
 monochrom/oviAri3/: ; mkdir $@
-monochrom/oviAri3/$(CBI):
+monochrom/oviAri3/cytoBandIdeo.txt.gz:
 	cd monochrom/oviAri3/; $(WGET) $(MCDL)/oviAri3/database/$(CBI)
 
 monochrom/equCab2cytoBand.txt.gz: monochrom/equCab2/ monochrom/equCab2/$(CBI)
 	$(CDMC) unlink equCab2cytoBand.txt.gz ; \
 	ln -s equCab2$(CBI) equCab2cytoBand.txt.gz
 monochrom/equCab2/: ; mkdir $@
-monochrom/equCab2/$(CBI):
+monochrom/equCab2/cytoBandIdeo.txt.gz:
 	cd monochrom/equCab2/; $(WGET) $(MCDL)/equCab2/database/$(CBI)
 
 monochrom_clean: ;  $(RM) monochrom/*
@@ -649,7 +664,7 @@ rgd: rgd/ \
 
 rgd/: ; mkdir $@
 rgd/rattus_genes_mp:
-	cd rgd/; $(WGET)/rattus_genes_mp
+	cd rgd/; $(WGET) $(RGDFTP)/rattus_genes_mp
 
 rgd_clean: ; $(RM) rdg/*
 ##########################################
@@ -662,48 +677,33 @@ sdg/phenotype_data.tab:
 sgd_clean: ; $(RM) sdg/*
 ##########################################
 STRING = https://string-db.org
-STRING_DWN = $(STRING)/download
-STRING_MAP = $(STRING)/mapping_files/entrez
-VERSION = 11.0
-YEAR = 2018
-STRTAX =9606 10090 7955 7227 6239 4932
-STRSPC =celegans fly human mouse yeast zebrafish
+STRDL = $(STRING)/download
+STRMAP = $(STRING)/mapping_files/entrez
+
+# not hard coding these would be better ...
+STRVER = 11.0
+STRYR = 2018
+
+STRTAX = 9606 10090 7955 7227 6239 4932
+STRSPC = celegans fly human mouse yeast zebrafish
 
 string: string/ \
-	string/version
+		string/version \
+		$(foreach txid, $(STRTAX),string/$(txid).protein.links.detailed.v$(STRVER).txt.gz)\
+		$(foreach species, $(STRSPC), string/$(species).entrez_2_string.$(STRYR).tsv.gz)
 
 string/: ; mkdir $@
 
 string/version:
-#	cd string ; $(WGET) $(STRING)api/tsv-no-header/version # ; \
-	#if [ $(VESION) != $$(cut -f 1 version) ] ; then ; \
-	#	echo "NEW VERSION of STRING!" ; fi
+	cd string ; $(WGET) $(STRING)api/tsv-no-header/version  ; \
+	if [ $(STRVER) != $$(cut -f 1 version) ] then; echo "NEW VERSION of STRING!" ; \
+	else  echo "same version of STRING" ; fi
 
-#$(foreach $(prefix string/, txid), $(STRTAX), $(txid).protein.links.detailed.v$(VERSION).txt.gz):
-#	cd string; $(WGET) $(STRING_DWN)/$(subst string/,,$@)
-# 10090.protein.links.detailed.v11.0.txt.gz
-# 4932.protein.links.detailed.v11.0.txt.gz
-# 6239.protein.links.detailed.v11.0.txt.gz
-# 7227.protein.links.detailed.v11.0.txt.gz
-# 7955.protein.links.detailed.v11.0.txt.gz
-# 9606.protein.links.detailed.v11.0.txt.gz
+$(foreach txid, $(STRTAX),string/$(txid).protein.links.detailed.v$(STRVER).txt.gz):
+	cd string; $(WGET) $(STRDL)/$(subst string/,,$@)
 
-
-#string/$(foreach species, $(STRSPC), $(species).entrez_2_string.$(YEAR).tsv.gz):
-#	cd string; $(WGET) $(STRING_MAP)/$(subst string/,,$@)
-
-#string/celegans.entrez_2_string.$(YEAR).tsv.gz:
-#	cd string; $(WGET) $(STRING_MAP)/$(subst string/,,$@)
-#string/fly.entrez_2_string.$(YEAR).tsv.gz:
-#	cd string; $(WGET) $(STRING_MAP)/$(subst string/,,$@)
-#string/human.entrez_2_string.$(YEAR).tsv.gz:
-#	cd string; $(WGET) $(STRING_MAP)/$(subst string/,,$@)
-#string/mouse.entrez_2_string.$(YEAR).tsv.gz:
-#	cd string; $(WGET) $(STRING_MAP)/$(subst string/,,$@)
-#string/yeast.entrez_2_string.$(YEAR).tsv.gz:
-#	cd string; $(WGET) $(STRING_MAP)/$(subst string/,,$@)
-#string/zebrafish.entrez_2_string.$(YEAR).tsv.gz:
-#	cd string; $(WGET) $(STRING_MAP)/$(subst string/,,$@)
+$(foreach species, $(STRSPC), string/$(species).entrez_2_string.$(STRYR).tsv.gz):
+	cd string; $(WGET) $(STRMAP)/$(subst string/,,$@)
 
 string_clean: ;  $(RM) string/*
 ##########################################
