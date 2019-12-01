@@ -56,7 +56,7 @@ fname=$(fgrep "/human_disease/disease_model_annotations" md5sum.txt| cut -f2- -d
 /usr/bin/wget --timestamping ftp://ftp.flybase.net/releases/current/precomputed_files/$fname ; \
 unlink disease_model_annotations.tsv.gz; \
 ln -s $fname  disease_model_annotations.tsv.gz
-cd flybase/ ; /usr/bin/wget --timestamping/species/species.ab.gz
+cd flybase/ ; /usr/bin/wget --timestamping ftp://ftp.flybase.net/releases/current/precomputed_files/species/species.ab.gz
 cd flybase/ ;  \
 fname=$(fgrep "alleles/fbal_to_fbgn_fb" md5sum.txt| cut -f2- -d'/') ; \
 /usr/bin/wget --timestamping ftp://ftp.flybase.net/releases/current/precomputed_files/$fname ; \
@@ -228,25 +228,24 @@ unlink wormbase/letter ; cd wormbase/ ; wsnum=$(sed -n '1 s|.*\.\(WS[0-9]\{3\}\)
 ln -s /letter_$wbnum letter
 #species/c_elegans/PRJNA13758/annotation/c_elegans.PRJNA13758.WS273.geneIDs.txt.gz
 unlink wormbase/c_elegans.PRJNA13758.geneIDs.txt.gz ; cd wormbase/ ; wsnum=$(sed -n '1 s|.*\.\(WS[0-9]\{3\}\)\..*|\1|p' CHECKSUMS) ; \
-/usr/bin/wget --timestamping --force-directories ftp://ftp.wormbase.org/pub/wormbase/releases/current-production-release/species/c_elegans/PRJNA13758/annotation/c_elegans/PRJNA13758.$wbnum.geneIDs.txt.gz;\
+/usr/bin/wget --timestamping --force-directories --no-host-directories ftp://ftp.wormbase.org/pub/wormbase/releases/current-production-release/species/c_elegans/PRJNA13758/annotation/c_elegans/PRJNA13758.$wbnum.geneIDs.txt.gz;\
 ln -s ftp.wormbase.org/pub/wormbase/releases/current-production-release/species/c_elegans/PRJNA13758/annotation/c_elegans/PRJNA13758.$wbnum.geneIDs.txt.gz c_elegans.PRJNA13758.geneIDs.txt.gz
 # species/c_elegans/PRJNA13758/c_elegans.PRJNA13758.WS273.annotations.gff3.gz
 unlink wormbase/c_elegans.PRJNA13758.annotations.gff3.gz ; cd wormbase/ ; wsnum=$(sed -n '1 s|.*\.\(WS[0-9]\{3\}\)\..*|\1|p' CHECKSUMS) ; \
-/usr/bin/wget --timestamping --force-directories ftp://ftp.wormbase.org/pub/wormbase/releases/current-production-release/species/c_elegans/PRJNA13758/c_elegans/PRJNA13758.$wbnum.annotations.gff3.gz;\
+/usr/bin/wget --timestamping --force-directories --no-host-directories ftp://ftp.wormbase.org/pub/wormbase/releases/current-production-release/species/c_elegans/PRJNA13758/c_elegans/PRJNA13758.$wbnum.annotations.gff3.gz;\
 ln -s ftp.wormbase.org/pub/wormbase/releases/current-production-release/species/c_elegans/PRJNA13758/c_elegans/PRJNA13758.$wbnum.annotations.gff3.gz c_elegans.PRJNA13758.annotations.gff3.gz
 # species/c_elegans/PRJNA13758/annotation/c_elegans.PRJNA13758.WS273.xrefs.txt.gz
 unlink wormbase/c_elegans.PRJNA13758.xrefs.txt.gz ; cd wormbase/ ; wsnum=$(sed -n '1 s|.*\.\(WS[0-9]\{3\}\)\..*|\1|p' CHECKSUMS) ; \
-/usr/bin/wget --timestamping --force-directories ftp://ftp.wormbase.org/pub/wormbase/releases/current-production-release/species/c_elegans/PRJNA13758/annotation/c_elegans/PRJNA13758.$wsnum.xrefs.txt.gz;\
+/usr/bin/wget --timestamping --force-directories --no-host-directories ftp://ftp.wormbase.org/pub/wormbase/releases/current-production-release/species/c_elegans/PRJNA13758/annotation/c_elegans/PRJNA13758.$wsnum.xrefs.txt.gz;\
 ln -s ftp.wormbase.org/pub/wormbase/releases/current-production-release/species/c_elegans/PRJNA13758/annotation/c_elegans/PRJNA13758.$wsnum.xrefs.txt.gz c_elegans.PRJNA13758.xrefs.txt.gz
 unlink wormbase/phenotype_association.wb ; cd wormbase/ ; wsnum=$(sed -n '1 s|.*\.\(WS[0-9]\{3\}\)\..*|\1|p' CHECKSUMS) ; \
-/usr/bin/wget --timestamping --force-directories ftp://ftp.wormbase.org/pub/wormbase/releases/current-production-release/ONTOLOGY/phenotype_association.$wsnum.wb;\
+/usr/bin/wget --timestamping --force-directories --no-host-directories ftp://ftp.wormbase.org/pub/wormbase/releases/current-production-release/ONTOLOGY/phenotype_association.$wsnum.wb;\
 ln -s ftp.wormbase.org/pub/wormbase/releases/current-production-release/ONTOLOGY/phenotype_association.$wsnum.wb phenotype_association.wb
 unlink wormbase/rnai_phenotypes.wb ; cd wormbase/ ; wsnum=$(sed -n '1 s|.*\.\(WS[0-9]\{3\}\)\..*|\1|p' CHECKSUMS) ; \
-/usr/bin/wget --timestamping --force-directories ftp://ftp.wormbase.org/pub/wormbase/releases/current-production-release/ONTOLOGY/rnai_phenotypes.$wsnum.wb;\
+/usr/bin/wget --timestamping --force-directories --no-host-directories ftp://ftp.wormbase.org/pub/wormbase/releases/current-production-release/ONTOLOGY/rnai_phenotypes.$wsnum.wb;\
 ln -s ftp.wormbase.org/pub/wormbase/releases/current-production-release/ONTOLOGY/rnai_phenotypes.$wsnum.wb rnai_phenotypes.wb
 unlink wormbase/disease_association.wb ; cd wormbase/ ; wsnum=$(sed -n '1 s|.*\.\(WS[0-9]\{3\}\)\..*|\1|p' CHECKSUMS) ; \
-/usr/bin/wget --timestamping --force-directories ftp://ftp.wormbase.org/pub/wormbase/releases/current-production-release/ONTOLOGY/rnai_phenotypes.$wsnum.wb;\
-ln -s ftp.wormbase.org/pub/wormbase/releases/current-production-release/ONTOLOGY/rnai_phenotypes.$wsnum.wb disease_association.wb
+
 cd wormbase/ ; /usr/bin/wget --timestamping -O pub_xrefs.txt \
 http://tazendra.caltech.edu/~azurebrd/cgi-bin/forms/generic.cgi?action=WpaXref
 
