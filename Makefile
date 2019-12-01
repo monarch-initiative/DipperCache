@@ -1,3 +1,7 @@
+# should run as
+# make  --no-builtin-variables --no-builtin-rules
+# since this is not performing any traditional build tasks
+
 DIPPER = $$HOME/Projects/Monarch/dipper
 WGET = /usr/bin/wget --timestamping
 FULLPTH := --force-directories --no-host-directories
@@ -73,7 +77,9 @@ bgee: dipper bgee/ \
 		bgee/bgee.sqlite3.gz
 
 bgee/: ; mkdir $@
-bgee/bgee.sqlite3.gz: bgee/bgee.sqlite3 ; $(CDBG) gzip --force $<
+bgee/bgee.sqlite3.gz: bgee/bgee_sqlite3.sql
+	$(CDBG) gzip --force bgee.sqlite3  # appends .gz,  caused reindexing
+
 bgee/bgee.sqlite3: bgee/bgee_sqlite3.sql
 	$(CDBGE) /usr/bin/sqlite3 -mmap 3G bgee.sqlite3 < bgee_sqlite3.sql
 
@@ -85,7 +91,7 @@ bgee/sql_lite_dump.sql:  bgee/sql_lite_dump.tar.gz
 	$(CDBGE) /bin/tar -xzf sql_lite_dump.tar.gz
 
 bgee/sql_lite_dump.tar.gz:
-	$(CDBG)  $(WGET) ftp://ftp.bgee.org/current/sql_lite_dump.tar.gz
+	$(CDBGE) $(WGET) ftp://ftp.bgee.org/current/sql_lite_dump.tar.gz
 
 bgee_clean: ; $(RM) bgee/*
 ########################################
@@ -311,7 +317,7 @@ go: eco go/ \
 go/: ; mkdir $@
 
 $(foreach species, $(GOASPC), go/$(species).gaf.gz):
-	cd go/; $(WGET) $(GOGA)/$(subst go/,,$@)
+	cd go/; $(WGET) $(GOGA)/$(notdir $@)
 
 go/go-refs.json:
 	cd go/; $(WGET) http://current.geneontology.org/metadata/go-refs.json
@@ -651,7 +657,7 @@ reactome/ChEBI2Reactome.txt:
 	cd reactome; $(WGET) $(RCTDL)/ChEBI2Reactome.txt
 
 rectome/gaf-eco-mapping.txt:  eco/gaf-eco-mapping.txt
-	unlink $@; cd reactome; ln -s ../$< $(subst rectome/,,$@)
+	unlink $@; cd reactome; ln -s ../$< $(notdir $@)
 
 reactome_clean: ; $(RM) rectome/*
 ##########################################
@@ -698,10 +704,10 @@ string/version:
 	else  echo "same version of STRING" ; fi
 
 $(foreach txid, $(STRTAX),string/$(txid).protein.links.detailed.v$(STRVER).txt.gz):
-	cd string; $(WGET) $(STRDL)/$(subst string/,,$@)
+	cd string; $(WGET) $(STRDL)/$(notdir $@)
 
 $(foreach species, $(STRSPC), string/$(species).entrez_2_string.$(STRYR).tsv.gz):
-	cd string; $(WGET) $(STRMAP)/$(subst string/,,$@)
+	cd string; $(WGET) $(STRMAP)/$(notdir $@)
 
 string_clean: ;  $(RM) string/*
 ##########################################
@@ -747,41 +753,41 @@ wormbase: wormbase/ \
 
 wormbase/: ; mkdir $@
 wormbase/CHECKSUMS:
-	$(CDWB) $(WGET) ftp://$(WBPROD)/$(subst wormbase/,,$@)
+	$(CDWB) $(WGET) ftp://$(WBPROD)/$(notdir $@)
 wormbase/letter:  wormbase/CHECKSUMS
 	unlink $@ ; $(CDWB) wsnum=$$($(WSNUM)); \
 	$(WGET) ftp://$(WBPROD)/letter_$$wbnum ;\
-	ln -s /letter_$$wbnum $(subst wormbase/,,$@)
+	ln -s /letter_$$wbnum $(notdir $@)
 wormbase/c_elegans.PRJNA13758.geneIDs.txt.gz:  wormbase/CHECKSUMS
 	#species/c_elegans/PRJNA13758/annotation/c_elegans.PRJNA13758.WS273.geneIDs.txt.gz
 	unlink $@ ; $(CDWB) wsnum=$$($(WSNUM)) ; \
 	$(WGET) $(FULLPTH) ftp://$(WBPROD)/species/$(WBSPC)/annotation/$(WBSPC).$$wbnum.geneIDs.txt.gz;\
-	ln -s $(WBPROD)/species/$(WBSPC)/annotation/$(WBSPC).$$wbnum.geneIDs.txt.gz $(subst wormbase/,,$@)
+	ln -s $(WBPROD)/species/$(WBSPC)/annotation/$(WBSPC).$$wbnum.geneIDs.txt.gz $(notdir $@)
 wormbase/c_elegans.PRJNA13758.annotations.gff3.gz: wormbase/CHECKSUMS
 	# species/c_elegans/PRJNA13758/c_elegans.PRJNA13758.WS273.annotations.gff3.gz
 	unlink $@ ; $(CDWB) wsnum=$$($(WSNUM)) ; \
 	$(WGET) $(FULLPTH) ftp://$(WBPROD)/species/$(WBSPC)/$(WBSPC).$$wbnum.annotations.gff3.gz;\
-	ln -s $(WBPROD)/species/$(WBSPC)/$(WBSPC).$$wbnum.annotations.gff3.gz $(subst wormbase/,,$@)
+	ln -s $(WBPROD)/species/$(WBSPC)/$(WBSPC).$$wbnum.annotations.gff3.gz $(notdir $@)
 wormbase/c_elegans.PRJNA13758.xrefs.txt.gz: wormbase/CHECKSUMS
 	# species/c_elegans/PRJNA13758/annotation/c_elegans.PRJNA13758.WS273.xrefs.txt.gz
 	unlink $@ ; $(CDWB) wsnum=$$($(WSNUM)) ; \
 	$(WGET) $(FULLPTH) ftp://$(WBPROD)/species/$(WBSPC)/annotation/$(WBSPC).$$wsnum.xrefs.txt.gz;\
-	ln -s $(WBPROD)/species/$(WBSPC)/annotation/$(WBSPC).$$wsnum.xrefs.txt.gz $(subst wormbase/,,$@)
+	ln -s $(WBPROD)/species/$(WBSPC)/annotation/$(WBSPC).$$wsnum.xrefs.txt.gz $(notdir $@)
 wormbase/phenotype_association.wb: wormbase/CHECKSUMS
 	unlink $@ ; $(CDWB) wsnum=$$($(WSNUM)) ; \
 	$(WGET) $(FULLPTH) ftp://$(WBPROD)/ONTOLOGY/phenotype_association.$$wsnum.wb;\
-	ln -s $(WBPROD)/ONTOLOGY/phenotype_association.$$wsnum.wb $(subst wormbase/,,$@)
+	ln -s $(WBPROD)/ONTOLOGY/phenotype_association.$$wsnum.wb $(notdir $@)
 wormbase/rnai_phenotypes.wb: wormbase/CHECKSUMS
 	unlink $@ ; $(CDWB) wsnum=$$($(WSNUM)) ; \
 	$(WGET) $(FULLPTH) ftp://$(WBPROD)/ONTOLOGY/rnai_phenotypes.$$wsnum.wb;\
-	ln -s $(WBPROD)/ONTOLOGY/rnai_phenotypes.$$wsnum.wb $(subst wormbase/,,$@)
+	ln -s $(WBPROD)/ONTOLOGY/rnai_phenotypes.$$wsnum.wb $(notdir $@)
 wormbase/disease_association.wb: wormbase/CHECKSUMS
 	unlink $@ ; $(CDWB) wsnum=$$($(WSNUM)) ; \
 	$(WGET $(FULLPTH) ftp://$(WBPROD)/ONTOLOGY/rnai_phenotypes.$$wsnum.wb;\
-	ln -s $(WBPROD)/ONTOLOGY/rnai_phenotypes.$$wsnum.wb $(subst wormbase/,,$@)
+	ln -s $(WBPROD)/ONTOLOGY/rnai_phenotypes.$$wsnum.wb $(notdir $@)
 # api call so no date or file version
 wormbase/pub_xrefs.txt:
-	$(CDWB) $(WGET) -O $(subst wormbase/,,$@) \
+	$(CDWB) $(WGET) -O $(notdir $@) \
 	http://tazendra.caltech.edu/~azurebrd/cgi-bin/forms/generic.cgi?action=WpaXref
 
 wormbase_clean: ;  $(RM) wormbase/*
@@ -819,7 +825,7 @@ zfin: zfin/ $(addprefix zfin/, $(ZFFILES)) zfin/zp-mapping-2019.txt
 zfin/: ; mkdir $@
 
 $(addprefix zfin/, $(ZFFILES)):
-	cd zfin/; $(WGET) $(ZFDL)/$(subst afin/,,$@)
+	cd zfin/; $(WGET) $(ZFDL)/$(notdir $@)
 
 # it seems like it would be good to drop the date out of the file name
 zfin/zp-mapping-2019.txt:
