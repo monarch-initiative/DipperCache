@@ -12,75 +12,50 @@ all:  animalqtldb bgee clinvar ctd flybase genereviews go gwascatalog \
 	# coriell ensembl eom mgi monarch mychem mychem omim ucscbands
 ##########################################
 # animalqtldb
-AQDL = https://www.animalgenome.org/QTLdb
-CDAQL = cd animalqtldb ;
+AQTLDL = https://www.animalgenome.org/QTLdb
+CDAQTL = cd animalqtldb ;
+
+AQTLGI = gene_info.gz \
+		Bos_taurus.gene_info.gz \
+		Sus_scrofa.gene_info.gz \
+		Gallus_gallus.gene_info.gz \
+		Ovis_aries.gene_info.gz \
+		Oncorhynchus_mykiss.gene_info.gz \
+		Equus_caballus.gene_info.gz
+
+AQTLTMP = QTL_Btau_4.6.gff.txt.gz \
+		QTL_EquCab2.0.gff.txt.gz \
+		QTL_GG_4.0.gff.txt.gz \
+		QTL_OAR_3.1.gff.txt.gz
+
+AQTLVER = pig_QTLdata.txt \
+		sheep_QTLdata.txt \
+		cattle_QTLdata.txt \
+		chicken_QTLdata.txt \
+		horse_QTLdata.txt \
+		rainbow_trout_QTLdata.txt
 
 animalqtldb: ncbigene animalqtldb/ \
-	animalqtldb/Bos_taurus.gene_info.gz \
-	animalqtldb/Sus_scrofa.gene_info.gz \
-	animalqtldb/Gallus_gallus.gene_info.gz \
-	animalqtldb/gene_info.gz \
-	animalqtldb/Oncorhynchus_mykiss.gene_info.gz \
-	animalqtldb/Ovis_aries.gene_info.gz \
-	animalqtldb/Equus_caballus.gene_info.gz \
-	animalqtldb/QTL_Btau_4.6.gff.txt.gz \
-	animalqtldb/QTL_EquCab2.0.gff.txt.gz \
-	animalqtldb/QTL_GG_4.0.gff.txt.gz \
-	animalqtldb/QTL_OAR_3.1.gff.txt.gz \
-	animalqtldb/QTL_SS_10.2.gff.txt.gz \
-	animalqtldb/cattle_QTLdata.txt \
-	animalqtldb/chicken_QTLdata.txt \
-	animalqtldb/horse_QTLdata.txt \
-	animalqtldb/pig_QTLdata.txt \
-	animalqtldb/rainbow_trout_QTLdata.txt \
-	animalqtldb/sheep_QTLdata.txt
+		$(foreach spc, $(AQTLGI), animalqtldb/$(spc)) \
+		$(foreach spc, $(AQTLTMP), animalqtldb/$(spc)) \
+		$(foreach spc, $(AQTLVER), animalqtldb/$(spc))
 
 animalqtldb/: ; mkdir $@
 
-# AQTL_T_FILES
-animalqtldb/QTL_Btau_4.6.gff.txt.gz:
-	$(CDAQL) $(WGET) $(AQDL)/tmp/QTL_Btau_4.6.gff.txt.gz
-animalqtldb/QTL_EquCab2.0.gff.txt.gz:
-	$(CDAQL) $(WGET) $(AQDL)/tmp/QTL_EquCab2.0.gff.txt.gz
-animalqtldb/QTL_GG_4.0.gff.txt.gz:
-	$(CDAQL) $(WGET) $(AQDL)/tmp/QTL_GG_4.0.gff.txt.gz
-animalqtldb/QTL_OAR_3.1.gff.txt.gz:
-	$(CDAQL) $(WGET) $(AQDL)/tmp/QTL_OAR_3.1.gff.txt.gz
-animalqtldb/QTL_SS_10.2.gff.txt.gz:
-	$(CDAQL) $(WGET) $(AQDL)/tmp/QTL_SS_10.2.gff.txt.gz
+# AQTL_TMP_FILES
+$(foreach spc, $(AQTLTMP), animalqtldb/$(spc)):
+	$(CDAQL) $(WGET) $(AQTLDL)/tmp/$@
 
-# AQTL_V_FILES
-AQLV = export/KSUI8GFHOT6
-animalqtldb/cattle_QTLdata.txt:
-	$(CDAQL) $(WGET) $(AQDL)/$(AQLV)/cattle_QTLdata.txt
-animalqtldb/chicken_QTLdata.txt:
-	$(CDAQL) $(WGET) $(AQDL)/$(AQLV)/chicken_QTLdata.txt
-animalqtldb/horse_QTLdata.txt:
-	$(CDAQL) $(WGET) $(AQDL)/$(AQLV)/horse_QTLdata.txt
-animalqtldb/pig_QTLdata.txt:
-	$(CDAQL) $(WGET) $(AQDL)/$(AQLV)/pig_QTLdata.txt
-animalqtldb/rainbow_trout_QTLdata.txt:
-	$(CDAQL) $(WGET) $(AQDL)/$(AQLV)/rainbow_trout_QTLdata.txt
-animalqtldb/sheep_QTLdata.txt:
-	$(CDAQL) $(WGET) $(AQDL)/$(AQLV)/sheep_QTLdata.txt
+# AQTL_VER_FILES
+$(foreach spc, $(AQTLVER), animalqtldb/$(spc)):
+	$(CDAQL) $(WGET) $(AQTLDL)/export/KSUI8GFHOT6/$@
 
 # GENEINFO_FILES
-# these are created under ncbigene and linked here
-animalqtldb/gene_info.gz: ncbigene/gene_info.gz
-	unlink $@; $(CDAQL) ln -s ../$< $(subst animalqtldb/,,$@)
-animalqtldb/Gallus_gallus.gene_info.gz: ncbigene/Gallus_gallus.gene_info.gz
-	unlink $@; $(CDAQL) ln -s ../$< $(subst animalqtldb/,,$@)
-animalqtldb/Sus_scrofa.gene_info.gz: ncbigene/Sus_scrofa.gene_info.gz
-	unlink $@; $(CDAQL) ln -s ../$< $(subst animalqtldb/,,$@)
-animalqtldb/Bos_taurus.gene_info.gz: ncbigene/Bos_taurus.gene_info.gz
-	unlink $@; $(CDAQL) ln -s ../$< $(subst animalqtldb/,,$@)
-# GENEINFO_LOCAL_FILES
-animalqtldb/Equus_caballus.gene_info.gz: ncbigene/Equus_caballus.gene_info.gz
-	unlink $@; $(CDAQL) ln -s ../$< $(subst animalqtldb/,,$@)
-animalqtldb/Ovis_aries.gene_info.gz: ncbigene/Ovis_aries.gene_info.gz
-	unlink $@; $(CDAQL) ln -s ../$< $(subst animalqtldb/,,$@)
-animalqtldb/Oncorhynchus_mykiss.gene_info.gz: ncbigene/Oncorhynchus_mykiss.gene_info.gz
-	unlink $@; $(CDAQL) ln -s ../$< $(subst animalqtldb/,,$@)
+# these are all created under ncbigene first then linked here
+# so the distinction of the locally generated ones becomes moot
+
+$(foreach spc, $(AQTLGI), animalqtldb/$(spc)): $(foreach spc, $(AQTLGI),ncbigene/$(spc))
+	unlink $@; $(CDAQL) ln -s ../ncbigene/$@ $@
 
 animalqtldb_clean: ;  $(RM) animalqtldb/*
 ##########################################
@@ -756,7 +731,7 @@ string_clean: ;  $(RM) string/*
 #  private access
 ##########################################
 WBREL = ftp.wormbase.org/pub/wormbase/releases
-WBDEV = $(WBREL)/current-development-release
+#WBDEV = $(WBREL)/current-development-release  unused?
 WBPROD = $(WBREL)/current-production-release
 WBSPC = c_elegans/PRJNA13758
 CDWB = cd wormbase/ ;
@@ -839,7 +814,7 @@ ZFFILES = \
 	E_zfin_gene_alias.gff3 \
 	fish_model_disease.txt \
 	fish_components_fish.txt \
-	phenoGeneCleanData_fish.txt   # zfinslim
+	phenoGeneCleanData_fish.txt
 
 zfin: zfin/ $(addprefix zfin/, $(ZFFILES)) zfin/zp-mapping-2019.txt
 
@@ -866,7 +841,6 @@ zfinslim/zp-mapping-2019.txt: zfin/zp-mapping-2019.txt
 
 zfinslim_clean: ; $(RM) zfin/zp-mapping-2019.txt zfin/phenoGeneCleanData_fish.txt
 ##########################################
-
 
 
 clean: animalqtldb_clean bgee_clean clinvar_clean  ctd_clean eco_clean\
