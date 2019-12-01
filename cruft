@@ -1,0 +1,281 @@
+make[1]: Entering directory '/home/tomc/Projects/Monarch/DipperCache'
+
+mkdir ncbigene/
+cd ncbigene/ ; /usr/bin/wget --timestamping ftp://ftp.ncbi.nih.gov/gene/DATA/gene_info.gz
+# test if in the future (GMT?)
+# touch -r "gene_info.gz" -d '-8 hour' "gene_info.gz"
+cd ncbigene/ ; /usr/bin/wget --timestamping ftp://ftp.ncbi.nih.gov/gene/DATA/gene_history.gz
+cd ncbigene/ ; /usr/bin/wget --timestamping ftp://ftp.ncbi.nih.gov/gene/DATA/gene2pubmed.gz
+cd ncbigene/ ; /usr/bin/wget --timestamping ftp://ftp.ncbi.nih.gov/gene/DATA/gene_group.gz
+/usr/bin/wget --timestamping ftp://ftp.ncbi.nih.gov/gene/DATA/GENE_INFO/Non-mammalian_vertebrates/Gallus_gallus.gene_info.gz
+/usr/bin/wget --timestamping ftp://ftp.ncbi.nih.gov/gene/DATA/GENE_INFO/Mammalia/Sus_scrofa.gene_info.gz
+/usr/bin/wget --timestamping ftp://ftp.ncbi.nih.gov/gene/DATA/GENE_INFO/Mammalia/Bos_taurus.gene_info.gz
+/bin/zgrep "^9796[^0-9]" gene_info.gz | /bin/gzip > Equus_caballus.gene_info.gz
+/bin/zgrep "^9940[^0-9]" gene_info.gz | /bin/gzip > Ovis_aries.gene_info.gz
+/bin/zgrep "^8022[^0-9]" gene_info.gz | /bin/gzip > Oncorhynchus_mykiss.gene_info.gz
+
+mkdir animalqtldb/
+unlink animalqtldb/gene_info.gz;  ln -s ../ncbigene/animalqtldb/gene_info.gz animalqtldb/gene_info.gz
+unlink animalqtldb/Bos_taurus.gene_info.gz;  ln -s ../ncbigene/animalqtldb/Bos_taurus.gene_info.gz animalqtldb/Bos_taurus.gene_info.gz
+unlink animalqtldb/Sus_scrofa.gene_info.gz;  ln -s ../ncbigene/animalqtldb/Sus_scrofa.gene_info.gz animalqtldb/Sus_scrofa.gene_info.gz
+unlink animalqtldb/Gallus_gallus.gene_info.gz;  ln -s ../ncbigene/animalqtldb/Gallus_gallus.gene_info.gz animalqtldb/Gallus_gallus.gene_info.gz
+unlink animalqtldb/Ovis_aries.gene_info.gz;  ln -s ../ncbigene/animalqtldb/Ovis_aries.gene_info.gz animalqtldb/Ovis_aries.gene_info.gz
+unlink animalqtldb/Oncorhynchus_mykiss.gene_info.gz;  ln -s ../ncbigene/animalqtldb/Oncorhynchus_mykiss.gene_info.gz animalqtldb/Oncorhynchus_mykiss.gene_info.gz
+unlink animalqtldb/Equus_caballus.gene_info.gz;  ln -s ../ncbigene/animalqtldb/Equus_caballus.gene_info.gz animalqtldb/Equus_caballus.gene_info.gz
+/usr/bin/wget --timestamping https://www.animalgenome.org/QTLdb/tmp/animalqtldb/QTL_Btau_4.6.gff.txt.gz
+/usr/bin/wget --timestamping https://www.animalgenome.org/QTLdb/tmp/animalqtldb/QTL_EquCab2.0.gff.txt.gz
+/usr/bin/wget --timestamping https://www.animalgenome.org/QTLdb/tmp/animalqtldb/QTL_GG_4.0.gff.txt.gz
+/usr/bin/wget --timestamping https://www.animalgenome.org/QTLdb/tmp/animalqtldb/QTL_OAR_3.1.gff.txt.gz
+/usr/bin/wget --timestamping https://www.animalgenome.org/QTLdb/export/KSUI8GFHOT6/animalqtldb/pig_QTLdata.txt
+/usr/bin/wget --timestamping https://www.animalgenome.org/QTLdb/export/KSUI8GFHOT6/animalqtldb/sheep_QTLdata.txt
+/usr/bin/wget --timestamping https://www.animalgenome.org/QTLdb/export/KSUI8GFHOT6/animalqtldb/cattle_QTLdata.txt
+/usr/bin/wget --timestamping https://www.animalgenome.org/QTLdb/export/KSUI8GFHOT6/animalqtldb/chicken_QTLdata.txt
+/usr/bin/wget --timestamping https://www.animalgenome.org/QTLdb/export/KSUI8GFHOT6/animalqtldb/horse_QTLdata.txt
+/usr/bin/wget --timestamping https://www.animalgenome.org/QTLdb/export/KSUI8GFHOT6/animalqtldb/rainbow_trout_QTLdata.txt
+git clone https://github.com/monarch-initiative/dipper.git
+
+mkdir bgee/
+/usr/bin/wget --timestamping ftp://ftp.bgee.org/current/sql_lite_dump.tar.gz
+cd bgee/ ; /bin/tar -xzf sql_lite_dump.tar.gz
+cd bgee/ ; ../dipper/scripts/mysql2sqlite bgee/sql_lite_dump.sql > bgee/bgee_sqlite3.sql ;\
+echo -e "\nvacuum;analyze;" >> bgee/bgee_sqlite3.sql
+cd bgee/ ; /usr/bin/sqlite3 -mmap 3G bgee.sqlite3 < bgee_sqlite3.sql
+gzip --force bgee/bgee.sqlite3
+
+mkdir clinvar/
+cd clinvar; /usr/bin/wget --timestamping ftp://ftp.ncbi.nlm.nih.gov/pub/clinvar/xml/ClinVarFullRelease_00-latest.xml.gz
+cd clinvar; /usr/bin/wget --timestamping ftp://ftp.ncbi.nlm.nih.gov/pub/clinvar/gene_condition_source_id
+
+mkdir ctd/
+cd ctd; /usr/bin/wget --timestamping http://ctdbase.org/reports/CTD_chemicals_diseases.tsv.gz
+
+mkdir flybase/
+cd flybase/ ; /usr/bin/wget --timestamping ftp://ftp.flybase.net/releases/current/precomputed_files/md5sum.txt
+cd flybase/ ;  \
+fname=$(fgrep "/human_disease/disease_model_annotations" md5sum.txt| cut -f2- -d'/') ; \
+/usr/bin/wget --timestamping ftp://ftp.flybase.net/releases/current/precomputed_files/$fname ; \
+unlink disease_model_annotations.tsv.gz; \
+ln -s $fname  disease_model_annotations.tsv.gz
+cd flybase/ ; /usr/bin/wget --timestamping/species/species.ab.gz
+cd flybase/ ;  \
+fname=$(fgrep "alleles/fbal_to_fbgn_fb" md5sum.txt| cut -f2- -d'/') ; \
+/usr/bin/wget --timestamping ftp://ftp.flybase.net/releases/current/precomputed_files/$fname ; \
+unlink fbal_to_fbgn_fb.tsv.gz ; \
+ln -s $fname fbal_to_fbgn_fb.tsv.gz
+cd flybase/ ;
+fname=$(fgrep "references/fbrf_pmid_pmcid_doi_fb" md5sum.txt| cut -f2- -d'/') ; \
+/usr/bin/wget --timestamping ftp://ftp.flybase.net/releases/current/precomputed_files/$fname ; \
+unlink fbrf_pmid_pmcid_doi_fb.tsv.gz ; \
+ln -s $fname fbrf_pmid_pmcid_doi_fb.tsv.gz
+
+mkdir genereviews/
+cd genereviews; /usr/bin/wget --timestamping http://ftp.ncbi.nih.gov/pub/GeneReviews/NBKid_shortname_OMIM.txt
+cd genereviews; /usr/bin/wget --timestamping http://ftp.ncbi.nih.gov/pub/GeneReviews/GRtitle_shortname_NBKid.txt
+
+mkdir eco/
+cd eco/; /usr/bin/wget --timestamping http://purl.obolibrary.org/obo/eco/gaf-eco-mapping.txt
+
+mkdir go/
+cd go/; /usr/bin/wget --timestamping :http://current.geneontology.org/annotations/dog.gaf.gz
+cd go/; /usr/bin/wget --timestamping :http://current.geneontology.org/annotations/fb.gaf.gz
+cd go/; /usr/bin/wget --timestamping :http://current.geneontology.org/annotations/zfin.gaf.gz
+cd go/; /usr/bin/wget --timestamping :http://current.geneontology.org/annotations/mgi.gaf.gz
+cd go/; /usr/bin/wget --timestamping :http://current.geneontology.org/annotations/rgd.gaf.gz
+cd go/; /usr/bin/wget --timestamping :http://current.geneontology.org/annotations/wb.gaf.gz
+cd go/; /usr/bin/wget --timestamping :http://current.geneontology.org/annotations/goa_pig.gaf.gz
+cd go/; /usr/bin/wget --timestamping :http://current.geneontology.org/annotations/goa_chicken.gaf.gz
+cd go/; /usr/bin/wget --timestamping :http://current.geneontology.org/annotations/goa_human.gaf.gz
+cd go/; /usr/bin/wget --timestamping :http://current.geneontology.org/annotations/goa_cow.gaf.gz
+cd go/; /usr/bin/wget --timestamping :http://current.geneontology.org/annotations/sgd.gaf.gz
+cd go/; /usr/bin/wget --timestamping :http://current.geneontology.org/annotations/pombase.gaf.gz
+cd go/; /usr/bin/wget --timestamping :http://current.geneontology.org/annotations/dictibase.gaf.gz
+cd go/; /usr/bin/wget --timestamping :http://current.geneontology.org/annotations/aspgd.gaf.gz
+cd go/; /usr/bin/wget --timestamping http://current.geneontology.org/metadata/go-refs.json
+cd go/; /usr/bin/wget --timestamping http://www.geneontology.org/doc/GO.references
+cd go/; /usr/bin/wget --timestamping ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/idmapping/idmapping_selected.tab.gz
+unlink go/gaf-eco-mapping.txt;cd go/; ln -s ../eco/gaf-eco-mapping.txt gaf-eco-mapping.txt
+
+mkdir gwascatalog/
+cd gwascatalog; /usr/bin/wget --timestamping ftp://ftp.ebi.ac.uk/pub/databases/gwas/releases/latest/gwas-catalog-associations_ontology-annotated.tsv
+
+mkdir hgnc/
+cd hgnc; /usr/bin/wget --timestamping ftp://ftp.ebi.ac.uk/pub/databases/genenames/hgnc_complete_set.txt
+
+mkdir hpoa/
+cd hgnc; /usr/bin/wget --timestamping http://compbio.charite.de/jenkins/job/hpo.annotations.current/lastSuccessfulBuild/artifact/misc_2018/phenotype.hpoa
+
+mkdir impc/
+cd impc; /usr/bin/wget --timestamping ftp://ftp.ebi.ac.uk/pub/databases/impc/latest/csv/checksum.md5
+cd impc; /usr/bin/wget --timestamping ftp://ftp.ebi.ac.uk/pub/databases/impc/latest/csv/ALL_genotype_phenotype.csv.gz
+
+mkdir kegg/
+cd kegg; /usr/bin/wget --timestamping http://rest.genome.jp/list/disease
+cd kegg; /usr/bin/wget --timestamping http://rest.genome.jp/list/pathway
+cd kegg; /usr/bin/wget --timestamping http://rest.genome.jp/list/hsa -O hsa_genes
+cd kegg; /usr/bin/wget --timestamping http://rest.genome.jp/list/orthology
+cd kegg; /usr/bin/wget --timestamping http://rest.kegg.jp/link/disease/hsa -O disease_gene
+cd kegg; /usr/bin/wget --timestamping http://rest.genome.jp/link/disease/omim
+cd kegg; /usr/bin/wget --timestamping http://rest.genome.jp/link/omim/hsa -O omim2gene
+cd kegg; /usr/bin/wget --timestamping http://rest.kegg.jp/link/pathway/hsa -O human_gene2pathway
+cd kegg; /usr/bin/wget --timestamping http://rest.kegg.jp/link/orthology/hsa -O hsa_orthologs
+cd kegg; /usr/bin/wget --timestamping http://rest.kegg.jp/link/orthology/mmu
+cd kegg; /usr/bin/wget --timestamping http://rest.kegg.jp/link/orthology/rno
+cd kegg; /usr/bin/wget --timestamping http://rest.kegg.jp/link/orthology/dme
+cd kegg; /usr/bin/wget --timestamping http://rest.kegg.jp/link/orthology/dre
+cd kegg; /usr/bin/wget --timestamping http://rest.kegg.jp/link/orthology/cel
+cd kegg; /usr/bin/wget --timestamping http://rest.kegg.jp/link/pathway/pubmed
+cd kegg; /usr/bin/wget --timestamping http://rest.kegg.jp/link/pathway/ds
+cd kegg; /usr/bin/wget --timestamping http://rest.kegg.jp/link/pathway/ko
+
+mkdir mmrrc/
+cd mmrrc; /usr/bin/wget --timestamping https://www.mmrrc.org/about/mmrrc_catalog_data.csv
+
+mkdir monochrom/
+
+mkdir monochrom/hg19/
+cd monochrom/hg19; /usr/bin/wget --timestamping http://hgdownload.cse.ucsc.edu/goldenPath/hg19/database/cytoBand.txt.gz
+cd monochrom/ ; unlink 9606cytoBand.txt.gz ;\
+ln -s hg19/cytoBand.txt.gz 9606cytoBand.txt.gz
+
+mkdir monochrom/mm10/
+cd monochrom/mm10/ ; /usr/bin/wget --timestamping http://hgdownload.cse.ucsc.edu/goldenPath/mm10/database/cytoBandIdeo.txt.gz
+cd monochrom/ ; unlink 10090cytoBand.txt.gz ;\
+ln -s mm10/cytoBandIdeo.txt.gz 10090cytoBand.txt.gz  # note dropping 'Ideo' (to fix)
+
+mkdir monochrom/danRer10/
+cd monochrom/danRer10/ ;  /usr/bin/wget --timestamping http://hgdownload.cse.ucsc.edu/goldenPath/danRer10/database/cytoBandIdeo.txt.gz
+cd monochrom/ ; unlink 7955cytoBand.txt.gz ; \
+ln -s  danRer10/cytoBandIdeo.txt.gz 7955cytoBand.txt.gz
+
+mkdir monochrom/rn6/
+cd monochrom/rn6/; /usr/bin/wget --timestamping http://hgdownload.cse.ucsc.edu/goldenPath/rn6/database/cytoBandIdeo.txt.gz
+cd monochrom/ ; unlink 10116cytoBand.txt.gz ; \
+ln -s rn6/cytoBandIdeo.txt.gz 10116cytoBand.txt.gz
+
+mkdir monochrom/bosTau7/
+cd monochrom/bosTau7/; /usr/bin/wget --timestamping http://hgdownload.cse.ucsc.edu/goldenPath/bosTau7/database/cytoBandIdeo.txt.gz
+cd monochrom/ ; unlink bosTau7cytoBand.txt.gz; \
+ln -s bosTau7/cytoBandIdeo.txt.gz bosTau7cytoBand.txt.gz
+
+mkdir monochrom/galGal4/
+cd monochrom/galGal4/; /usr/bin/wget --timestamping http://hgdownload.cse.ucsc.edu/goldenPath/galGal4/database/cytoBandIdeo.txt.gz
+cd monochrom/ ; unlink galGal4cytoBand.txt.gz; \
+ln -s galGal4/cytoBandIdeo.txt.gz galGal4cytoBand.txt.gz
+
+mkdir monochrom/susScr3/
+cd monochrom/susScr3/; /usr/bin/wget --timestamping http://hgdownload.cse.ucsc.edu/goldenPath/susScr3/database/cytoBandIdeo.txt.gz
+cd monochrom/ ; unlink susScr3cytoBand.txt.gz ; \
+ln -s susScr3/cytoBandIdeo.txt.gz susScr3cytoBand.txt.gz
+
+mkdir monochrom/oviAri3/
+cd monochrom/oviAri3/; /usr/bin/wget --timestamping http://hgdownload.cse.ucsc.edu/goldenPath/oviAri3/database/cytoBandIdeo.txt.gz
+cd monochrom/ ; unlink oviAri3cytoBand.txt.gz ; \
+ln -s oviAri3/cytoBandIdeo.txt.gz oviAri3cytoBand.txt.gz
+
+mkdir monochrom/equCab2/
+cd monochrom/equCab2/; /usr/bin/wget --timestamping http://hgdownload.cse.ucsc.edu/goldenPath/equCab2/database/cytoBandIdeo.txt.gz
+cd monochrom/ ; unlink equCab2cytoBand.txt.gz ; \
+ln -s equCab2cytoBandIdeo.txt.gz equCab2cytoBand.txt.gz
+
+mkdir mpd/
+cd mpd; /usr/bin/wget --timestamping http://phenomedoc.jax.org/MPD_downloads/ontology_mappings.csv
+cd mpd; /usr/bin/wget --timestamping http://phenomedoc.jax.org/MPD_downloads/straininfo.csv
+cd mpd; /usr/bin/wget --timestamping http://phenomedoc.jax.org/MPD_downloads/measurements.csv
+
+mkdir omia/
+cd omia; /usr/bin/wget --timestamping http://compldb.angis.org.au/dumps/omia.xml.gz
+# http://omia.angis.org.au/dumps/omia.xml.gz  # broken alt
+
+mkdir orphanet/
+cd orphanet/; /usr/bin/wget --timestamping http://www.orphadata.org/data/xml/en_product6.xml
+
+mkdir panther/
+cd panther; /usr/bin/wget --timestamping ftp://ftp.pantherdb.org/ortholog/current_release/RefGenomeOrthologs.tar.gz
+cd panther; /usr/bin/wget --timestamping ftp://ftp.pantherdb.org/ortholog/current_release/Orthologs_HCOP.tar.gz
+
+mkdir reactome/
+cd reactome; /usr/bin/wget --timestamping http://www.reactome.org/download/current/Ensembl2Reactome.txt
+cd reactome; /usr/bin/wget --timestamping http://www.reactome.org/download/current/ChEBI2Reactome.txt
+unlink rectome/gaf-eco-mapping.txt; cd reactome; ln -s ../eco/gaf-eco-mapping.txt gaf-eco-mapping.txt
+
+mkdir rgd/
+cd rgd/; /usr/bin/wget --timestamping ftp://ftp.rgd.mcw.edu/pub/data_release/annotated_rgd_objects_by_ontology/rattus_genes_mp
+
+mkdir sdg/
+cd sdg; /usr/bin/wget --timestamping https://downloads.yeastgenome.org/curation/literature/phenotype_data.tab
+
+mkdir string/
+cd string ; /usr/bin/wget --timestamping https://string-db.orgapi/tsv-no-header/version  ; \
+if [ 11.0 != $(cut -f 1 version) ] then; echo "NEW VERSION of STRING!" ; \
+else  echo "same version of STRING" ; fi
+cd string; /usr/bin/wget --timestamping https://string-db.org/download/9606.protein.links.detailed.v11.0.txt.gz
+cd string; /usr/bin/wget --timestamping https://string-db.org/download/10090.protein.links.detailed.v11.0.txt.gz
+cd string; /usr/bin/wget --timestamping https://string-db.org/download/7955.protein.links.detailed.v11.0.txt.gz
+cd string; /usr/bin/wget --timestamping https://string-db.org/download/7227.protein.links.detailed.v11.0.txt.gz
+cd string; /usr/bin/wget --timestamping https://string-db.org/download/6239.protein.links.detailed.v11.0.txt.gz
+cd string; /usr/bin/wget --timestamping https://string-db.org/download/4932.protein.links.detailed.v11.0.txt.gz
+cd string; /usr/bin/wget --timestamping https://string-db.org/mapping_files/entrez/celegans.entrez_2_string.2018.tsv.gz
+cd string; /usr/bin/wget --timestamping https://string-db.org/mapping_files/entrez/fly.entrez_2_string.2018.tsv.gz
+cd string; /usr/bin/wget --timestamping https://string-db.org/mapping_files/entrez/human.entrez_2_string.2018.tsv.gz
+cd string; /usr/bin/wget --timestamping https://string-db.org/mapping_files/entrez/mouse.entrez_2_string.2018.tsv.gz
+cd string; /usr/bin/wget --timestamping https://string-db.org/mapping_files/entrez/yeast.entrez_2_string.2018.tsv.gz
+cd string; /usr/bin/wget --timestamping https://string-db.org/mapping_files/entrez/zebrafish.entrez_2_string.2018.tsv.gz
+
+mkdir wormbase/
+cd wormbase/ ; /usr/bin/wget --timestamping ftp://ftp.wormbase.org/pub/wormbase/releases/current-production-release/CHECKSUMS
+unlink wormbase/letter ; cd wormbase/ ; wsnum=$(sed -n '1 s|.*\.\(WS[0-9]\{3\}\)\..*|\1|p' CHECKSUMS); \
+/usr/bin/wget --timestamping ftp://ftp.wormbase.org/pub/wormbase/releases/current-production-release/letter_$wbnum ;\
+ln -s /letter_$wbnum letter
+#species/c_elegans/PRJNA13758/annotation/c_elegans.PRJNA13758.WS273.geneIDs.txt.gz
+unlink wormbase/c_elegans.PRJNA13758.geneIDs.txt.gz ; cd wormbase/ ; wsnum=$(sed -n '1 s|.*\.\(WS[0-9]\{3\}\)\..*|\1|p' CHECKSUMS) ; \
+/usr/bin/wget --timestamping --force-directories ftp://ftp.wormbase.org/pub/wormbase/releases/current-production-release/species/c_elegans/PRJNA13758/annotation/c_elegans/PRJNA13758.$wbnum.geneIDs.txt.gz;\
+ln -s ftp.wormbase.org/pub/wormbase/releases/current-production-release/species/c_elegans/PRJNA13758/annotation/c_elegans/PRJNA13758.$wbnum.geneIDs.txt.gz c_elegans.PRJNA13758.geneIDs.txt.gz
+# species/c_elegans/PRJNA13758/c_elegans.PRJNA13758.WS273.annotations.gff3.gz
+unlink wormbase/c_elegans.PRJNA13758.annotations.gff3.gz ; cd wormbase/ ; wsnum=$(sed -n '1 s|.*\.\(WS[0-9]\{3\}\)\..*|\1|p' CHECKSUMS) ; \
+/usr/bin/wget --timestamping --force-directories ftp://ftp.wormbase.org/pub/wormbase/releases/current-production-release/species/c_elegans/PRJNA13758/c_elegans/PRJNA13758.$wbnum.annotations.gff3.gz;\
+ln -s ftp.wormbase.org/pub/wormbase/releases/current-production-release/species/c_elegans/PRJNA13758/c_elegans/PRJNA13758.$wbnum.annotations.gff3.gz c_elegans.PRJNA13758.annotations.gff3.gz
+# species/c_elegans/PRJNA13758/annotation/c_elegans.PRJNA13758.WS273.xrefs.txt.gz
+unlink wormbase/c_elegans.PRJNA13758.xrefs.txt.gz ; cd wormbase/ ; wsnum=$(sed -n '1 s|.*\.\(WS[0-9]\{3\}\)\..*|\1|p' CHECKSUMS) ; \
+/usr/bin/wget --timestamping --force-directories ftp://ftp.wormbase.org/pub/wormbase/releases/current-production-release/species/c_elegans/PRJNA13758/annotation/c_elegans/PRJNA13758.$wsnum.xrefs.txt.gz;\
+ln -s ftp.wormbase.org/pub/wormbase/releases/current-production-release/species/c_elegans/PRJNA13758/annotation/c_elegans/PRJNA13758.$wsnum.xrefs.txt.gz c_elegans.PRJNA13758.xrefs.txt.gz
+unlink wormbase/phenotype_association.wb ; cd wormbase/ ; wsnum=$(sed -n '1 s|.*\.\(WS[0-9]\{3\}\)\..*|\1|p' CHECKSUMS) ; \
+/usr/bin/wget --timestamping --force-directories ftp://ftp.wormbase.org/pub/wormbase/releases/current-production-release/ONTOLOGY/phenotype_association.$wsnum.wb;\
+ln -s ftp.wormbase.org/pub/wormbase/releases/current-production-release/ONTOLOGY/phenotype_association.$wsnum.wb phenotype_association.wb
+unlink wormbase/rnai_phenotypes.wb ; cd wormbase/ ; wsnum=$(sed -n '1 s|.*\.\(WS[0-9]\{3\}\)\..*|\1|p' CHECKSUMS) ; \
+/usr/bin/wget --timestamping --force-directories ftp://ftp.wormbase.org/pub/wormbase/releases/current-production-release/ONTOLOGY/rnai_phenotypes.$wsnum.wb;\
+ln -s ftp.wormbase.org/pub/wormbase/releases/current-production-release/ONTOLOGY/rnai_phenotypes.$wsnum.wb rnai_phenotypes.wb
+unlink wormbase/disease_association.wb ; cd wormbase/ ; wsnum=$(sed -n '1 s|.*\.\(WS[0-9]\{3\}\)\..*|\1|p' CHECKSUMS) ; \
+/usr/bin/wget --timestamping --force-directories ftp://ftp.wormbase.org/pub/wormbase/releases/current-production-release/ONTOLOGY/rnai_phenotypes.$wsnum.wb;\
+ln -s ftp.wormbase.org/pub/wormbase/releases/current-production-release/ONTOLOGY/rnai_phenotypes.$wsnum.wb disease_association.wb
+cd wormbase/ ; /usr/bin/wget --timestamping -O pub_xrefs.txt \
+http://tazendra.caltech.edu/~azurebrd/cgi-bin/forms/generic.cgi?action=WpaXref
+
+mkdir zfin/
+cd zfin/; /usr/bin/wget --timestamping http://zfin.org/downloads/zfin/genotype_features.txt
+cd zfin/; /usr/bin/wget --timestamping http://zfin.org/downloads/zfin/phenotype_fish.txt
+cd zfin/; /usr/bin/wget --timestamping http://zfin.org/downloads/zfin/zfinpubs.txt
+cd zfin/; /usr/bin/wget --timestamping http://zfin.org/downloads/zfin/Morpholinos.txt
+cd zfin/; /usr/bin/wget --timestamping http://zfin.org/downloads/zfin/pheno_environment.txt
+cd zfin/; /usr/bin/wget --timestamping http://zfin.org/downloads/zfin/pheno_environment_fish.txt
+cd zfin/; /usr/bin/wget --timestamping http://zfin.org/downloads/zfin/stage_ontology.txt
+cd zfin/; /usr/bin/wget --timestamping http://zfin.org/downloads/zfin/mappings.txt
+cd zfin/; /usr/bin/wget --timestamping http://zfin.org/downloads/zfin/genotype_backgrounds.txt
+cd zfin/; /usr/bin/wget --timestamping http://zfin.org/downloads/zfin/genbank.txt
+cd zfin/; /usr/bin/wget --timestamping http://zfin.org/downloads/zfin/uniprot.txt
+cd zfin/; /usr/bin/wget --timestamping http://zfin.org/downloads/zfin/gene.txt
+cd zfin/; /usr/bin/wget --timestamping http://zfin.org/downloads/zfin/wildtypes.txt
+cd zfin/; /usr/bin/wget --timestamping http://zfin.org/downloads/zfin/human_orthos.txt
+cd zfin/; /usr/bin/wget --timestamping http://zfin.org/downloads/zfin/features.txt
+cd zfin/; /usr/bin/wget --timestamping http://zfin.org/downloads/zfin/features-affected-genes.txt
+cd zfin/; /usr/bin/wget --timestamping http://zfin.org/downloads/zfin/gene_marker_relationship.txt
+cd zfin/; /usr/bin/wget --timestamping http://zfin.org/downloads/zfin/CRISPR.txt
+cd zfin/; /usr/bin/wget --timestamping http://zfin.org/downloads/zfin/TALEN.txt
+cd zfin/; /usr/bin/wget --timestamping http://zfin.org/downloads/zfin/pub_to_pubmed_id_translation.txt
+cd zfin/; /usr/bin/wget --timestamping http://zfin.org/downloads/zfin/E_zfin_gene_alias.gff3
+cd zfin/; /usr/bin/wget --timestamping http://zfin.org/downloads/zfin/fish_model_disease.txt
+cd zfin/; /usr/bin/wget --timestamping http://zfin.org/downloads/zfin/fish_components_fish.txt
+cd zfin/; /usr/bin/wget --timestamping http://zfin.org/downloads/zfin/phenoGeneCleanData_fish.txt
+cd zfin/; /usr/bin/wget --timestamping http://purl.obolibrary.org/obo/zp/src/curation/id_map_zfin.tsv ;\
+ln -s id_map_zfin.tsv zp-mapping-2019.txt
+# coriell ensembl eom mgi monarch mychem mychem omim ucscbands
+make[1]: Leaving directory '/home/tomc/Projects/Monarch/DipperCache'
