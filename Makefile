@@ -354,6 +354,8 @@ hgnc/: ; mkdir $@
 hgnc/hgnc_complete_set.txt:
 	cd hgnc/; $(WGET) $(EBIFTP)/$(EBIPTH)/hgnc_complete_set.txt
 
+# Warning: File 'hgnc/hgnc_complete_set.txt' has modification time 18212 s in the future
+
 hgnc_clean:  ;  $(RM) hgnc/*
 ##########################################
 # fragile
@@ -662,8 +664,8 @@ reactome/Ensembl2Reactome.txt:
 reactome/ChEBI2Reactome.txt:
 	cd reactome; $(WGET) $(RCTDL)/ChEBI2Reactome.txt
 
-rectome/gaf-eco-mapping.txt:  eco/gaf-eco-mapping.txt
-	unlink $@; cd reactome; ln -s ../$< $(notdir $@)
+reactome/gaf-eco-mapping.txt:  eco/gaf-eco-mapping.txt
+	cd reactome; unlink $(notdir $@); ln -s ../$< $(notdir $@)
 
 reactome_clean: ; $(RM) rectome/*
 ##########################################
