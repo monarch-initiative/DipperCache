@@ -291,12 +291,11 @@ genereviews/GRtitle_shortname_NBKid.txt:
 genereviews_clean: ;  $(RM) genereviews/*
 
 ##########################################
-GOGA := http://current.geneontology.org/annotations
+GOADL := http://current.geneontology.org
 FTPEBI := ftp://ftp.uniprot.org/pub/databases
 UPCRKB := uniprot/current_release/knowledgebase
 
-GOASPC = dog \
-		fb \
+GOASPC = fb \
 		zfin \
 		mgi \
 		rgd \
@@ -305,6 +304,7 @@ GOASPC = dog \
 		goa_chicken \
 		goa_human \
 		goa_cow \
+		gao_dog \
 		sgd \
 		pombase \
 		dictibase \
@@ -320,7 +320,7 @@ go: eco go/ \
 go/: ; mkdir $@
 
 $(foreach species, $(GOASPC), go/$(species).gaf.gz):
-	cd go/; $(WGET) $(GOGA)/$(notdir $@)
+	cd go/; $(WGET) $(GOADL)/annotations/$(notdir $@)
 
 go/go-refs.json:
 	cd go/; $(WGET) http://current.geneontology.org/metadata/go-refs.json
