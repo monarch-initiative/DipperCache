@@ -689,30 +689,36 @@ sdg/phenotype_data.tab:
 sgd_clean: ; $(RM) sdg/*
 ##########################################
 STRING = https://string-db.org
-STRDL = $(STRING)/download
+# redirects on dl to a static file server
+STRSTA = https://stringdb-static.org
+
+STRDL = $(STRSTA)/download
 STRMAP = $(STRING)/mapping_files/entrez
 
 # not hard coding these would be better ...
 STRVER = 11.0
 STRYR = 2018
 
+SRTPTH = protein.links.detailed.v$(STRVER)
+
 STRTAX = 9606 10090 7955 7227 6239 4932
 STRSPC = celegans fly human mouse yeast zebrafish
 
 string: string/ \
 		string/version \
-		$(foreach txid, $(STRTAX),string/$(txid).protein.links.detailed.v$(STRVER).txt.gz)\
+		$(foreach txid, $(STRTAX), string/$(txid).$(SRTPTH).txt.gz) \
 		$(foreach species, $(STRSPC), string/$(species).entrez_2_string.$(STRYR).tsv.gz)
 
 string/: ; mkdir $@
 
 string/version:
-	cd string ; $(WGET) $(STRING)api/tsv-no-header/version  ; \
+	cd string ; $(WGET) $(STRING)/api/tsv-no-header/version  ; \
 	if [ "$(STRVER)" != "$$(cut -f 1 version)" ] ;then echo "NEW VERSION of STRING!" ; \
 	else  echo "same version of STRING" ; fi
 
-$(foreach txid, $(STRTAX),string/$(txid).protein.links.detailed.v$(STRVER).txt.gz):
-	cd string; $(WGET) $(STRDL)/$(notdir $@)
+$(foreach txid, $(STRTAX), string/$(txid).$(SRTPTH).txt.gz):
+	cd string; $(WGET) $(STRDL)/$(SRTPTH)/$(notdir $@)
+	#cd string; $(WGET) $(STRDL)/$(SRTPTH)/$(subst string/,,$@)
 
 $(foreach species, $(STRSPC), string/$(species).entrez_2_string.$(STRYR).tsv.gz):
 	cd string; $(WGET) $(STRMAP)/$(notdir $@)
