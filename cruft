@@ -34,8 +34,8 @@ cd animalqtldb ; /usr/bin/wget --timestamping https://www.animalgenome.org/QTLdb
 cd animalqtldb ; /usr/bin/wget --timestamping https://www.animalgenome.org/QTLdb/export/KSUI8GFHOT6/rainbow_trout_QTLdata.txt
 
 mkdir biogrid/
-cd biogrid ; /usr/bin/wget --timestamping https://downloads.thebiogrid.org/File/BioGRID/Latest-Release//BIOGRID-ALL-LATEST.mitab.zip
-cd biogrid ; /usr/bin/wget --timestamping https://downloads.thebiogrid.org/File/BioGRID/Latest-Release//BIOGRID-IDENTIFIERS-LATEST.tab.zip
+cd biogrid ; /usr/bin/wget --timestamping https://downloads.thebiogrid.org/Download/BioGRID/Latest-Release/BIOGRID-ALL-LATEST.mitab.zip
+cd biogrid ; /usr/bin/wget --timestamping https://downloads.thebiogrid.org/Download/BioGRID/Latest-Release/BIOGRID-IDENTIFIERS-LATEST.tab.zip
 cd dipper; git pull
 
 mkdir bgee/
