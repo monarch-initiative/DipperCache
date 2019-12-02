@@ -231,16 +231,16 @@ cd string; /usr/bin/wget --timestamping https://string-db.org/mapping_files/entr
 mkdir wormbase/
 cd wormbase/ ; /usr/bin/wget --timestamping ftp://ftp.wormbase.org/pub/wormbase/releases/current-production-release/CHECKSUMS
 unlink wormbase/letter ; cd wormbase/ ; wsnum=$(sed -n '1 s|.*\.\(WS[0-9]\{3\}\)\..*|\1|p' CHECKSUMS); \
-/usr/bin/wget --timestamping ftp://ftp.wormbase.org/pub/wormbase/releases/current-production-release/letter_$wbnum ;\
-ln -s /letter_$wbnum letter
+/usr/bin/wget --timestamping ftp://ftp.wormbase.org/pub/wormbase/releases/current-production-release/letter_$wsnum ;\
+ln -s /letter_$wsnum letter
 #species/c_elegans/PRJNA13758/annotation/c_elegans.PRJNA13758.WS273.geneIDs.txt.gz
 unlink wormbase/c_elegans.PRJNA13758.geneIDs.txt.gz ; cd wormbase/ ; wsnum=$(sed -n '1 s|.*\.\(WS[0-9]\{3\}\)\..*|\1|p' CHECKSUMS) ; \
-/usr/bin/wget --timestamping --force-directories --no-host-directories ftp://ftp.wormbase.org/pub/wormbase/releases/current-production-release/species/c_elegans/PRJNA13758/annotation/c_elegans/PRJNA13758.$wbnum.geneIDs.txt.gz;\
-ln -s pub/wormbase/releases/current-production-release/species/c_elegans/PRJNA13758/annotation/c_elegans/PRJNA13758.$wbnum.geneIDs.txt.gz c_elegans.PRJNA13758.geneIDs.txt.gz
+/usr/bin/wget --timestamping --force-directories --no-host-directories ftp://ftp.wormbase.org/pub/wormbase/releases/current-production-release/species/c_elegans/PRJNA13758/annotation/c_elegans/PRJNA13758.$wsnum.geneIDs.txt.gz;\
+ln -s pub/wormbase/releases/current-production-release/species/c_elegans/PRJNA13758/annotation/c_elegans/PRJNA13758.$wsnum.geneIDs.txt.gz c_elegans.PRJNA13758.geneIDs.txt.gz
 # species/c_elegans/PRJNA13758/c_elegans.PRJNA13758.WS273.annotations.gff3.gz
 unlink wormbase/c_elegans.PRJNA13758.annotations.gff3.gz ; cd wormbase/ ; wsnum=$(sed -n '1 s|.*\.\(WS[0-9]\{3\}\)\..*|\1|p' CHECKSUMS) ; \
-/usr/bin/wget --timestamping --force-directories --no-host-directories ftp://ftp.wormbase.org/pub/wormbase/releases/current-production-release/species/c_elegans/PRJNA13758/c_elegans/PRJNA13758.$wbnum.annotations.gff3.gz;\
-ln -s pub/wormbase/releases/current-production-release/species/c_elegans/PRJNA13758/c_elegans/PRJNA13758.$wbnum.annotations.gff3.gz c_elegans.PRJNA13758.annotations.gff3.gz
+/usr/bin/wget --timestamping --force-directories --no-host-directories ftp://ftp.wormbase.org/pub/wormbase/releases/current-production-release/species/c_elegans/PRJNA13758/c_elegans/PRJNA13758.$wsnum.annotations.gff3.gz;\
+ln -s pub/wormbase/releases/current-production-release/species/c_elegans/PRJNA13758/c_elegans/PRJNA13758.$wsnum.annotations.gff3.gz c_elegans.PRJNA13758.annotations.gff3.gz
 # species/c_elegans/PRJNA13758/annotation/c_elegans.PRJNA13758.WS273.xrefs.txt.gz
 unlink wormbase/c_elegans.PRJNA13758.xrefs.txt.gz ; cd wormbase/ ; wsnum=$(sed -n '1 s|.*\.\(WS[0-9]\{3\}\)\..*|\1|p' CHECKSUMS) ; \
 /usr/bin/wget --timestamping --force-directories --no-host-directories ftp://ftp.wormbase.org/pub/wormbase/releases/current-production-release/species/c_elegans/PRJNA13758/annotation/c_elegans/PRJNA13758.$wsnum.xrefs.txt.gz;\
