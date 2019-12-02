@@ -1,4 +1,4 @@
-# should run as
+# could run as
 # make  --no-builtin-variables --no-builtin-rules
 # since this is not performing any traditional build tasks
 
@@ -9,7 +9,7 @@ RM := rm --force --recursive --verbose
 
 .PHONY: cruft recent clean dipper/scripts
 
-all:  animalqtldb bgee clinvar ctd flybase genereviews go gwascatalog \
+all:  animalqtldb biogrid bgee clinvar ctd flybase genereviews go gwascatalog \
 	hgnc hpoa impc kegg  mmrrc  monochrom mpd ncbigene omia  orphanet \
 	panther reactome rgd sgd string  wormbase zfin zfinslim
 
@@ -861,7 +861,7 @@ zfinslim_clean: ; $(RM) zfin/id_map_zfin.tsv zfin/phenoGeneCleanData_fish.txt
 ##########################################
 
 
-clean: animalqtldb_clean bgee_clean clinvar_clean  ctd_clean eco_clean\
+clean: animalqtldb_clean biogrid_clean bgee_clean clinvar_clean  ctd_clean eco_clean\
 	flybase_clean genereviews_clean go_clean gwascatalog_clean hgnc_clean \
 	hpoa_clean impc_clean kegg_clean  mmrrc_clean  monochrom_clean \
 	mpd_clean ncbigene_clean omia_clean  orphanet_clean panther_clean reactome_clean \
