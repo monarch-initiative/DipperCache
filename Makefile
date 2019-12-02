@@ -808,7 +808,7 @@ wormbase_clean: ;  $(RM) wormbase/*
 ##########################################
 ZFDL = https://zfin.org/downloads
 # not        https://purl.obolibrary.org/obo/zp/src/curation
-ZPCURATION = http://purl.obolibrary.org/obo/zp/id_map_zfin.tsv
+ZPCURATION = http://purl.obolibrary.org/obo/zp
 ZFFILES = \
 	genotype_features.txt \
 	phenotype_fish.txt \
