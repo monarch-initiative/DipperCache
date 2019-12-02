@@ -813,7 +813,6 @@ ZFFILES = \
 	phenotype_fish.txt \
 	zfinpubs.txt \
 	Morpholinos.txt \
-	pheno_environment.txt \
 	pheno_environment_fish.txt \
 	stage_ontology.txt \
 	mappings.txt \
@@ -821,7 +820,6 @@ ZFFILES = \
 	genbank.txt \
 	uniprot.txt \
 	gene.txt \
-	wildtypes.txt \
 	human_orthos.txt \
 	features.txt \
 	features-affected-genes.txt \
