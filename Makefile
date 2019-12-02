@@ -806,8 +806,9 @@ wormbase/pub_xrefs.txt:
 
 wormbase_clean: ;  $(RM) wormbase/*
 ##########################################
-ZFDL = http://zfin.org/downloads
-ZPCURATION = http://purl.obolibrary.org/obo/zp/src/curation
+ZFDL = https://zfin.org/downloads
+# not        https://purl.obolibrary.org/obo/zp/src/curation
+ZPCURATION = http://purl.obolibrary.org/obo/zp/id_map_zfin.tsv
 ZFFILES = \
 	genotype_features.txt \
 	phenotype_fish.txt \
@@ -832,30 +833,30 @@ ZFFILES = \
 	fish_components_fish.txt \
 	phenoGeneCleanData_fish.txt
 
-zfin: zfin/ $(addprefix zfin/, $(ZFFILES)) zfin/zp-mapping-2019.txt
+zfin: zfin/ \
+		$(addprefix zfin/, $(ZFFILES)) \
+		zfin/id_map_zfin.tsv
 
 zfin/: ; mkdir $@
 
 $(addprefix zfin/, $(ZFFILES)):
 	cd zfin/; $(WGET) $(ZFDL)/$(notdir $@)
 
-# it seems like it would be good to drop the date out of the file name
-zfin/zp-mapping-2019.txt:
-	cd zfin/; $(WGET) $(ZPCURATION)/id_map_zfin.tsv ;\
-	ln -s id_map_zfin.tsv zp-mapping-2019.txt
+zfin/id_map_zfin.tsv:
+	cd zfin/; $(WGET) $(ZPCURATION)/$(notdir $@)
 
 zfin_clean: ;  $(RM) zfin/*
 ##########################################
 zfinslim:  zfin \
 		zfin/phenoGeneCleanData_fish.txt \
-		zfin/zp-mapping-2019.txt
+		zfin/id_map_zfin.tsv
 
 # zfinslim/: ; mkdir $@  # just stick it in zdin
 
 zfinslim/phenoGeneCleanData_fish.txt: zfin/phenoGeneCleanData_fish.txt
-zfinslim/zp-mapping-2019.txt: zfin/zp-mapping-2019.txt
+zfinslim/zp-mapping-2019.txt: zfin/id_map_zfin.tsv
 
-zfinslim_clean: ; $(RM) zfin/zp-mapping-2019.txt zfin/phenoGeneCleanData_fish.txt
+zfinslim_clean: ; $(RM) zfin/id_map_zfin.tsv zfin/phenoGeneCleanData_fish.txt
 ##########################################
 
 
