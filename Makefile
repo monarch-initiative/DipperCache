@@ -7,7 +7,7 @@ WGET = /usr/bin/wget --timestamping
 FULLPTH := --force-directories --no-host-directories
 RM := rm --force --recursive --verbose
 
-.PHONY: cruft recent clean
+.PHONY: cruft recent clean dipper/scripts
 
 all:  animalqtldb bgee clinvar ctd flybase genereviews go gwascatalog \
 	hgnc hpoa impc kegg  mmrrc  monochrom mpd ncbigene omia  orphanet \
@@ -57,18 +57,18 @@ animalqtldb/: ; mkdir $@
 
 # AQTL_TMP_FILES
 $(foreach spc, $(AQTLTMP), animalqtldb/$(spc)):
-	$(CDAQL) $(WGET) $(AQTLDL)/tmp/$@
+	$(CDAQL) $(WGET) $(AQTLDL)/tmp/$(notdir $@)
 
 # AQTL_VER_FILES
 $(foreach spc, $(AQTLVER), animalqtldb/$(spc)):
-	$(CDAQL) $(WGET) $(AQTLDL)/export/KSUI8GFHOT6/$@
+	$(CDAQL) $(WGET) $(AQTLDL)/export/KSUI8GFHOT6/$(notdir $@)
 
 # GENEINFO_FILES
 # these are all created under ncbigene first then linked here
 # so the distinction of the locally generated ones becomes moot
 
 $(foreach spc, $(AQTLGI), animalqtldb/$(spc)): $(foreach spc, $(AQTLGI),ncbigene/$(spc))
-	unlink $@; $(CDAQL) ln -s ../ncbigene/$@ $@
+	unlink $@; $(CDAQL) ln -s ../ncbigene/$(notdir $@) $(notdir $@)
 
 animalqtldb_clean: ;  $(RM) animalqtldb/*
 ##########################################
@@ -149,9 +149,11 @@ ctd/CTD_chemicals_diseases.tsv.gz:
 ctd_clean: ; $(RM) ctd/*
 ##########################################
 # included here for dipper/scripts/
-# TODO need update mechanism
-dipper: dipper/
+dipper: dipper/ dipper/scripts
 dipper/: ; git clone https://github.com/monarch-initiative/dipper.git
+
+dipper/scripts:
+	cd dipper; git pull
 
 dipper_clean: ; $(RM) dipper
 ##########################################
@@ -232,7 +234,8 @@ $(ENSRDF_TARGET):
 #eom: eom/ ; mkdir $@
 # a dead end fron the 'disco' days?
 ##########################################
-FLYFTP = ftp://ftp.flybase.net/releases/current/precomputed_files
+FLYFTP = ftp://ftp.flybase.net
+FLYPRE = releases/current/precomputed_files
 CDFLY = cd flybase/ ;
 
 flybase: flybase/ \
@@ -245,31 +248,31 @@ flybase: flybase/ \
 flybase/: ; mkdir $@
 
 flybase/md5sum.txt:
-	$(CDFLY) $(WGET) $(FLYFTP)/md5sum.txt
+	$(CDFLY) $(WGET) $(FLYFTP)/$(FLYPRE)/md5sum.txt
 
 flybase/disease_model_annotations.tsv.gz: flybase/md5sum.txt
 	$(CDFLY)  \
 	fname=$$(fgrep "/human_disease/disease_model_annotations" md5sum.txt| cut -f2- -d'/') ; \
-	$(WGET) $(FLYFTP)/$$fname ; \
+	$(WGET) $(FULLPTH) $(FLYFTP)/$(FLYPRE)/$$fname ; \
 	unlink disease_model_annotations.tsv.gz; \
-	ln -s $$fname  disease_model_annotations.tsv.gz
+	ln -s $(FLYPRE)/$$fname  disease_model_annotations.tsv.gz
 
 flybase/species.ab.gz: flybase/md5sum.txt
-	$(CDFLY) $(WGET) $(FLYFTP)/species/species.ab.gz
+	$(CDFLY) $(WGET) $(FLYFTP)/$(FLYPRE)/species/species.ab.gz
 
 flybase/fbal_to_fbgn_fb.tsv.gz: flybase/md5sum.txt
 	$(CDFLY)  \
 	fname=$$(fgrep "alleles/fbal_to_fbgn_fb" md5sum.txt| cut -f2- -d'/') ; \
-	$(WGET) $(FLYFTP)/$$fname ; \
+	$(WGET) $(FLYFTP)/$(FLYPRE)/$$fname ; \
 	unlink fbal_to_fbgn_fb.tsv.gz ; \
-	ln -s $$fname fbal_to_fbgn_fb.tsv.gz
+	ln -s $(FLYPRE)/$$fname fbal_to_fbgn_fb.tsv.gz
 
 flybase/fbrf_pmid_pmcid_doi_fb.tsv.gz: flybase/md5sum.txt
 	$(CDFLY)
 	fname=$$(fgrep "references/fbrf_pmid_pmcid_doi_fb" md5sum.txt| cut -f2- -d'/') ; \
-	$(WGET) $(FLYFTP)/$$fname ; \
+	$(WGET) $(FLYFTP)/$(FLYPRE)/$$fname ; \
 	unlink fbrf_pmid_pmcid_doi_fb.tsv.gz ; \
-	ln -s $$fname fbrf_pmid_pmcid_doi_fb.tsv.gz
+	ln -s $(FLYPRE)/$$fname fbrf_pmid_pmcid_doi_fb.tsv.gz
 
 flybase_clean: ;  $(RM) flybase/*
 
@@ -734,9 +737,9 @@ string_clean: ;  $(RM) string/*
 #udp: udp/ ; mkdir $@
 #  private access
 ##########################################
-WBREL = ftp.wormbase.org/pub/wormbase/releases
-#WBDEV = $(WBREL)/current-development-release  unused?
-WBPROD = $(WBREL)/current-production-release
+WBFTP = ftp://ftp.wormbase.org
+#WBDEV = /pub/wormbase/releases//current-development-release  unused?
+WBPROD = pub/wormbase/releases/current-production-release
 WBSPC = c_elegans/PRJNA13758
 CDWB = cd wormbase/ ;
 WSNUM = sed -n '1 s|.*\.\(WS[0-9]\{3\}\)\..*|\1|p' CHECKSUMS
@@ -753,37 +756,37 @@ wormbase: wormbase/ \
 
 wormbase/: ; mkdir $@
 wormbase/CHECKSUMS:
-	$(CDWB) $(WGET) ftp://$(WBPROD)/$(notdir $@)
+	$(CDWB) $(WGET) $(WBFTP)/$(WBPROD)/$(notdir $@)
 wormbase/letter:  wormbase/CHECKSUMS
 	unlink $@ ; $(CDWB) wsnum=$$($(WSNUM)); \
-	$(WGET) ftp://$(WBPROD)/letter_$$wbnum ;\
+	$(WGET) $(WBFTP)/$(WBPROD)/letter_$$wbnum ;\
 	ln -s /letter_$$wbnum $(notdir $@)
 wormbase/c_elegans.PRJNA13758.geneIDs.txt.gz:  wormbase/CHECKSUMS
 	#species/c_elegans/PRJNA13758/annotation/c_elegans.PRJNA13758.WS273.geneIDs.txt.gz
 	unlink $@ ; $(CDWB) wsnum=$$($(WSNUM)) ; \
-	$(WGET) $(FULLPTH) ftp://$(WBPROD)/species/$(WBSPC)/annotation/$(WBSPC).$$wbnum.geneIDs.txt.gz;\
+	$(WGET) $(FULLPTH) $(WBFTP)/$(WBPROD)/species/$(WBSPC)/annotation/$(WBSPC).$$wbnum.geneIDs.txt.gz;\
 	ln -s $(WBPROD)/species/$(WBSPC)/annotation/$(WBSPC).$$wbnum.geneIDs.txt.gz $(notdir $@)
 wormbase/c_elegans.PRJNA13758.annotations.gff3.gz: wormbase/CHECKSUMS
 	# species/c_elegans/PRJNA13758/c_elegans.PRJNA13758.WS273.annotations.gff3.gz
 	unlink $@ ; $(CDWB) wsnum=$$($(WSNUM)) ; \
-	$(WGET) $(FULLPTH) ftp://$(WBPROD)/species/$(WBSPC)/$(WBSPC).$$wbnum.annotations.gff3.gz;\
+	$(WGET) $(FULLPTH) $(WBFTP)/$(WBPROD)/species/$(WBSPC)/$(WBSPC).$$wbnum.annotations.gff3.gz;\
 	ln -s $(WBPROD)/species/$(WBSPC)/$(WBSPC).$$wbnum.annotations.gff3.gz $(notdir $@)
 wormbase/c_elegans.PRJNA13758.xrefs.txt.gz: wormbase/CHECKSUMS
 	# species/c_elegans/PRJNA13758/annotation/c_elegans.PRJNA13758.WS273.xrefs.txt.gz
 	unlink $@ ; $(CDWB) wsnum=$$($(WSNUM)) ; \
-	$(WGET) $(FULLPTH) ftp://$(WBPROD)/species/$(WBSPC)/annotation/$(WBSPC).$$wsnum.xrefs.txt.gz;\
+	$(WGET) $(FULLPTH) $(WBFTP)/$(WBPROD)/species/$(WBSPC)/annotation/$(WBSPC).$$wsnum.xrefs.txt.gz;\
 	ln -s $(WBPROD)/species/$(WBSPC)/annotation/$(WBSPC).$$wsnum.xrefs.txt.gz $(notdir $@)
 wormbase/phenotype_association.wb: wormbase/CHECKSUMS
 	unlink $@ ; $(CDWB) wsnum=$$($(WSNUM)) ; \
-	$(WGET) $(FULLPTH) ftp://$(WBPROD)/ONTOLOGY/phenotype_association.$$wsnum.wb;\
+	$(WGET) $(FULLPTH) $(WBFTP)/$(WBPROD)/ONTOLOGY/phenotype_association.$$wsnum.wb;\
 	ln -s $(WBPROD)/ONTOLOGY/phenotype_association.$$wsnum.wb $(notdir $@)
 wormbase/rnai_phenotypes.wb: wormbase/CHECKSUMS
 	unlink $@ ; $(CDWB) wsnum=$$($(WSNUM)) ; \
-	$(WGET) $(FULLPTH) ftp://$(WBPROD)/ONTOLOGY/rnai_phenotypes.$$wsnum.wb;\
+	$(WGET) $(FULLPTH) $(WBFTP)/$(WBPROD)/ONTOLOGY/rnai_phenotypes.$$wsnum.wb;\
 	ln -s $(WBPROD)/ONTOLOGY/rnai_phenotypes.$$wsnum.wb $(notdir $@)
 wormbase/disease_association.wb: wormbase/CHECKSUMS
 	unlink $@ ; $(CDWB) wsnum=$$($(WSNUM)) ; \
-	$(WGET $(FULLPTH) ftp://$(WBPROD)/ONTOLOGY/rnai_phenotypes.$$wsnum.wb;\
+	$(WGET $(FULLPTH) $(WBFTP)/$(WBPROD)/ONTOLOGY/rnai_phenotypes.$$wsnum.wb;\
 	ln -s $(WBPROD)/ONTOLOGY/rnai_phenotypes.$$wsnum.wb $(notdir $@)
 # api call so no date or file version
 wormbase/pub_xrefs.txt:
