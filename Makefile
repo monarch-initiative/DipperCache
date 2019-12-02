@@ -95,9 +95,7 @@ bgee/sql_lite_dump.tar.gz:
 
 bgee_clean: ; $(RM) bgee/*
 ########################################
-	#https://downloads.thebiogrid.org/Download/BioGRID/Latest-Release  old?
-	#https://downloads.thebiogrid.org/BioGRID/Latest-Release/
-BGDL = https://downloads.thebiogrid.org/File/BioGRID/Latest-Release/
+BGDL = https://downloads.thebiogrid.org/Download/BioGRID/Latest-Release
 
 CDBOG = cd biogrid ;
 biogrid: biogrid/ \
