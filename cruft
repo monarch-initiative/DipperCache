@@ -15,23 +15,23 @@ cd ncbigene/ ; /usr/bin/wget --timestamping ftp://ftp.ncbi.nih.gov/gene/DATA/gen
 /bin/zgrep "^8022[^0-9]" gene_info.gz | /bin/gzip > Oncorhynchus_mykiss.gene_info.gz
 
 mkdir animalqtldb/
-unlink animalqtldb/gene_info.gz;  ln -s ../ncbigene/gene_info.gz gene_info.gz
-unlink animalqtldb/Bos_taurus.gene_info.gz;  ln -s ../ncbigene/Bos_taurus.gene_info.gz Bos_taurus.gene_info.gz
-unlink animalqtldb/Sus_scrofa.gene_info.gz;  ln -s ../ncbigene/Sus_scrofa.gene_info.gz Sus_scrofa.gene_info.gz
-unlink animalqtldb/Gallus_gallus.gene_info.gz;  ln -s ../ncbigene/Gallus_gallus.gene_info.gz Gallus_gallus.gene_info.gz
-unlink animalqtldb/Ovis_aries.gene_info.gz;  ln -s ../ncbigene/Ovis_aries.gene_info.gz Ovis_aries.gene_info.gz
-unlink animalqtldb/Oncorhynchus_mykiss.gene_info.gz;  ln -s ../ncbigene/Oncorhynchus_mykiss.gene_info.gz Oncorhynchus_mykiss.gene_info.gz
-unlink animalqtldb/Equus_caballus.gene_info.gz;  ln -s ../ncbigene/Equus_caballus.gene_info.gz Equus_caballus.gene_info.gz
-/usr/bin/wget --timestamping https://www.animalgenome.org/QTLdb/tmp/QTL_Btau_4.6.gff.txt.gz
-/usr/bin/wget --timestamping https://www.animalgenome.org/QTLdb/tmp/QTL_EquCab2.0.gff.txt.gz
-/usr/bin/wget --timestamping https://www.animalgenome.org/QTLdb/tmp/QTL_GG_4.0.gff.txt.gz
-/usr/bin/wget --timestamping https://www.animalgenome.org/QTLdb/tmp/QTL_OAR_3.1.gff.txt.gz
-/usr/bin/wget --timestamping https://www.animalgenome.org/QTLdb/export/KSUI8GFHOT6/pig_QTLdata.txt
-/usr/bin/wget --timestamping https://www.animalgenome.org/QTLdb/export/KSUI8GFHOT6/sheep_QTLdata.txt
-/usr/bin/wget --timestamping https://www.animalgenome.org/QTLdb/export/KSUI8GFHOT6/cattle_QTLdata.txt
-/usr/bin/wget --timestamping https://www.animalgenome.org/QTLdb/export/KSUI8GFHOT6/chicken_QTLdata.txt
-/usr/bin/wget --timestamping https://www.animalgenome.org/QTLdb/export/KSUI8GFHOT6/horse_QTLdata.txt
-/usr/bin/wget --timestamping https://www.animalgenome.org/QTLdb/export/KSUI8GFHOT6/rainbow_trout_QTLdata.txt
+unlink animalqtldb/gene_info.gz; cd animalqtldb ; ln -s ../ncbigene/gene_info.gz gene_info.gz
+unlink animalqtldb/Bos_taurus.gene_info.gz; cd animalqtldb ; ln -s ../ncbigene/Bos_taurus.gene_info.gz Bos_taurus.gene_info.gz
+unlink animalqtldb/Sus_scrofa.gene_info.gz; cd animalqtldb ; ln -s ../ncbigene/Sus_scrofa.gene_info.gz Sus_scrofa.gene_info.gz
+unlink animalqtldb/Gallus_gallus.gene_info.gz; cd animalqtldb ; ln -s ../ncbigene/Gallus_gallus.gene_info.gz Gallus_gallus.gene_info.gz
+unlink animalqtldb/Ovis_aries.gene_info.gz; cd animalqtldb ; ln -s ../ncbigene/Ovis_aries.gene_info.gz Ovis_aries.gene_info.gz
+unlink animalqtldb/Oncorhynchus_mykiss.gene_info.gz; cd animalqtldb ; ln -s ../ncbigene/Oncorhynchus_mykiss.gene_info.gz Oncorhynchus_mykiss.gene_info.gz
+unlink animalqtldb/Equus_caballus.gene_info.gz; cd animalqtldb ; ln -s ../ncbigene/Equus_caballus.gene_info.gz Equus_caballus.gene_info.gz
+cd animalqtldb ; /usr/bin/wget --timestamping https://www.animalgenome.org/QTLdb/tmp/QTL_Btau_4.6.gff.txt.gz
+cd animalqtldb ; /usr/bin/wget --timestamping https://www.animalgenome.org/QTLdb/tmp/QTL_EquCab2.0.gff.txt.gz
+cd animalqtldb ; /usr/bin/wget --timestamping https://www.animalgenome.org/QTLdb/tmp/QTL_GG_4.0.gff.txt.gz
+cd animalqtldb ; /usr/bin/wget --timestamping https://www.animalgenome.org/QTLdb/tmp/QTL_OAR_3.1.gff.txt.gz
+cd animalqtldb ; /usr/bin/wget --timestamping https://www.animalgenome.org/QTLdb/export/KSUI8GFHOT6/pig_QTLdata.txt
+cd animalqtldb ; /usr/bin/wget --timestamping https://www.animalgenome.org/QTLdb/export/KSUI8GFHOT6/sheep_QTLdata.txt
+cd animalqtldb ; /usr/bin/wget --timestamping https://www.animalgenome.org/QTLdb/export/KSUI8GFHOT6/cattle_QTLdata.txt
+cd animalqtldb ; /usr/bin/wget --timestamping https://www.animalgenome.org/QTLdb/export/KSUI8GFHOT6/chicken_QTLdata.txt
+cd animalqtldb ; /usr/bin/wget --timestamping https://www.animalgenome.org/QTLdb/export/KSUI8GFHOT6/horse_QTLdata.txt
+cd animalqtldb ; /usr/bin/wget --timestamping https://www.animalgenome.org/QTLdb/export/KSUI8GFHOT6/rainbow_trout_QTLdata.txt
 cd dipper; git pull
 
 mkdir bgee/
