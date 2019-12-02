@@ -7,12 +7,12 @@ cd ncbigene/ ; /usr/bin/wget --timestamping ftp://ftp.ncbi.nih.gov/gene/DATA/gen
 cd ncbigene/ ; /usr/bin/wget --timestamping ftp://ftp.ncbi.nih.gov/gene/DATA/gene_history.gz
 cd ncbigene/ ; /usr/bin/wget --timestamping ftp://ftp.ncbi.nih.gov/gene/DATA/gene2pubmed.gz
 cd ncbigene/ ; /usr/bin/wget --timestamping ftp://ftp.ncbi.nih.gov/gene/DATA/gene_group.gz
-/usr/bin/wget --timestamping ftp://ftp.ncbi.nih.gov/gene/DATA/GENE_INFO/Non-mammalian_vertebrates/Gallus_gallus.gene_info.gz
-/usr/bin/wget --timestamping ftp://ftp.ncbi.nih.gov/gene/DATA/GENE_INFO/Mammalia/Sus_scrofa.gene_info.gz
-/usr/bin/wget --timestamping ftp://ftp.ncbi.nih.gov/gene/DATA/GENE_INFO/Mammalia/Bos_taurus.gene_info.gz
-/bin/zgrep "^9796[^0-9]" gene_info.gz | /bin/gzip > Equus_caballus.gene_info.gz
-/bin/zgrep "^9940[^0-9]" gene_info.gz | /bin/gzip > Ovis_aries.gene_info.gz
-/bin/zgrep "^8022[^0-9]" gene_info.gz | /bin/gzip > Oncorhynchus_mykiss.gene_info.gz
+cd ncbigene/ ; /usr/bin/wget --timestamping ftp://ftp.ncbi.nih.gov/gene/DATA/GENE_INFO/Non-mammalian_vertebrates/Gallus_gallus.gene_info.gz
+cd ncbigene/ ; /usr/bin/wget --timestamping ftp://ftp.ncbi.nih.gov/gene/DATA/GENE_INFO/Mammalia/Sus_scrofa.gene_info.gz
+cd ncbigene/ ; /usr/bin/wget --timestamping ftp://ftp.ncbi.nih.gov/gene/DATA/GENE_INFO/Mammalia/Bos_taurus.gene_info.gz
+cd ncbigene/ ; /bin/zgrep "^9796[^0-9]" gene_info.gz | /bin/gzip > Equus_caballus.gene_info.gz
+cd ncbigene/ ; /bin/zgrep "^9940[^0-9]" gene_info.gz | /bin/gzip > Ovis_aries.gene_info.gz
+cd ncbigene/ ; /bin/zgrep "^8022[^0-9]" gene_info.gz | /bin/gzip > Oncorhynchus_mykiss.gene_info.gz
 
 mkdir animalqtldb/
 unlink animalqtldb/gene_info.gz; cd animalqtldb ; ln -s ../ncbigene/gene_info.gz gene_info.gz
@@ -58,12 +58,12 @@ ln -s releases/current/precomputed_files/$fname  disease_model_annotations.tsv.g
 cd flybase/ ; /usr/bin/wget --timestamping ftp://ftp.flybase.net/releases/current/precomputed_files/species/species.ab.gz
 cd flybase/ ;  \
 fname=$(fgrep "alleles/fbal_to_fbgn_fb" md5sum.txt| cut -f2- -d'/') ; \
-/usr/bin/wget --timestamping ftp://ftp.flybase.net/releases/current/precomputed_files/$fname ; \
+/usr/bin/wget --timestamping --force-directories --no-host-directories ftp://ftp.flybase.net/releases/current/precomputed_files/$fname ; \
 unlink fbal_to_fbgn_fb.tsv.gz ; \
 ln -s releases/current/precomputed_files/$fname fbal_to_fbgn_fb.tsv.gz
 cd flybase/ ;
 fname=$(fgrep "references/fbrf_pmid_pmcid_doi_fb" md5sum.txt| cut -f2- -d'/') ; \
-/usr/bin/wget --timestamping ftp://ftp.flybase.net/releases/current/precomputed_files/$fname ; \
+/usr/bin/wget --timestamping --force-directories --no-host-directories ftp://ftp.flybase.net/releases/current/precomputed_files/$fname ; \
 unlink fbrf_pmid_pmcid_doi_fb.tsv.gz ; \
 ln -s releases/current/precomputed_files/$fname fbrf_pmid_pmcid_doi_fb.tsv.gz
 
