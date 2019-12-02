@@ -231,8 +231,8 @@ cd string; /usr/bin/wget --timestamping https://string-db.org/mapping_files/entr
 mkdir wormbase/
 cd wormbase/ ; /usr/bin/wget --timestamping ftp://ftp.wormbase.org/pub/wormbase/releases/current-production-release/CHECKSUMS
 unlink wormbase/letter ; cd wormbase/ ; wsnum=$(sed -n '1 s|.*\.\(WS[0-9]\{3\}\)\..*|\1|p' CHECKSUMS); \
-/usr/bin/wget --timestamping ftp://ftp.wormbase.org/pub/wormbase/releases/current-production-release/letter_$wsnum ;\
-ln -s /letter_$wsnum letter
+/usr/bin/wget --timestamping ftp://ftp.wormbase.org/pub/wormbase/releases/current-production-release/letter.$wsnum ;\
+ln -s /letter.$wsnum letter
 #species/c_elegans/PRJNA13758/annotation/c_elegans.PRJNA13758.WS273.geneIDs.txt.gz
 unlink wormbase/c_elegans.PRJNA13758.geneIDs.txt.gz ; cd wormbase/ ; wsnum=$(sed -n '1 s|.*\.\(WS[0-9]\{3\}\)\..*|\1|p' CHECKSUMS) ; \
 /usr/bin/wget --timestamping --force-directories --no-host-directories ftp://ftp.wormbase.org/pub/wormbase/releases/current-production-release/species/c_elegans/PRJNA13758/annotation/c_elegans/PRJNA13758.$wsnum.geneIDs.txt.gz;\
@@ -252,7 +252,8 @@ unlink wormbase/rnai_phenotypes.wb ; cd wormbase/ ; wsnum=$(sed -n '1 s|.*\.\(WS
 /usr/bin/wget --timestamping --force-directories --no-host-directories ftp://ftp.wormbase.org/pub/wormbase/releases/current-production-release/ONTOLOGY/rnai_phenotypes.$wsnum.wb;\
 ln -s pub/wormbase/releases/current-production-release/ONTOLOGY/rnai_phenotypes.$wsnum.wb rnai_phenotypes.wb
 unlink wormbase/disease_association.wb ; cd wormbase/ ; wsnum=$(sed -n '1 s|.*\.\(WS[0-9]\{3\}\)\..*|\1|p' CHECKSUMS) ; \
-
+/usr/bin/wget --timestamping --force-directories --no-host-directories ftp://ftp.wormbase.org/pub/wormbase/releases/current-production-release/ONTOLOGY/rnai_phenotypes.$wsnum.wb;\
+ln -s pub/wormbase/releases/current-production-release/ONTOLOGY/rnai_phenotypes.$wsnum.wb disease_association.wb
 cd wormbase/ ; /usr/bin/wget --timestamping -O pub_xrefs.txt \
 http://tazendra.caltech.edu/~azurebrd/cgi-bin/forms/generic.cgi?action=WpaXref
 
