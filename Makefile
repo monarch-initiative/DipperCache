@@ -767,11 +767,10 @@ wormbase: wormbase/ \
 wormbase/: ; mkdir $@
 wormbase/CHECKSUMS:
 	$(CDWB) $(WGET) $(WBFTP)/$(WBPROD)/$(notdir $@)
-wormbase/letter:  wormbase/CHECKSUMS
+wormbase/letter: wormbase/CHECKSUMS
 	unlink $@ ; $(CDWB) wsnum=$$($(WSNUM)); \
-	$(WGET) $(WBFTP)/$(WBPROD)/letter_$$wsnum ;\
-	ln -s /letter_$$wsnum $(notdir $@)
-
+	$(WGET) $(WBFTP)/$(WBPROD)/letter.$$wsnum ;\
+	ln -s /letter.$$wsnum $(notdir $@)
 wormbase/c_elegans.PRJNA13758.geneIDs.txt.gz:  wormbase/CHECKSUMS
 	#species/c_elegans/PRJNA13758/annotation/c_elegans.PRJNA13758.WS273.geneIDs.txt.gz
 	unlink $@ ; $(CDWB) wsnum=$$($(WSNUM)) ; \
@@ -797,7 +796,7 @@ wormbase/rnai_phenotypes.wb: wormbase/CHECKSUMS
 	ln -s $(WBPROD)/ONTOLOGY/rnai_phenotypes.$$wsnum.wb $(notdir $@)
 wormbase/disease_association.wb: wormbase/CHECKSUMS
 	unlink $@ ; $(CDWB) wsnum=$$($(WSNUM)) ; \
-	$(WGET $(FULLPTH) $(WBFTP)/$(WBPROD)/ONTOLOGY/rnai_phenotypes.$$wsnum.wb;\
+	$(WGET) $(FULLPTH) $(WBFTP)/$(WBPROD)/ONTOLOGY/rnai_phenotypes.$$wsnum.wb;\
 	ln -s $(WBPROD)/ONTOLOGY/rnai_phenotypes.$$wsnum.wb $(notdir $@)
 # api call so no date or file version
 wormbase/pub_xrefs.txt:
