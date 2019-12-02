@@ -255,29 +255,28 @@ cd wormbase/ ; /usr/bin/wget --timestamping -O pub_xrefs.txt \
 http://tazendra.caltech.edu/~azurebrd/cgi-bin/forms/generic.cgi?action=WpaXref
 
 mkdir zfin/
-cd zfin/; /usr/bin/wget --timestamping http://zfin.org/downloads/genotype_features.txt
-cd zfin/; /usr/bin/wget --timestamping http://zfin.org/downloads/phenotype_fish.txt
-cd zfin/; /usr/bin/wget --timestamping http://zfin.org/downloads/zfinpubs.txt
-cd zfin/; /usr/bin/wget --timestamping http://zfin.org/downloads/Morpholinos.txt
-cd zfin/; /usr/bin/wget --timestamping http://zfin.org/downloads/pheno_environment_fish.txt
-cd zfin/; /usr/bin/wget --timestamping http://zfin.org/downloads/stage_ontology.txt
-cd zfin/; /usr/bin/wget --timestamping http://zfin.org/downloads/mappings.txt
-cd zfin/; /usr/bin/wget --timestamping http://zfin.org/downloads/genotype_backgrounds.txt
-cd zfin/; /usr/bin/wget --timestamping http://zfin.org/downloads/genbank.txt
-cd zfin/; /usr/bin/wget --timestamping http://zfin.org/downloads/uniprot.txt
-cd zfin/; /usr/bin/wget --timestamping http://zfin.org/downloads/gene.txt
-cd zfin/; /usr/bin/wget --timestamping http://zfin.org/downloads/human_orthos.txt
-cd zfin/; /usr/bin/wget --timestamping http://zfin.org/downloads/features.txt
-cd zfin/; /usr/bin/wget --timestamping http://zfin.org/downloads/features-affected-genes.txt
-cd zfin/; /usr/bin/wget --timestamping http://zfin.org/downloads/gene_marker_relationship.txt
-cd zfin/; /usr/bin/wget --timestamping http://zfin.org/downloads/CRISPR.txt
-cd zfin/; /usr/bin/wget --timestamping http://zfin.org/downloads/TALEN.txt
-cd zfin/; /usr/bin/wget --timestamping http://zfin.org/downloads/pub_to_pubmed_id_translation.txt
-cd zfin/; /usr/bin/wget --timestamping http://zfin.org/downloads/E_zfin_gene_alias.gff3
-cd zfin/; /usr/bin/wget --timestamping http://zfin.org/downloads/fish_model_disease.txt
-cd zfin/; /usr/bin/wget --timestamping http://zfin.org/downloads/fish_components_fish.txt
-cd zfin/; /usr/bin/wget --timestamping http://zfin.org/downloads/phenoGeneCleanData_fish.txt
-cd zfin/; /usr/bin/wget --timestamping http://purl.obolibrary.org/obo/zp/src/curation/id_map_zfin.tsv ;\
-ln -s id_map_zfin.tsv zp-mapping-2019.txt
+cd zfin/; /usr/bin/wget --timestamping https://zfin.org/downloads/genotype_features.txt
+cd zfin/; /usr/bin/wget --timestamping https://zfin.org/downloads/phenotype_fish.txt
+cd zfin/; /usr/bin/wget --timestamping https://zfin.org/downloads/zfinpubs.txt
+cd zfin/; /usr/bin/wget --timestamping https://zfin.org/downloads/Morpholinos.txt
+cd zfin/; /usr/bin/wget --timestamping https://zfin.org/downloads/pheno_environment_fish.txt
+cd zfin/; /usr/bin/wget --timestamping https://zfin.org/downloads/stage_ontology.txt
+cd zfin/; /usr/bin/wget --timestamping https://zfin.org/downloads/mappings.txt
+cd zfin/; /usr/bin/wget --timestamping https://zfin.org/downloads/genotype_backgrounds.txt
+cd zfin/; /usr/bin/wget --timestamping https://zfin.org/downloads/genbank.txt
+cd zfin/; /usr/bin/wget --timestamping https://zfin.org/downloads/uniprot.txt
+cd zfin/; /usr/bin/wget --timestamping https://zfin.org/downloads/gene.txt
+cd zfin/; /usr/bin/wget --timestamping https://zfin.org/downloads/human_orthos.txt
+cd zfin/; /usr/bin/wget --timestamping https://zfin.org/downloads/features.txt
+cd zfin/; /usr/bin/wget --timestamping https://zfin.org/downloads/features-affected-genes.txt
+cd zfin/; /usr/bin/wget --timestamping https://zfin.org/downloads/gene_marker_relationship.txt
+cd zfin/; /usr/bin/wget --timestamping https://zfin.org/downloads/CRISPR.txt
+cd zfin/; /usr/bin/wget --timestamping https://zfin.org/downloads/TALEN.txt
+cd zfin/; /usr/bin/wget --timestamping https://zfin.org/downloads/pub_to_pubmed_id_translation.txt
+cd zfin/; /usr/bin/wget --timestamping https://zfin.org/downloads/E_zfin_gene_alias.gff3
+cd zfin/; /usr/bin/wget --timestamping https://zfin.org/downloads/fish_model_disease.txt
+cd zfin/; /usr/bin/wget --timestamping https://zfin.org/downloads/fish_components_fish.txt
+cd zfin/; /usr/bin/wget --timestamping https://zfin.org/downloads/phenoGeneCleanData_fish.txt
+cd zfin/; /usr/bin/wget --timestamping http://purl.obolibrary.org/obo/zp/id_map_zfin.tsv/id_map_zfin.tsv
 # coriell ensembl eom mgi monarch mychem mychem omim ucscbands
 make[1]: Leaving directory '/home/tomc/Projects/Monarch/DipperCache'
