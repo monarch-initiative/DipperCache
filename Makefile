@@ -95,7 +95,10 @@ bgee/sql_lite_dump.tar.gz:
 
 bgee_clean: ; $(RM) bgee/*
 ########################################
-BGDL = https://downloads.thebiogrid.org/Download/BioGRID/Latest-Release
+	#https://downloads.thebiogrid.org/Download/BioGRID/Latest-Release  old?
+	#https://downloads.thebiogrid.org/BioGRID/Latest-Release/
+BGDL = https://downloads.thebiogrid.org/File/BioGRID/Latest-Release/
+
 CDBOG = cd biogrid ;
 biogrid: biogrid/ \
 	biogrid/BIOGRID-ALL-LATEST.mitab.zip \
@@ -539,7 +542,7 @@ monochrom/oviAri3/cytoBandIdeo.txt.gz:
 
 monochrom/equCab2cytoBand.txt.gz: monochrom/equCab2/ monochrom/equCab2/$(CBI)
 	$(CDMC) unlink equCab2cytoBand.txt.gz ; \
-	ln -s equCab2$(CBI) equCab2cytoBand.txt.gz
+	ln -s equCab2/$(CBI) equCab2cytoBand.txt.gz
 monochrom/equCab2/: ; mkdir $@
 monochrom/equCab2/cytoBandIdeo.txt.gz:
 	cd monochrom/equCab2/; $(WGET) $(MCDL)/equCab2/database/$(CBI)
