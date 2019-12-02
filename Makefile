@@ -304,7 +304,7 @@ GOASPC = fb \
 		goa_chicken \
 		goa_human \
 		goa_cow \
-		gao_dog \
+		goa_dog \
 		sgd \
 		pombase \
 		dictibase \
