@@ -307,7 +307,7 @@ GOASPC = fb \
 		goa_dog \
 		sgd \
 		pombase \
-		dictibase \
+		dictybase \
 		aspgd
 
 go: eco go/ \
