@@ -36,7 +36,7 @@ cd dipper; git pull
 
 mkdir bgee/
 cd bgee/ ; /usr/bin/wget --timestamping ftp://ftp.bgee.org/current/sql_lite_dump.tar.gz
-cd bgee/ ; /bin/tar -xzf sql_lite_dump.tar.gz
+cd bgee/ ; /bin/tar -xzf sql_lite_dump.tar.gz sql_lite_dump.sql
 cd bgee/ ; ../dipper/scripts/mysql2sqlite bgee/sql_lite_dump.sql > bgee/bgee_sqlite3.sql ;\
 echo -e "\nvacuum;analyze;" >> bgee/bgee_sqlite3.sql
 gzip --force bgee.sqlite3  # appends .gz,  caused reindexing
@@ -174,9 +174,9 @@ cd monochrom/ ; unlink equCab2cytoBand.txt.gz ; \
 ln -s equCab2cytoBandIdeo.txt.gz equCab2cytoBand.txt.gz
 
 mkdir mpd/
-cd mpd; /usr/bin/wget --timestamping http://phenomedoc.jax.org/MPD_downloads/ontology_mappings.csv
-cd mpd; /usr/bin/wget --timestamping http://phenomedoc.jax.org/MPD_downloads/straininfo.csv
-cd mpd; /usr/bin/wget --timestamping http://phenomedoc.jax.org/MPD_downloads/measurements.csv
+cd mpd; /usr/bin/wget --timestamping https://phenomedoc.jax.org/MPD_downloads/ontology_mappings.csv
+cd mpd; /usr/bin/wget --timestamping https://phenomedoc.jax.org/MPD_downloads/straininfo.csv
+cd mpd; /usr/bin/wget --timestamping https://phenomedoc.jax.org/MPD_downloads/measurements.csv
 
 mkdir omia/
 cd omia; /usr/bin/wget --timestamping http://compldb.angis.org.au/dumps/omia.xml.gz
@@ -190,8 +190,8 @@ cd panther; /usr/bin/wget --timestamping ftp://ftp.pantherdb.org/ortholog/curren
 cd panther; /usr/bin/wget --timestamping ftp://ftp.pantherdb.org/ortholog/current_release/Orthologs_HCOP.tar.gz
 
 mkdir reactome/
-cd reactome; /usr/bin/wget --timestamping http://www.reactome.org/download/current/Ensembl2Reactome.txt
-cd reactome; /usr/bin/wget --timestamping http://www.reactome.org/download/current/ChEBI2Reactome.txt
+cd reactome; /usr/bin/wget --timestamping https://www.reactome.org/download/current/Ensembl2Reactome.txt
+cd reactome; /usr/bin/wget --timestamping https://www.reactome.org/download/current/ChEBI2Reactome.txt
 unlink rectome/gaf-eco-mapping.txt; cd reactome; ln -s ../eco/gaf-eco-mapping.txt gaf-eco-mapping.txt
 
 mkdir rgd/
@@ -202,7 +202,7 @@ cd sdg; /usr/bin/wget --timestamping https://downloads.yeastgenome.org/curation/
 
 mkdir string/
 cd string ; /usr/bin/wget --timestamping https://string-db.orgapi/tsv-no-header/version  ; \
-if [ 11.0 != $(cut -f 1 version) ] then; echo "NEW VERSION of STRING!" ; \
+if [ "11.0" != "$(cut -f 1 version)" ] ;then echo "NEW VERSION of STRING!" ; \
 else  echo "same version of STRING" ; fi
 cd string; /usr/bin/wget --timestamping https://string-db.org/download/9606.protein.links.detailed.v11.0.txt.gz
 cd string; /usr/bin/wget --timestamping https://string-db.org/download/10090.protein.links.detailed.v11.0.txt.gz
