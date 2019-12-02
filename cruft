@@ -277,6 +277,6 @@ cd zfin/; /usr/bin/wget --timestamping https://zfin.org/downloads/E_zfin_gene_al
 cd zfin/; /usr/bin/wget --timestamping https://zfin.org/downloads/fish_model_disease.txt
 cd zfin/; /usr/bin/wget --timestamping https://zfin.org/downloads/fish_components_fish.txt
 cd zfin/; /usr/bin/wget --timestamping https://zfin.org/downloads/phenoGeneCleanData_fish.txt
-cd zfin/; /usr/bin/wget --timestamping http://purl.obolibrary.org/obo/zp/id_map_zfin.tsv/id_map_zfin.tsv
+cd zfin/; /usr/bin/wget --timestamping http://purl.obolibrary.org/obo/zp/id_map_zfin.tsv
 # coriell ensembl eom mgi monarch mychem mychem omim ucscbands
 make[1]: Leaving directory '/home/tomc/Projects/Monarch/DipperCache'
