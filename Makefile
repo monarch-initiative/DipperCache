@@ -88,7 +88,7 @@ bgee/bgee_sqlite3.sql:  bgee/sql_lite_dump.sql
 	echo -e "\nvacuum;analyze;" >> $@
 
 bgee/sql_lite_dump.sql:  bgee/sql_lite_dump.tar.gz
-	$(CDBGE) /bin/tar -xzf sql_lite_dump.tar.gz
+	$(CDBGE) /bin/tar -xzf sql_lite_dump.tar.gz $(notdir $@)
 
 bgee/sql_lite_dump.tar.gz:
 	$(CDBGE) $(WGET) ftp://ftp.bgee.org/current/sql_lite_dump.tar.gz
@@ -546,7 +546,7 @@ monochrom/equCab2/cytoBandIdeo.txt.gz:
 
 monochrom_clean: ;  $(RM) monochrom/*
 ##########################################
-MPDDL = http://phenomedoc.jax.org/MPD_downloads
+MPDDL = https://phenomedoc.jax.org/MPD_downloads
 mpd: mpd/ \
 	mpd/ontology_mappings.csv \
 	mpd/straininfo.csv \
@@ -650,7 +650,7 @@ panther/Orthologs_HCOP.tar.gz:
 
 panther_clean: ; $(RM) panther/*
 ##########################################
-RCTDL = http://www.reactome.org/download/current
+RCTDL = https://www.reactome.org/download/current
 reactome: reactome/ \
 		reactome/Ensembl2Reactome.txt \
 		reactome/ChEBI2Reactome.txt \
@@ -706,7 +706,7 @@ string/: ; mkdir $@
 
 string/version:
 	cd string ; $(WGET) $(STRING)api/tsv-no-header/version  ; \
-	if [ $(STRVER) != $$(cut -f 1 version) ] then; echo "NEW VERSION of STRING!" ; \
+	if [ "$(STRVER)" != "$$(cut -f 1 version)" ] ;then echo "NEW VERSION of STRING!" ; \
 	else  echo "same version of STRING" ; fi
 
 $(foreach txid, $(STRTAX),string/$(txid).protein.links.detailed.v$(STRVER).txt.gz):
