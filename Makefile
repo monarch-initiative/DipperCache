@@ -344,12 +344,15 @@ gwascatalog/$(GWASFILE):
 # SO & MONDO ontologies need their own cache
 gwascatalog_clean:  ;  $(RM) gwascatalog/*
 ##########################################
-EBIFTP = ftp://ftp.ebi.ac.uk/pub/databases/genenames
-hgnc: hgnc/ hgnc/hgnc_complete_set.txt
+EBIFTP := ftp://ftp.ebi.ac.uk
+EBIPTH := pub/databases/genenames/new/tsv
+
+hgnc: hgnc/ \
+		hgnc/hgnc_complete_set.txt
 
 hgnc/: ; mkdir $@
 hgnc/hgnc_complete_set.txt:
-	cd hgnc; $(WGET) $(EBIFTP)/hgnc_complete_set.txt
+	cd hgnc/; $(WGET) $(EBIFTP)/$(EBIPTH)/hgnc_complete_set.txt
 
 hgnc_clean:  ;  $(RM) hgnc/*
 ##########################################
