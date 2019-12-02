@@ -264,15 +264,13 @@ flybase/fbal_to_fbgn_fb.tsv.gz: flybase/md5sum.txt
 	$(CDFLY)  \
 	fname=$$(fgrep "alleles/fbal_to_fbgn_fb" md5sum.txt| cut -f2- -d'/') ; \
 	$(WGET) $(FULLPTH) $(FLYFTP)/$(FLYPRE)/$$fname ; \
-	unlink fbal_to_fbgn_fb.tsv.gz ; \
-	ln -s $(FLYPRE)/$$fname fbal_to_fbgn_fb.tsv.gz
+	unlink$(notdir $@) ; ln -s $(FLYPRE)/$$fname $(notdir $@)
 
 flybase/fbrf_pmid_pmcid_doi_fb.tsv.gz: flybase/md5sum.txt
-	$(CDFLY)
+	$(CDFLY) \
 	fname=$$(fgrep "references/fbrf_pmid_pmcid_doi_fb" md5sum.txt| cut -f2- -d'/') ; \
 	$(WGET) $(FULLPTH) $(FLYFTP)/$(FLYPRE)/$$fname ; \
-	unlink fbrf_pmid_pmcid_doi_fb.tsv.gz ; \
-	ln -s $(FLYPRE)/$$fname fbrf_pmid_pmcid_doi_fb.tsv.gz
+	unlink $(notdir $@); ln -s $(FLYPRE)/$$fname $(notdir $@)
 
 flybase_clean: ;  $(RM) flybase/*
 
