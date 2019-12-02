@@ -75,7 +75,6 @@ mkdir eco/
 cd eco/; /usr/bin/wget --timestamping http://purl.obolibrary.org/obo/eco/gaf-eco-mapping.txt
 
 mkdir go/
-cd go/; /usr/bin/wget --timestamping http://current.geneontology.org/annotations/dog.gaf.gz
 cd go/; /usr/bin/wget --timestamping http://current.geneontology.org/annotations/fb.gaf.gz
 cd go/; /usr/bin/wget --timestamping http://current.geneontology.org/annotations/zfin.gaf.gz
 cd go/; /usr/bin/wget --timestamping http://current.geneontology.org/annotations/mgi.gaf.gz
@@ -85,6 +84,7 @@ cd go/; /usr/bin/wget --timestamping http://current.geneontology.org/annotations
 cd go/; /usr/bin/wget --timestamping http://current.geneontology.org/annotations/goa_chicken.gaf.gz
 cd go/; /usr/bin/wget --timestamping http://current.geneontology.org/annotations/goa_human.gaf.gz
 cd go/; /usr/bin/wget --timestamping http://current.geneontology.org/annotations/goa_cow.gaf.gz
+cd go/; /usr/bin/wget --timestamping http://current.geneontology.org/annotations/gao_dog.gaf.gz
 cd go/; /usr/bin/wget --timestamping http://current.geneontology.org/annotations/sgd.gaf.gz
 cd go/; /usr/bin/wget --timestamping http://current.geneontology.org/annotations/pombase.gaf.gz
 cd go/; /usr/bin/wget --timestamping http://current.geneontology.org/annotations/dictibase.gaf.gz
