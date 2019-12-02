@@ -656,7 +656,7 @@ RCTDL = https://www.reactome.org/download/current
 reactome: reactome/ \
 		reactome/Ensembl2Reactome.txt \
 		reactome/ChEBI2Reactome.txt \
-		rectome/gaf-eco-mapping.txt
+		reactome/gaf-eco-mapping.txt
 
 reactome/: ; mkdir $@
 reactome/Ensembl2Reactome.txt:
