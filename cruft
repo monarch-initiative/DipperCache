@@ -32,6 +32,10 @@ cd animalqtldb ; /usr/bin/wget --timestamping https://www.animalgenome.org/QTLdb
 cd animalqtldb ; /usr/bin/wget --timestamping https://www.animalgenome.org/QTLdb/export/KSUI8GFHOT6/chicken_QTLdata.txt
 cd animalqtldb ; /usr/bin/wget --timestamping https://www.animalgenome.org/QTLdb/export/KSUI8GFHOT6/horse_QTLdata.txt
 cd animalqtldb ; /usr/bin/wget --timestamping https://www.animalgenome.org/QTLdb/export/KSUI8GFHOT6/rainbow_trout_QTLdata.txt
+
+mkdir biogrid/
+cd biogrid ; /usr/bin/wget --timestamping https://downloads.thebiogrid.org/File/BioGRID/Latest-Release//BIOGRID-ALL-LATEST.mitab.zip
+cd biogrid ; /usr/bin/wget --timestamping https://downloads.thebiogrid.org/File/BioGRID/Latest-Release//BIOGRID-IDENTIFIERS-LATEST.tab.zip
 cd dipper; git pull
 
 mkdir bgee/
@@ -172,7 +176,7 @@ ln -s oviAri3/cytoBandIdeo.txt.gz oviAri3cytoBand.txt.gz
 mkdir monochrom/equCab2/
 cd monochrom/equCab2/; /usr/bin/wget --timestamping http://hgdownload.cse.ucsc.edu/goldenPath/equCab2/database/cytoBandIdeo.txt.gz
 cd monochrom/ ; unlink equCab2cytoBand.txt.gz ; \
-ln -s equCab2cytoBandIdeo.txt.gz equCab2cytoBand.txt.gz
+ln -s equCab2/cytoBandIdeo.txt.gz equCab2cytoBand.txt.gz
 
 mkdir mpd/
 cd mpd; /usr/bin/wget --timestamping https://phenomedoc.jax.org/MPD_downloads/ontology_mappings.csv
