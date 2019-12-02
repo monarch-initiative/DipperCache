@@ -15,24 +15,24 @@ cd ncbigene/ ; /usr/bin/wget --timestamping ftp://ftp.ncbi.nih.gov/gene/DATA/gen
 /bin/zgrep "^8022[^0-9]" gene_info.gz | /bin/gzip > Oncorhynchus_mykiss.gene_info.gz
 
 mkdir animalqtldb/
-unlink animalqtldb/gene_info.gz;  ln -s ../ncbigene/animalqtldb/gene_info.gz animalqtldb/gene_info.gz
-unlink animalqtldb/Bos_taurus.gene_info.gz;  ln -s ../ncbigene/animalqtldb/Bos_taurus.gene_info.gz animalqtldb/Bos_taurus.gene_info.gz
-unlink animalqtldb/Sus_scrofa.gene_info.gz;  ln -s ../ncbigene/animalqtldb/Sus_scrofa.gene_info.gz animalqtldb/Sus_scrofa.gene_info.gz
-unlink animalqtldb/Gallus_gallus.gene_info.gz;  ln -s ../ncbigene/animalqtldb/Gallus_gallus.gene_info.gz animalqtldb/Gallus_gallus.gene_info.gz
-unlink animalqtldb/Ovis_aries.gene_info.gz;  ln -s ../ncbigene/animalqtldb/Ovis_aries.gene_info.gz animalqtldb/Ovis_aries.gene_info.gz
-unlink animalqtldb/Oncorhynchus_mykiss.gene_info.gz;  ln -s ../ncbigene/animalqtldb/Oncorhynchus_mykiss.gene_info.gz animalqtldb/Oncorhynchus_mykiss.gene_info.gz
-unlink animalqtldb/Equus_caballus.gene_info.gz;  ln -s ../ncbigene/animalqtldb/Equus_caballus.gene_info.gz animalqtldb/Equus_caballus.gene_info.gz
-/usr/bin/wget --timestamping https://www.animalgenome.org/QTLdb/tmp/animalqtldb/QTL_Btau_4.6.gff.txt.gz
-/usr/bin/wget --timestamping https://www.animalgenome.org/QTLdb/tmp/animalqtldb/QTL_EquCab2.0.gff.txt.gz
-/usr/bin/wget --timestamping https://www.animalgenome.org/QTLdb/tmp/animalqtldb/QTL_GG_4.0.gff.txt.gz
-/usr/bin/wget --timestamping https://www.animalgenome.org/QTLdb/tmp/animalqtldb/QTL_OAR_3.1.gff.txt.gz
-/usr/bin/wget --timestamping https://www.animalgenome.org/QTLdb/export/KSUI8GFHOT6/animalqtldb/pig_QTLdata.txt
-/usr/bin/wget --timestamping https://www.animalgenome.org/QTLdb/export/KSUI8GFHOT6/animalqtldb/sheep_QTLdata.txt
-/usr/bin/wget --timestamping https://www.animalgenome.org/QTLdb/export/KSUI8GFHOT6/animalqtldb/cattle_QTLdata.txt
-/usr/bin/wget --timestamping https://www.animalgenome.org/QTLdb/export/KSUI8GFHOT6/animalqtldb/chicken_QTLdata.txt
-/usr/bin/wget --timestamping https://www.animalgenome.org/QTLdb/export/KSUI8GFHOT6/animalqtldb/horse_QTLdata.txt
-/usr/bin/wget --timestamping https://www.animalgenome.org/QTLdb/export/KSUI8GFHOT6/animalqtldb/rainbow_trout_QTLdata.txt
-git clone https://github.com/monarch-initiative/dipper.git
+unlink animalqtldb/gene_info.gz;  ln -s ../ncbigene/gene_info.gz gene_info.gz
+unlink animalqtldb/Bos_taurus.gene_info.gz;  ln -s ../ncbigene/Bos_taurus.gene_info.gz Bos_taurus.gene_info.gz
+unlink animalqtldb/Sus_scrofa.gene_info.gz;  ln -s ../ncbigene/Sus_scrofa.gene_info.gz Sus_scrofa.gene_info.gz
+unlink animalqtldb/Gallus_gallus.gene_info.gz;  ln -s ../ncbigene/Gallus_gallus.gene_info.gz Gallus_gallus.gene_info.gz
+unlink animalqtldb/Ovis_aries.gene_info.gz;  ln -s ../ncbigene/Ovis_aries.gene_info.gz Ovis_aries.gene_info.gz
+unlink animalqtldb/Oncorhynchus_mykiss.gene_info.gz;  ln -s ../ncbigene/Oncorhynchus_mykiss.gene_info.gz Oncorhynchus_mykiss.gene_info.gz
+unlink animalqtldb/Equus_caballus.gene_info.gz;  ln -s ../ncbigene/Equus_caballus.gene_info.gz Equus_caballus.gene_info.gz
+/usr/bin/wget --timestamping https://www.animalgenome.org/QTLdb/tmp/QTL_Btau_4.6.gff.txt.gz
+/usr/bin/wget --timestamping https://www.animalgenome.org/QTLdb/tmp/QTL_EquCab2.0.gff.txt.gz
+/usr/bin/wget --timestamping https://www.animalgenome.org/QTLdb/tmp/QTL_GG_4.0.gff.txt.gz
+/usr/bin/wget --timestamping https://www.animalgenome.org/QTLdb/tmp/QTL_OAR_3.1.gff.txt.gz
+/usr/bin/wget --timestamping https://www.animalgenome.org/QTLdb/export/KSUI8GFHOT6/pig_QTLdata.txt
+/usr/bin/wget --timestamping https://www.animalgenome.org/QTLdb/export/KSUI8GFHOT6/sheep_QTLdata.txt
+/usr/bin/wget --timestamping https://www.animalgenome.org/QTLdb/export/KSUI8GFHOT6/cattle_QTLdata.txt
+/usr/bin/wget --timestamping https://www.animalgenome.org/QTLdb/export/KSUI8GFHOT6/chicken_QTLdata.txt
+/usr/bin/wget --timestamping https://www.animalgenome.org/QTLdb/export/KSUI8GFHOT6/horse_QTLdata.txt
+/usr/bin/wget --timestamping https://www.animalgenome.org/QTLdb/export/KSUI8GFHOT6/rainbow_trout_QTLdata.txt
+cd dipper; git pull
 
 mkdir bgee/
 cd bgee/ ; /usr/bin/wget --timestamping ftp://ftp.bgee.org/current/sql_lite_dump.tar.gz
@@ -52,20 +52,20 @@ mkdir flybase/
 cd flybase/ ; /usr/bin/wget --timestamping ftp://ftp.flybase.net/releases/current/precomputed_files/md5sum.txt
 cd flybase/ ;  \
 fname=$(fgrep "/human_disease/disease_model_annotations" md5sum.txt| cut -f2- -d'/') ; \
-/usr/bin/wget --timestamping ftp://ftp.flybase.net/releases/current/precomputed_files/$fname ; \
+/usr/bin/wget --timestamping --force-directories --no-host-directories ftp://ftp.flybase.net/releases/current/precomputed_files/$fname ; \
 unlink disease_model_annotations.tsv.gz; \
-ln -s $fname  disease_model_annotations.tsv.gz
+ln -s releases/current/precomputed_files/$fname  disease_model_annotations.tsv.gz
 cd flybase/ ; /usr/bin/wget --timestamping ftp://ftp.flybase.net/releases/current/precomputed_files/species/species.ab.gz
 cd flybase/ ;  \
 fname=$(fgrep "alleles/fbal_to_fbgn_fb" md5sum.txt| cut -f2- -d'/') ; \
 /usr/bin/wget --timestamping ftp://ftp.flybase.net/releases/current/precomputed_files/$fname ; \
 unlink fbal_to_fbgn_fb.tsv.gz ; \
-ln -s $fname fbal_to_fbgn_fb.tsv.gz
+ln -s releases/current/precomputed_files/$fname fbal_to_fbgn_fb.tsv.gz
 cd flybase/ ;
 fname=$(fgrep "references/fbrf_pmid_pmcid_doi_fb" md5sum.txt| cut -f2- -d'/') ; \
 /usr/bin/wget --timestamping ftp://ftp.flybase.net/releases/current/precomputed_files/$fname ; \
 unlink fbrf_pmid_pmcid_doi_fb.tsv.gz ; \
-ln -s $fname fbrf_pmid_pmcid_doi_fb.tsv.gz
+ln -s releases/current/precomputed_files/$fname fbrf_pmid_pmcid_doi_fb.tsv.gz
 
 mkdir genereviews/
 cd genereviews; /usr/bin/wget --timestamping http://ftp.ncbi.nih.gov/pub/GeneReviews/NBKid_shortname_OMIM.txt
@@ -228,21 +228,21 @@ ln -s /letter_$wbnum letter
 #species/c_elegans/PRJNA13758/annotation/c_elegans.PRJNA13758.WS273.geneIDs.txt.gz
 unlink wormbase/c_elegans.PRJNA13758.geneIDs.txt.gz ; cd wormbase/ ; wsnum=$(sed -n '1 s|.*\.\(WS[0-9]\{3\}\)\..*|\1|p' CHECKSUMS) ; \
 /usr/bin/wget --timestamping --force-directories --no-host-directories ftp://ftp.wormbase.org/pub/wormbase/releases/current-production-release/species/c_elegans/PRJNA13758/annotation/c_elegans/PRJNA13758.$wbnum.geneIDs.txt.gz;\
-ln -s ftp.wormbase.org/pub/wormbase/releases/current-production-release/species/c_elegans/PRJNA13758/annotation/c_elegans/PRJNA13758.$wbnum.geneIDs.txt.gz c_elegans.PRJNA13758.geneIDs.txt.gz
+ln -s pub/wormbase/releases/current-production-release/species/c_elegans/PRJNA13758/annotation/c_elegans/PRJNA13758.$wbnum.geneIDs.txt.gz c_elegans.PRJNA13758.geneIDs.txt.gz
 # species/c_elegans/PRJNA13758/c_elegans.PRJNA13758.WS273.annotations.gff3.gz
 unlink wormbase/c_elegans.PRJNA13758.annotations.gff3.gz ; cd wormbase/ ; wsnum=$(sed -n '1 s|.*\.\(WS[0-9]\{3\}\)\..*|\1|p' CHECKSUMS) ; \
 /usr/bin/wget --timestamping --force-directories --no-host-directories ftp://ftp.wormbase.org/pub/wormbase/releases/current-production-release/species/c_elegans/PRJNA13758/c_elegans/PRJNA13758.$wbnum.annotations.gff3.gz;\
-ln -s ftp.wormbase.org/pub/wormbase/releases/current-production-release/species/c_elegans/PRJNA13758/c_elegans/PRJNA13758.$wbnum.annotations.gff3.gz c_elegans.PRJNA13758.annotations.gff3.gz
+ln -s pub/wormbase/releases/current-production-release/species/c_elegans/PRJNA13758/c_elegans/PRJNA13758.$wbnum.annotations.gff3.gz c_elegans.PRJNA13758.annotations.gff3.gz
 # species/c_elegans/PRJNA13758/annotation/c_elegans.PRJNA13758.WS273.xrefs.txt.gz
 unlink wormbase/c_elegans.PRJNA13758.xrefs.txt.gz ; cd wormbase/ ; wsnum=$(sed -n '1 s|.*\.\(WS[0-9]\{3\}\)\..*|\1|p' CHECKSUMS) ; \
 /usr/bin/wget --timestamping --force-directories --no-host-directories ftp://ftp.wormbase.org/pub/wormbase/releases/current-production-release/species/c_elegans/PRJNA13758/annotation/c_elegans/PRJNA13758.$wsnum.xrefs.txt.gz;\
-ln -s ftp.wormbase.org/pub/wormbase/releases/current-production-release/species/c_elegans/PRJNA13758/annotation/c_elegans/PRJNA13758.$wsnum.xrefs.txt.gz c_elegans.PRJNA13758.xrefs.txt.gz
+ln -s pub/wormbase/releases/current-production-release/species/c_elegans/PRJNA13758/annotation/c_elegans/PRJNA13758.$wsnum.xrefs.txt.gz c_elegans.PRJNA13758.xrefs.txt.gz
 unlink wormbase/phenotype_association.wb ; cd wormbase/ ; wsnum=$(sed -n '1 s|.*\.\(WS[0-9]\{3\}\)\..*|\1|p' CHECKSUMS) ; \
 /usr/bin/wget --timestamping --force-directories --no-host-directories ftp://ftp.wormbase.org/pub/wormbase/releases/current-production-release/ONTOLOGY/phenotype_association.$wsnum.wb;\
-ln -s ftp.wormbase.org/pub/wormbase/releases/current-production-release/ONTOLOGY/phenotype_association.$wsnum.wb phenotype_association.wb
+ln -s pub/wormbase/releases/current-production-release/ONTOLOGY/phenotype_association.$wsnum.wb phenotype_association.wb
 unlink wormbase/rnai_phenotypes.wb ; cd wormbase/ ; wsnum=$(sed -n '1 s|.*\.\(WS[0-9]\{3\}\)\..*|\1|p' CHECKSUMS) ; \
 /usr/bin/wget --timestamping --force-directories --no-host-directories ftp://ftp.wormbase.org/pub/wormbase/releases/current-production-release/ONTOLOGY/rnai_phenotypes.$wsnum.wb;\
-ln -s ftp.wormbase.org/pub/wormbase/releases/current-production-release/ONTOLOGY/rnai_phenotypes.$wsnum.wb rnai_phenotypes.wb
+ln -s pub/wormbase/releases/current-production-release/ONTOLOGY/rnai_phenotypes.$wsnum.wb rnai_phenotypes.wb
 unlink wormbase/disease_association.wb ; cd wormbase/ ; wsnum=$(sed -n '1 s|.*\.\(WS[0-9]\{3\}\)\..*|\1|p' CHECKSUMS) ; \
 
 cd wormbase/ ; /usr/bin/wget --timestamping -O pub_xrefs.txt \
