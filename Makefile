@@ -57,18 +57,18 @@ animalqtldb/: ; mkdir $@
 
 # AQTL_TMP_FILES
 $(foreach spc, $(AQTLTMP), animalqtldb/$(spc)):
-	$(CDAQL) $(WGET) $(AQTLDL)/tmp/$(notdir $@)
+	$(CDAQTL) $(WGET) $(AQTLDL)/tmp/$(notdir $@)
 
 # AQTL_VER_FILES
 $(foreach spc, $(AQTLVER), animalqtldb/$(spc)):
-	$(CDAQL) $(WGET) $(AQTLDL)/export/KSUI8GFHOT6/$(notdir $@)
+	$(CDAQTL) $(WGET) $(AQTLDL)/export/KSUI8GFHOT6/$(notdir $@)
 
 # GENEINFO_FILES
 # these are all created under ncbigene first then linked here
 # so the distinction of the locally generated ones becomes moot
 
 $(foreach spc, $(AQTLGI), animalqtldb/$(spc)): $(foreach spc, $(AQTLGI),ncbigene/$(spc))
-	unlink $@; $(CDAQL) ln -s ../ncbigene/$(notdir $@) $(notdir $@)
+	unlink $@; $(CDAQTL) ln -s ../ncbigene/$(notdir $@) $(notdir $@)
 
 animalqtldb_clean: ;  $(RM) animalqtldb/*
 ##########################################
