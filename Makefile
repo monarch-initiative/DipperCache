@@ -263,14 +263,14 @@ flybase/species.ab.gz: flybase/md5sum.txt
 flybase/fbal_to_fbgn_fb.tsv.gz: flybase/md5sum.txt
 	$(CDFLY)  \
 	fname=$$(fgrep "alleles/fbal_to_fbgn_fb" md5sum.txt| cut -f2- -d'/') ; \
-	$(WGET) $(FLYFTP)/$(FLYPRE)/$$fname ; \
+	$(WGET) $(FULLPTH) $(FLYFTP)/$(FLYPRE)/$$fname ; \
 	unlink fbal_to_fbgn_fb.tsv.gz ; \
 	ln -s $(FLYPRE)/$$fname fbal_to_fbgn_fb.tsv.gz
 
 flybase/fbrf_pmid_pmcid_doi_fb.tsv.gz: flybase/md5sum.txt
 	$(CDFLY)
 	fname=$$(fgrep "references/fbrf_pmid_pmcid_doi_fb" md5sum.txt| cut -f2- -d'/') ; \
-	$(WGET) $(FLYFTP)/$(FLYPRE)/$$fname ; \
+	$(WGET) $(FULLPTH) $(FLYFTP)/$(FLYPRE)/$$fname ; \
 	unlink fbrf_pmid_pmcid_doi_fb.tsv.gz ; \
 	ln -s $(FLYPRE)/$$fname fbrf_pmid_pmcid_doi_fb.tsv.gz
 
@@ -594,19 +594,19 @@ ncbigene/gene_group.gz:
 GENEINFO = $(NCBIFTP)/GENE_INFO
 
 ncbigene/Gallus_gallus.gene_info.gz:
-	$(CDAQL) $(WGET) $(GENEINFO)/Non-mammalian_vertebrates/Gallus_gallus.gene_info.gz
+	cd ncbigene/ ; $(WGET) $(GENEINFO)/Non-mammalian_vertebrates/Gallus_gallus.gene_info.gz
 ncbigene/Sus_scrofa.gene_info.gz:
-	$(CDAQL) $(WGET) $(GENEINFO)/Mammalia/Sus_scrofa.gene_info.gz
+	cd ncbigene/ ; $(WGET) $(GENEINFO)/Mammalia/Sus_scrofa.gene_info.gz
 ncbigene/Bos_taurus.gene_info.gz:
-	$(CDAQL) $(WGET) $(GENEINFO)/Mammalia/Bos_taurus.gene_info.gz
+	cd ncbigene/ ; $(WGET) $(GENEINFO)/Mammalia/Bos_taurus.gene_info.gz
 
 # GENEINFO_LOCAL_FILES	(maybe partion out more if they could help with other ingests)
 ncbigene/Equus_caballus.gene_info.gz: ncbigene/gene_info.gz
-	$(CDAQL) /bin/zgrep "^9796[^0-9]" gene_info.gz | /bin/gzip > Equus_caballus.gene_info.gz
+	cd ncbigene/ ; /bin/zgrep "^9796[^0-9]" gene_info.gz | /bin/gzip > Equus_caballus.gene_info.gz
 ncbigene/Ovis_aries.gene_info.gz: ncbigene/gene_info.gz
-	$(CDAQL) /bin/zgrep "^9940[^0-9]" gene_info.gz | /bin/gzip > Ovis_aries.gene_info.gz
+	cd ncbigene/ ; /bin/zgrep "^9940[^0-9]" gene_info.gz | /bin/gzip > Ovis_aries.gene_info.gz
 ncbigene/Oncorhynchus_mykiss.gene_info.gz: ncbigene/gene_info.gz
-	$(CDAQL) /bin/zgrep "^8022[^0-9]" gene_info.gz | /bin/gzip > Oncorhynchus_mykiss.gene_info.gz
+	cd ncbigene/ ; /bin/zgrep "^8022[^0-9]" gene_info.gz | /bin/gzip > Oncorhynchus_mykiss.gene_info.gz
 
 ncbigene_clean: ;  $(RM) ncbigene/*
 ##########################################
