@@ -95,7 +95,7 @@ mkdir gwascatalog/
 cd gwascatalog; /usr/bin/wget --timestamping ftp://ftp.ebi.ac.uk/pub/databases/gwas/releases/latest/gwas-catalog-associations_ontology-annotated.tsv
 
 mkdir hgnc/
-cd hgnc; /usr/bin/wget --timestamping ftp://ftp.ebi.ac.uk/pub/databases/genenames/hgnc_complete_set.txt
+cd hgnc/; /usr/bin/wget --timestamping ftp://ftp.ebi.ac.uk/pub/databases/genenames/new/tsv/hgnc_complete_set.txt
 
 mkdir hpoa/
 cd hgnc; /usr/bin/wget --timestamping http://compbio.charite.de/jenkins/job/hpo.annotations.current/lastSuccessfulBuild/artifact/misc_2018/phenotype.hpoa
