@@ -770,7 +770,7 @@ wormbase/CHECKSUMS:
 wormbase/letter: wormbase/CHECKSUMS
 	unlink $@ ; $(CDWB) wsnum=$$($(WSNUM)); \
 	$(WGET) $(WBFTP)/$(WBPROD)/letter.$$wsnum ;\
-	ln -s /letter.$$wsnum $(notdir $@)
+	ln -s letter.$$wsnum $(notdir $@)
 wormbase/c_elegans.PRJNA13758.geneIDs.txt.gz:  wormbase/CHECKSUMS
 	#species/c_elegans/PRJNA13758/annotation/c_elegans.PRJNA13758.WS273.geneIDs.txt.gz
 	unlink $@ ; $(CDWB) wsnum=$$($(WSNUM)) ; \
@@ -779,8 +779,8 @@ wormbase/c_elegans.PRJNA13758.geneIDs.txt.gz:  wormbase/CHECKSUMS
 wormbase/c_elegans.PRJNA13758.annotations.gff3.gz: wormbase/CHECKSUMS
 	# species/c_elegans/PRJNA13758/c_elegans.PRJNA13758.WS273.annotations.gff3.gz
 	unlink $@ ; $(CDWB) wsnum=$$($(WSNUM)) ; \
-	$(WGET) $(FULLPTH) $(WBFTP)/$(WBPROD)/species/$(WBSPC)/$(subst /,.,$(WBSPC)).$$wsnum.annotations.gff3.gz;\
-	ln -s $(WBPROD)/species/$(WBSPC)/$(subst /,.,$(WBSPC))$$wsnum.annotations.gff3.gz $(notdir $@)
+	$(WGET) $(FULLPTH) $(WBFTP)/$(WBPROD)/species/$(WBSPC)/(WBSPC).$$wsnum.annotations.gff3.gz;\
+	ln -s $(WBPROD)/species/$(WBSPC)/$(WBSPC)$$wsnum.annotations.gff3.gz $(notdir $@)
 wormbase/c_elegans.PRJNA13758.xrefs.txt.gz: wormbase/CHECKSUMS
 	# species/c_elegans/PRJNA13758/annotation/c_elegans.PRJNA13758.WS273.xrefs.txt.gz
 	unlink $@ ; $(CDWB) wsnum=$$($(WSNUM)) ; \
