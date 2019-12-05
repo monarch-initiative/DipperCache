@@ -1,6 +1,4 @@
 make[1]: Entering directory '/home/tomc/Projects/Monarch/DipperCache'
-
-mkdir ncbigene/
 cd ncbigene/ ; /usr/bin/wget --timestamping ftp://ftp.ncbi.nih.gov/gene/DATA/gene_info.gz
 # test if in the future (GMT?)
 # touch -r "gene_info.gz" -d '-8 hour' "gene_info.gz"
@@ -63,7 +61,7 @@ cd flybase/ ; /usr/bin/wget --timestamping ftp://ftp.flybase.net/releases/curren
 cd flybase/ ;  \
 fname=$(fgrep "alleles/fbal_to_fbgn_fb" md5sum.txt| cut -f2- -d'/') ; \
 /usr/bin/wget --timestamping --force-directories --no-host-directories ftp://ftp.flybase.net/releases/current/precomputed_files/$fname ; \
-unlinkfbal_to_fbgn_fb.tsv.gz ; ln -s releases/current/precomputed_files/$fname fbal_to_fbgn_fb.tsv.gz
+unlink fbal_to_fbgn_fb.tsv.gz ; ln -s releases/current/precomputed_files/$fname fbal_to_fbgn_fb.tsv.gz
 cd flybase/ ; \
 fname=$(fgrep "references/fbrf_pmid_pmcid_doi_fb" md5sum.txt| cut -f2- -d'/') ; \
 /usr/bin/wget --timestamping --force-directories --no-host-directories ftp://ftp.flybase.net/releases/current/precomputed_files/$fname ; \
@@ -72,9 +70,6 @@ unlink fbrf_pmid_pmcid_doi_fb.tsv.gz; ln -s releases/current/precomputed_files/$
 mkdir genereviews/
 cd genereviews; /usr/bin/wget --timestamping http://ftp.ncbi.nih.gov/pub/GeneReviews/NBKid_shortname_OMIM.txt
 cd genereviews; /usr/bin/wget --timestamping http://ftp.ncbi.nih.gov/pub/GeneReviews/GRtitle_shortname_NBKid.txt
-
-mkdir eco/
-cd eco/; /usr/bin/wget --timestamping http://purl.obolibrary.org/obo/eco/gaf-eco-mapping.txt
 
 mkdir go/
 cd go/; /usr/bin/wget --timestamping http://current.geneontology.org/annotations/fb.gaf.gz
@@ -198,6 +193,7 @@ mkdir reactome/
 cd reactome; /usr/bin/wget --timestamping https://www.reactome.org/download/current/Ensembl2Reactome.txt
 cd reactome; /usr/bin/wget --timestamping https://www.reactome.org/download/current/ChEBI2Reactome.txt
 cd reactome; unlink gaf-eco-mapping.txt; ln -s ../eco/gaf-eco-mapping.txt gaf-eco-mapping.txt
+unlink reactome/gaf-eco-mapping.yaml;cd reactome/; ln -s ../eco/gaf-eco-mapping.yaml gaf-eco-mapping.yaml
 
 mkdir rgd/
 cd rgd/; /usr/bin/wget --timestamping ftp://ftp.rgd.mcw.edu/pub/data_release/annotated_rgd_objects_by_ontology/rattus_genes_mp
@@ -239,8 +235,8 @@ unlink wormbase/c_elegans.PRJNA13758.geneIDs.txt.gz ; cd wormbase/ ; wsnum=$(sed
 ln -s pub/wormbase/releases/current-production-release/species/c_elegans/PRJNA13758/annotation/c_elegans.PRJNA13758.$wsnum.geneIDs.txt.gz c_elegans.PRJNA13758.geneIDs.txt.gz
 # species/c_elegans/PRJNA13758/c_elegans.PRJNA13758.WS273.annotations.gff3.gz
 unlink wormbase/c_elegans.PRJNA13758.annotations.gff3.gz ; cd wormbase/ ; wsnum=$(sed -n '1 s|.*\.\(WS[0-9]\{3\}\)\..*|\1|p' CHECKSUMS) ; \
-/usr/bin/wget --timestamping --force-directories --no-host-directories ftp://ftp.wormbase.org/pub/wormbase/releases/current-production-release/species/c_elegans/PRJNA13758/(WBSPC).$wsnum.annotations.gff3.gz;\
-ln -s pub/wormbase/releases/current-production-release/species/c_elegans/PRJNA13758/c_elegans/PRJNA13758$wsnum.annotations.gff3.gz c_elegans.PRJNA13758.annotations.gff3.gz
+/usr/bin/wget --timestamping --force-directories --no-host-directories ftp://ftp.wormbase.org/pub/wormbase/releases/current-production-release/species/c_elegans/PRJNA13758/c_elegans.PRJNA13758.$wsnum.annotations.gff3.gz;\
+ln -s pub/wormbase/releases/current-production-release/species/c_elegans/PRJNA13758/c_elegans.PRJNA13758.$wsnum.annotations.gff3.gz c_elegans.PRJNA13758.annotations.gff3.gz
 # species/c_elegans/PRJNA13758/annotation/c_elegans.PRJNA13758.WS273.xrefs.txt.gz
 unlink wormbase/c_elegans.PRJNA13758.xrefs.txt.gz ; cd wormbase/ ; wsnum=$(sed -n '1 s|.*\.\(WS[0-9]\{3\}\)\..*|\1|p' CHECKSUMS) ; \
 /usr/bin/wget --timestamping --force-directories --no-host-directories ftp://ftp.wormbase.org/pub/wormbase/releases/current-production-release/species/c_elegans/PRJNA13758/annotation/c_elegans.PRJNA13758.$wsnum.xrefs.txt.gz;\
@@ -256,6 +252,7 @@ unlink wormbase/disease_association.wb ; cd wormbase/ ; wsnum=$(sed -n '1 s|.*\.
 ln -s pub/wormbase/releases/current-production-release/ONTOLOGY/rnai_phenotypes.$wsnum.wb disease_association.wb
 cd wormbase/ ; /usr/bin/wget --timestamping -O pub_xrefs.txt \
 http://tazendra.caltech.edu/~azurebrd/cgi-bin/forms/generic.cgi?action=WpaXref
+unlink wormbase/gaf-eco-mapping.yaml;cd wormbase/; ln -s ../eco/gaf-eco-mapping.yaml gaf-eco-mapping.yaml
 
 mkdir zfin/
 cd zfin/; /usr/bin/wget --timestamping https://zfin.org/downloads/genotype_features.txt
