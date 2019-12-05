@@ -7,6 +7,14 @@ WGET = /usr/bin/wget --timestamping
 FULLPTH := --force-directories --no-host-directories
 RM := rm --force --recursive --verbose
 
+CLEAN = rm --force --recursive --verbose $(dir $@)/*
+
+# when the target needs to appear to be the first dependency
+# and both are one dir below PWD
+# note $(realpath) does not seem to be available for
+#  #  || ($(realpath $@) !=  $(realpath $<)) ] ; then
+SYMLINK = if [ ! L "$@" ] ; then cd  $(dir $@);unlink $(notdir $@)"; ln -s "../$<" "$(notdir $@)"; fi
+
 .PHONY: cruft recent clean dipper/scripts
 
 SOURCES = animalqtldb \
@@ -98,9 +106,10 @@ $(foreach spc, $(AQTLVER), animalqtldb/$(spc)):
 # so the distinction of the locally generated ones becomes moot
 
 $(foreach spc, $(AQTLGI), animalqtldb/$(spc)): $(foreach spc, $(AQTLGI),ncbigene/$(spc))
-	unlink $@; $(CDAQTL) ln -s ../ncbigene/$(notdir $@) $(notdir $@)
+	# unlink $@; $(CDAQTL) ln -s ../ncbigene/$(notdir $@) $(notdir $@)
+	$(SYMLINK)
 
-animalqtldb_clean: ;  $(RM) animalqtldb/*
+animalqtldb_clean: ;  $(CLEAN)  # $(RM) animalqtldb/*
 ##########################################
 CDBGE = cd bgee/ ;
 bgee: dipper bgee/ \
@@ -108,7 +117,7 @@ bgee: dipper bgee/ \
 
 bgee/: ; mkdir $@
 bgee/bgee.sqlite3.gz: bgee/bgee_sqlite3.sql
-	$(CDBG) gzip --force bgee.sqlite3  # appends .gz,  caused reindexing
+	$(CDBG) gzip --force bgee.sqlite3  # appends .gz
 
 bgee/bgee.sqlite3: bgee/bgee_sqlite3.sql
 	$(CDBGE) /usr/bin/sqlite3 -mmap 3G bgee.sqlite3 < bgee_sqlite3.sql
@@ -141,12 +150,11 @@ biogrid/BIOGRID-IDENTIFIERS-LATEST.tab.zip:
 
 # TODO get rid of obsuscating  name changes in py (then delete here too)
 biogrid/identifiers.tab.zip:  biogrid/BIOGRID-IDENTIFIERS-LATEST.tab.zip
-	unlink $@; $(CDBOG) \
-	ln -s BIOGRID-IDENTIFIERS-LATEST.tab.zip identifiers.tab.zip
+	# unlink $@; $(CDBOG) ln -s BIOGRID-IDENTIFIERS-LATEST.tab.zip identifiers.tab.zip
+	$(SYMLINK)
 biogrid/interactions.mitab.zip: biogrid/BIOGRID-ALL-LATEST.mitab.zip
-	unlink $@; $(CDBOG) \
-	ln -s BIOGRID-ALL-LATEST.mitab.zip interactions.mitab.zip
-
+	# unlink $@; $(CDBOG) ln -s BIOGRID-ALL-LATEST.mitab.zip interactions.mitab.zip
+	$(SYMLINK)
 biogrid_clean: ;  $(RM) biogrid/*
 ##########################################
 CVFTP = ftp://ftp.ncbi.nlm.nih.gov/pub/clinvar
@@ -366,9 +374,11 @@ go/GO.references:  # TODO depreicated in favor of go-refs.json
 go/idmapping_selected.tab.gz:  # expensive
 	cd go/; $(WGET) $(FTPEBI)/$(UPCRKB)/idmapping/idmapping_selected.tab.gz
 go/gaf-eco-mapping.txt: eco/gaf-eco-mapping.txt
-	unlink $@;cd go/; ln -s ../$< $(notdir $@)
+	# unlink $@;cd go/; ln -s ../$< $(notdir $@)
+	$(SYMLINK)
 go/gaf-eco-mapping.yaml: eco/gaf-eco-mapping.yaml
-	unlink $@;cd go/; ln -s ../$< $(notdir $@)
+	# unlink $@;cd go/; ln -s ../$< $(notdir $@)
+	$(SYMLINK)
 
 go_clean: ; $(RM) go/*
 ##########################################
@@ -379,7 +389,7 @@ gwascatalog: gwascatalog/ gwascatalog/$(GWASFILE)
 gwascatalog/: ; mkdir $@
 gwascatalog/$(GWASFILE):
 	cd gwascatalog; $(WGET) $(GWASFTP)/$(GWASFILE)
-# SO & MONDO ontologies need their own cache
+# SO & MONDO ontologies need their own ontology cache
 gwascatalog_clean:  ;  $(RM) gwascatalog/*
 ##########################################
 EBIFTP := ftp://ftp.ebi.ac.uk
@@ -518,68 +528,69 @@ monochrom: monochrom/ \
 	monochrom/equCab2cytoBand.txt.gz
 
 monochrom/: ; mkdir $@
+
 # accomadate existing ingest given names
 monochrom/9606cytoBand.txt.gz: monochrom/hg19/ monochrom/hg19/cytoBand.txt.gz
-	$(CDMC) unlink 9606cytoBand.txt.gz ;\
-	ln -s hg19/cytoBand.txt.gz 9606cytoBand.txt.gz
+	$(CDMC) unlink 9606cytoBand.txt.gz ; ln -s hg19/cytoBand.txt.gz 9606cytoBand.txt.gz
+	# $(CDMC) $(SYMLINK)
 monochrom/hg19/: ; mkdir $@
 monochrom/hg19/cytoBand.txt.gz:
 	cd monochrom/hg19; $(WGET) $(MCDL)/hg19/database/cytoBand.txt.gz
 
-monochrom/10090cytoBand.txt.gz: monochrom/mm10/ monochrom/mm10/$(CBI)
+monochrom/10090cytoBand.txt.gz: monochrom/mm10/$(CBI)  monochrom/mm10/
 	$(CDMC) unlink 10090cytoBand.txt.gz ;\
 	ln -s mm10/$(CBI) 10090cytoBand.txt.gz  # note dropping 'Ideo' (to fix)
+	# $(CDMC) $(SYMLINK)
 monochrom/mm10/: ; mkdir $@
 monochrom/mm10/$(CBI):
 	cd monochrom/mm10/ ; $(WGET) $(MCDL)/mm10/database/$(CBI)
 
-monochrom/7955cytoBand.txt.gz: monochrom/danRer10/ monochrom/danRer10/$(CBI)
-	$(CDMC) unlink 7955cytoBand.txt.gz ; \
-	ln -s  danRer10/$(CBI) 7955cytoBand.txt.gz
+monochrom/7955cytoBand.txt.gz: monochrom/danRer10/$(CBI) monochrom/danRer10/
+	$(CDMC) unlink 7955cytoBand.txt.gz ; ln -s  danRer10/$(CBI) 7955cytoBand.txt.gz
+	# $(CDMC) $(SYMLINK)
 monochrom/danRer10/: ; mkdir $@
 monochrom/danRer10/$(CBI):
 	cd monochrom/danRer10/ ;  $(WGET) $(MCDL)/danRer10/database/$(CBI)
-
-monochrom/10116cytoBand.txt.gz: monochrom/rn6/  monochrom/rn6/$(CBI)
-	$(CDMC) unlink 10116cytoBand.txt.gz ; \
-	ln -s rn6/$(CBI) 10116cytoBand.txt.gz
+	# $(CDMC) $(SYMLINK)
+monochrom/10116cytoBand.txt.gz: monochrom/rn6/$(CBI)  monochrom/rn6/
+	$(CDMC) unlink 10116cytoBand.txt.gz ; ln -s rn6/$(CBI) 10116cytoBand.txt.gz
+	# $(CDMC) $(SYMLINK)
 monochrom/rn6/: ; mkdir $@
 monochrom/rn6/$(CBI):
 	cd monochrom/rn6/; $(WGET) $(MCDL)/rn6/database/$(CBI)
 
-monochrom/bosTau7cytoBand.txt.gz: monochrom/bosTau7/ monochrom/bosTau7/$(CBI)
-	$(CDMC) unlink bosTau7cytoBand.txt.gz; \
-	ln -s bosTau7/$(CBI) bosTau7cytoBand.txt.gz
+monochrom/bosTau7cytoBand.txt.gz: monochrom/bosTau7/$(CBI) monochrom/bosTau7/
+	$(CDMC) unlink bosTau7cytoBand.txt.gz; ln -s bosTau7/$(CBI) bosTau7cytoBand.txt.gz
+	# $(CDMC) $(SYMLINK)
 monochrom/bosTau7/: ; mkdir $@
 
 monochrom/bosTau7/$(CBI):
 	cd monochrom/bosTau7/; $(WGET) $(MCDL)/bosTau7/database/$(CBI)
 
-monochrom/galGal4cytoBand.txt.gz: monochrom/galGal4/ monochrom/galGal4/$(CBI)
-
-	$(CDMC) unlink galGal4cytoBand.txt.gz; \
-	ln -s galGal4/$(CBI) galGal4cytoBand.txt.gz
+monochrom/galGal4cytoBand.txt.gz: monochrom/galGal4/$(CBI) monochrom/galGal4/
+	$(CDMC) unlink galGal4cytoBand.txt.gz; ln -s galGal4/$(CBI) galGal4cytoBand.txt.gz
+	# $(CDMC) $(SYMLINK)
 monochrom/galGal4/: ; mkdir $@
 monochrom/galGal4/cytoBandIdeo.txt.gz:
 	cd monochrom/galGal4/; $(WGET) $(MCDL)/galGal4/database/$(CBI)
 
-monochrom/susScr3cytoBand.txt.gz: monochrom/susScr3/ monochrom/susScr3/$(CBI)
-	$(CDMC) unlink susScr3cytoBand.txt.gz ; \
-	ln -s susScr3/$(CBI) susScr3cytoBand.txt.gz
+monochrom/susScr3cytoBand.txt.gz: monochrom/susScr3/$(CBI) monochrom/susScr3/
+	$(CDMC) unlink susScr3cytoBand.txt.gz ; ln -s susScr3/$(CBI) susScr3cytoBand.txt.gz
+	# $(CDMC) $(SYMLINK)
 monochrom/susScr3/: ; mkdir $@
 monochrom/susScr3/cytoBandIdeo.txt.gz:
 	cd monochrom/susScr3/; $(WGET) $(MCDL)/susScr3/database/$(CBI)
 
-monochrom/oviAri3cytoBand.txt.gz: monochrom/oviAri3/ monochrom/oviAri3/$(CBI)
-	$(CDMC) unlink oviAri3cytoBand.txt.gz ; \
-	ln -s oviAri3/$(CBI) oviAri3cytoBand.txt.gz
+monochrom/oviAri3cytoBand.txt.gz: monochrom/oviAri3/$(CBI) monochrom/oviAri3/
+	$(CDMC) unlink oviAri3cytoBand.txt.gz ; ln -s oviAri3/$(CBI) oviAri3cytoBand.txt.gz
+	# $(CDMC) $(SYMLINK)
 monochrom/oviAri3/: ; mkdir $@
 monochrom/oviAri3/cytoBandIdeo.txt.gz:
 	cd monochrom/oviAri3/; $(WGET) $(MCDL)/oviAri3/database/$(CBI)
 
-monochrom/equCab2cytoBand.txt.gz: monochrom/equCab2/ monochrom/equCab2/$(CBI)
-	$(CDMC) unlink equCab2cytoBand.txt.gz ; \
-	ln -s equCab2/$(CBI) equCab2cytoBand.txt.gz
+monochrom/equCab2cytoBand.txt.gz: monochrom/equCab2/$(CBI) monochrom/equCab2/
+	$(CDMC) unlink equCab2cytoBand.txt.gz ; ln -s equCab2/$(CBI) equCab2cytoBand.txt.gz
+	# $(CDMC) $(SYMLINK)
 monochrom/equCab2/: ; mkdir $@
 monochrom/equCab2/cytoBandIdeo.txt.gz:
 	cd monochrom/equCab2/; $(WGET) $(MCDL)/equCab2/database/$(CBI)
@@ -704,10 +715,11 @@ reactome/ChEBI2Reactome.txt:
 	cd reactome; $(WGET) $(RCTDL)/ChEBI2Reactome.txt
 
 reactome/gaf-eco-mapping.txt:  eco/gaf-eco-mapping.txt
-	cd reactome; unlink $(notdir $@); ln -s ../$< $(notdir $@)
+ 	#cd reactome; unlink $(notdir $@); ln -s ../$< $(notdir $@)
+	$(SYMLINK)
 reactome/gaf-eco-mapping.yaml: eco/gaf-eco-mapping.yaml
-	unlink $@;cd reactome/; ln -s ../$< $(notdir $@)
-
+	# unlink $@;cd reactome/; ln -s ../$< $(notdir $@)
+	$(SYMLINK)
 # curl -X GET "https://reactome.org/ContentService/data/diseases/doid" -H  "accept: text/plain"
 
 reactome_clean: ; $(RM) rectome/*
@@ -848,7 +860,8 @@ wormbase/pub_xrefs.txt:
 	$(CDWB) $(WGET) -O $(notdir $@) \
 	http://tazendra.caltech.edu/~azurebrd/cgi-bin/forms/generic.cgi?action=WpaXref
 wormbase/gaf-eco-mapping.yaml: eco/gaf-eco-mapping.yaml
-	unlink $@;cd wormbase/; ln -s ../$< $(notdir $@)
+	# unlink $@;cd wormbase/; ln -s ../$< $(notdir $@)
+	$(SYMLINK)
 
 wormbase_clean: ;  $(RM) wormbase/*
 ##########################################
@@ -893,14 +906,18 @@ zfin/id_map_zfin.tsv:
 
 zfin_clean: ;  $(RM) zfin/*
 ##########################################
-zfinslim:  zfin \
-		zfin/phenoGeneCleanData_fish.txt \
-		zfin/id_map_zfin.tsv
+zfinslim:  zfin/ zfinslim/ \
+		zfinslim/phenoGeneCleanData_fish.txt \
+		zfinslim/id_map_zfin.tsv
 
-# zfinslim/: ; mkdir $@  # just stick it in zdin
+zfinslim/: ; mkdir $@
 
 zfinslim/phenoGeneCleanData_fish.txt: zfin/phenoGeneCleanData_fish.txt
-zfinslim/zp-mapping-2019.txt: zfin/id_map_zfin.tsv
+	#cd  $(dir $@); id [ !L "$(notdir $@)" ] ; then ln -s "$(notdir $@)" "$<"; fi
+	$(SYMLINK)
+zfinslim/id_map_zfin.tsv: zfin/id_map_zfin.tsv
+	# cd  $(dir $@); id [ ! L "$(notdir $@)" ] ; then ln -s "$(notdir $@)" "$<"; fi
+	$(SYMLINK)
 
 zfinslim_clean: ; $(RM) zfin/id_map_zfin.tsv zfin/phenoGeneCleanData_fish.txt
 ##########################################
