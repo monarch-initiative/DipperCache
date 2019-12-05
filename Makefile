@@ -9,9 +9,11 @@ RM := rm --force --recursive --verbose
 
 .PHONY: cruft recent clean dipper/scripts
 
-all:  animalqtldb biogrid bgee clinvar ctd flybase genereviews go gwascatalog \
+SOURCES = animalqtldb biogrid bgee clinvar ctd flybase genereviews go gwascatalog \
 	hgnc hpoa impc kegg  mmrrc  monochrom mpd ncbigene omia  orphanet \
 	panther reactome rgd sgd string  wormbase zfin zfinslim
+
+all:  $(SOURCES) dipper
 
 # ommited for cause
 	# coriell ensembl eom mgi monarch mychem mychem omim ucscbands
@@ -22,6 +24,9 @@ recent:
 
 cruft:
 	make -n | sed 's|^mkdir |\nmkdir |g' > $@
+
+tree: $(SOURCES)
+	tree $(SOURCES)
 
 ##########################################
 # animalqtldb
@@ -161,12 +166,18 @@ dipper_clean: ; $(RM) dipper
 # used in more than one ingest
 OBO = http://purl.obolibrary.org/obo
 eco: eco/ \
-	eco/gaf-eco-mapping.txt
+	eco/gaf-eco-mapping.yaml
 
 eco/: ; mkdir $@
 
-eco/gaf-eco-mapping.txt:
+eco/gaf-eco-mapping.txt: eco/
 	cd eco/; $(WGET) $(OBO)/eco/gaf-eco-mapping.txt
+
+eco/gaf-eco-mapping.yaml: eco/gaf-eco-mapping.txt
+	awk -F'\t' 'BEGIN{print "---"} \
+	/^[^#]/ && $$2=="Default"{print "\"" $$1 "\": \"" $$3  "\""} \
+	/^[^#]/ && $$2!="Default"{print "\"" $$1 "-" $$2 "\": \"" $$3 "\""}' \
+	$< | sort  -k2,2 -t' '> $@
 
 eco_clean: ; $(RM) eco/*
 ##########################################
@@ -329,7 +340,9 @@ go/GO.references:  # TODO depreicated in favor of go-refs.json
 go/idmapping_selected.tab.gz:  # expensive
 	cd go/; $(WGET) $(FTPEBI)/$(UPCRKB)/idmapping/idmapping_selected.tab.gz
 go/gaf-eco-mapping.txt: eco/gaf-eco-mapping.txt
-	unlink $@;cd go/; ln -s ../$< gaf-eco-mapping.txt
+	unlink $@;cd go/; ln -s ../$< $(notdir $@)
+go/gaf-eco-mapping.yaml: eco/gaf-eco-mapping.yaml
+	unlink $@;cd go/; ln -s ../$< $(notdir $@)
 
 go_clean: ; $(RM) go/*
 ##########################################
@@ -655,7 +668,8 @@ RCTDL = https://www.reactome.org/download/current
 reactome: reactome/ \
 		reactome/Ensembl2Reactome.txt \
 		reactome/ChEBI2Reactome.txt \
-		reactome/gaf-eco-mapping.txt
+		reactome/gaf-eco-mapping.txt \
+		reactome/gaf-eco-mapping.yaml
 
 reactome/: ; mkdir $@
 reactome/Ensembl2Reactome.txt:
@@ -665,6 +679,10 @@ reactome/ChEBI2Reactome.txt:
 
 reactome/gaf-eco-mapping.txt:  eco/gaf-eco-mapping.txt
 	cd reactome; unlink $(notdir $@); ln -s ../$< $(notdir $@)
+reactome/gaf-eco-mapping.yaml: eco/gaf-eco-mapping.yaml
+	unlink $@;cd reactome/; ln -s ../$< $(notdir $@)
+
+# curl -X GET "https://reactome.org/ContentService/data/diseases/doid" -H  "accept: text/plain"
 
 reactome_clean: ; $(RM) rectome/*
 ##########################################
@@ -762,7 +780,8 @@ wormbase: wormbase/ \
 		wormbase/phenotype_association.wb \
 		wormbase/rnai_phenotypes.wb \
 		wormbase/disease_association.wb \
-		wormbase/pub_xrefs.txt
+		wormbase/pub_xrefs.txt \
+		wormbase/gaf-eco-mapping.yaml
 
 wormbase/: ; mkdir $@
 wormbase/CHECKSUMS:
@@ -802,6 +821,8 @@ wormbase/disease_association.wb: wormbase/CHECKSUMS
 wormbase/pub_xrefs.txt:
 	$(CDWB) $(WGET) -O $(notdir $@) \
 	http://tazendra.caltech.edu/~azurebrd/cgi-bin/forms/generic.cgi?action=WpaXref
+wormbase/gaf-eco-mapping.yaml: eco/gaf-eco-mapping.yaml
+	unlink $@;cd wormbase/; ln -s ../$< $(notdir $@)
 
 wormbase_clean: ;  $(RM) wormbase/*
 ##########################################
