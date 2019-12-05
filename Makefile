@@ -13,7 +13,7 @@ CLEAN = rm --force --recursive --verbose $(dir $@)/*
 # and both are one dir below PWD
 # note $(realpath) does not seem to be available for
 #  #  || ($(realpath $@) !=  $(realpath $<)) ] ; then
-SYMLINK = if [ ! L "$@" ] ; then cd  $(dir $@);unlink $(notdir $@)"; ln -s "../$<" "$(notdir $@)"; fi
+SYMLINK = if [ ! L "$@" ] ; then cd  $(dir $@);unlink "$(notdir $@)"; ln -s "../$<" "$(notdir $@)"; fi
 
 .PHONY: cruft recent clean dipper/scripts
 
