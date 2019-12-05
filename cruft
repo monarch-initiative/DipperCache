@@ -90,6 +90,7 @@ cd go/; /usr/bin/wget --timestamping http://current.geneontology.org/metadata/go
 cd go/; /usr/bin/wget --timestamping http://www.geneontology.org/doc/GO.references
 cd go/; /usr/bin/wget --timestamping ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/idmapping/idmapping_selected.tab.gz
 unlink go/gaf-eco-mapping.txt;cd go/; ln -s ../eco/gaf-eco-mapping.txt gaf-eco-mapping.txt
+unlink go/gaf-eco-mapping.yaml;cd go/; ln -s ../eco/gaf-eco-mapping.yaml gaf-eco-mapping.yaml
 
 mkdir gwascatalog/
 cd gwascatalog; /usr/bin/wget --timestamping ftp://ftp.ebi.ac.uk/pub/databases/gwas/releases/latest/gwas-catalog-associations_ontology-annotated.tsv
