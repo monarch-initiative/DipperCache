@@ -199,8 +199,8 @@ unlink reactome/gaf-eco-mapping.yaml;cd reactome/; ln -s ../eco/gaf-eco-mapping.
 mkdir rgd/
 cd rgd/; /usr/bin/wget --timestamping ftp://ftp.rgd.mcw.edu/pub/data_release/annotated_rgd_objects_by_ontology/rattus_genes_mp
 
-mkdir sdg/
-cd sdg; /usr/bin/wget --timestamping https://downloads.yeastgenome.org/curation/literature/phenotype_data.tab
+mkdir sgd/
+cd sgd; /usr/bin/wget --timestamping https://downloads.yeastgenome.org/curation/literature/phenotype_data.tab
 
 mkdir string/
 cd string ; /usr/bin/wget --timestamping https://string-db.org/api/tsv-no-header/version  ; \
