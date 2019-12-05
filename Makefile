@@ -906,10 +906,4 @@ zfinslim_clean: ; $(RM) zfin/id_map_zfin.tsv zfin/phenoGeneCleanData_fish.txt
 ##########################################
 
 
-clean: animalqtldb_clean biogrid_clean bgee_clean clinvar_clean  ctd_clean eco_clean\
-	flybase_clean genereviews_clean go_clean gwascatalog_clean hgnc_clean \
-	hpoa_clean impc_clean kegg_clean  mmrrc_clean  monochrom_clean \
-	mpd_clean ncbigene_clean omia_clean  orphanet_clean panther_clean reactome_clean \
-	rgd_clean sgd_clean string_clean  wormbase_clean zfin_clean zfinslim_clean
-	# ensembl_clean  eom_clean # mychem_clean # mychem_clean # omim_clean # udp_clean
-	# mgi_clean monarch_clean ucscbands_clean
+clean: $(foreach target $(SOURCES), $(target)_clean)
