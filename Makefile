@@ -9,9 +9,34 @@ RM := rm --force --recursive --verbose
 
 .PHONY: cruft recent clean dipper/scripts
 
-SOURCES = animalqtldb biogrid bgee clinvar ctd flybase genereviews go gwascatalog \
-	hgnc hpoa impc kegg  mmrrc  monochrom mpd ncbigene omia  orphanet \
-	panther reactome rgd sgd string  wormbase zfin zfinslim
+SOURCES = animalqtldb \
+	biogrid \
+	bgee \
+	clinvar \
+	ctd \
+	eco \
+	flybase \
+	genereviews \
+	go \
+	gwascatalog \
+	hgnc \
+	hpoa \
+	impc \
+	kegg  \
+	mmrrc  \
+	monochrom \
+	mpd \
+	ncbigene \
+	omia  \
+	orphanet \
+	panther \
+	reactome \
+	rgd \
+	sgd \
+	string  \
+	wormbase \
+	zfin \
+	zfinslim
 
 all:  $(SOURCES) dipper
 
@@ -699,12 +724,12 @@ rgd/rattus_genes_mp:
 rgd_clean: ; $(RM) rdg/*
 ##########################################
 SGDDL = https://downloads.yeastgenome.org/curation/literature
-sgd: sdg/ sdg/phenotype_data.tab
+sgd: sgd/ sgd/phenotype_data.tab
 
-sdg/: ; mkdir $@
-sdg/phenotype_data.tab:
-	cd sdg; $(WGET) $(SGDDL)/phenotype_data.tab
-sgd_clean: ; $(RM) sdg/*
+sgd/: ; mkdir $@
+sgd/phenotype_data.tab:
+	cd sgd; $(WGET) $(SGDDL)/phenotype_data.tab
+sgd_clean: ; $(RM) sgd/*
 ##########################################
 STRING = https://string-db.org
 # redirects on dl to a static file server
