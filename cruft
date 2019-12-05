@@ -14,19 +14,19 @@ cd ncbigene/ ; /bin/zgrep "^8022[^0-9]" gene_info.gz | /bin/gzip > Oncorhynchus_
 
 mkdir animalqtldb/
 # unlink animalqtldb/gene_info.gz; cd animalqtldb ; ln -s ../ncbigene/gene_info.gz gene_info.gz
-if [ ! L "animalqtldb/gene_info.gz" ] ; then cd  animalqtldb/;unlink "gene_info.gz"; ln -s "../ncbigene/gene_info.gz" "gene_info.gz"; fi
+if [ ! -L "animalqtldb/gene_info.gz" ] ; then cd  animalqtldb/;unlink "gene_info.gz"; ln -s "../ncbigene/gene_info.gz" "gene_info.gz"; fi
 # unlink animalqtldb/Bos_taurus.gene_info.gz; cd animalqtldb ; ln -s ../ncbigene/Bos_taurus.gene_info.gz Bos_taurus.gene_info.gz
-if [ ! L "animalqtldb/Bos_taurus.gene_info.gz" ] ; then cd  animalqtldb/;unlink "Bos_taurus.gene_info.gz"; ln -s "../ncbigene/gene_info.gz" "Bos_taurus.gene_info.gz"; fi
+if [ ! -L "animalqtldb/Bos_taurus.gene_info.gz" ] ; then cd  animalqtldb/;unlink "Bos_taurus.gene_info.gz"; ln -s "../ncbigene/gene_info.gz" "Bos_taurus.gene_info.gz"; fi
 # unlink animalqtldb/Sus_scrofa.gene_info.gz; cd animalqtldb ; ln -s ../ncbigene/Sus_scrofa.gene_info.gz Sus_scrofa.gene_info.gz
-if [ ! L "animalqtldb/Sus_scrofa.gene_info.gz" ] ; then cd  animalqtldb/;unlink "Sus_scrofa.gene_info.gz"; ln -s "../ncbigene/gene_info.gz" "Sus_scrofa.gene_info.gz"; fi
+if [ ! -L "animalqtldb/Sus_scrofa.gene_info.gz" ] ; then cd  animalqtldb/;unlink "Sus_scrofa.gene_info.gz"; ln -s "../ncbigene/gene_info.gz" "Sus_scrofa.gene_info.gz"; fi
 # unlink animalqtldb/Gallus_gallus.gene_info.gz; cd animalqtldb ; ln -s ../ncbigene/Gallus_gallus.gene_info.gz Gallus_gallus.gene_info.gz
-if [ ! L "animalqtldb/Gallus_gallus.gene_info.gz" ] ; then cd  animalqtldb/;unlink "Gallus_gallus.gene_info.gz"; ln -s "../ncbigene/gene_info.gz" "Gallus_gallus.gene_info.gz"; fi
+if [ ! -L "animalqtldb/Gallus_gallus.gene_info.gz" ] ; then cd  animalqtldb/;unlink "Gallus_gallus.gene_info.gz"; ln -s "../ncbigene/gene_info.gz" "Gallus_gallus.gene_info.gz"; fi
 # unlink animalqtldb/Ovis_aries.gene_info.gz; cd animalqtldb ; ln -s ../ncbigene/Ovis_aries.gene_info.gz Ovis_aries.gene_info.gz
-if [ ! L "animalqtldb/Ovis_aries.gene_info.gz" ] ; then cd  animalqtldb/;unlink "Ovis_aries.gene_info.gz"; ln -s "../ncbigene/gene_info.gz" "Ovis_aries.gene_info.gz"; fi
+if [ ! -L "animalqtldb/Ovis_aries.gene_info.gz" ] ; then cd  animalqtldb/;unlink "Ovis_aries.gene_info.gz"; ln -s "../ncbigene/gene_info.gz" "Ovis_aries.gene_info.gz"; fi
 # unlink animalqtldb/Oncorhynchus_mykiss.gene_info.gz; cd animalqtldb ; ln -s ../ncbigene/Oncorhynchus_mykiss.gene_info.gz Oncorhynchus_mykiss.gene_info.gz
-if [ ! L "animalqtldb/Oncorhynchus_mykiss.gene_info.gz" ] ; then cd  animalqtldb/;unlink "Oncorhynchus_mykiss.gene_info.gz"; ln -s "../ncbigene/gene_info.gz" "Oncorhynchus_mykiss.gene_info.gz"; fi
+if [ ! -L "animalqtldb/Oncorhynchus_mykiss.gene_info.gz" ] ; then cd  animalqtldb/;unlink "Oncorhynchus_mykiss.gene_info.gz"; ln -s "../ncbigene/gene_info.gz" "Oncorhynchus_mykiss.gene_info.gz"; fi
 # unlink animalqtldb/Equus_caballus.gene_info.gz; cd animalqtldb ; ln -s ../ncbigene/Equus_caballus.gene_info.gz Equus_caballus.gene_info.gz
-if [ ! L "animalqtldb/Equus_caballus.gene_info.gz" ] ; then cd  animalqtldb/;unlink "Equus_caballus.gene_info.gz"; ln -s "../ncbigene/gene_info.gz" "Equus_caballus.gene_info.gz"; fi
+if [ ! -L "animalqtldb/Equus_caballus.gene_info.gz" ] ; then cd  animalqtldb/;unlink "Equus_caballus.gene_info.gz"; ln -s "../ncbigene/gene_info.gz" "Equus_caballus.gene_info.gz"; fi
 cd animalqtldb ; /usr/bin/wget --timestamping https://www.animalgenome.org/QTLdb/tmp/QTL_Btau_4.6.gff.txt.gz
 cd animalqtldb ; /usr/bin/wget --timestamping https://www.animalgenome.org/QTLdb/tmp/QTL_EquCab2.0.gff.txt.gz
 cd animalqtldb ; /usr/bin/wget --timestamping https://www.animalgenome.org/QTLdb/tmp/QTL_GG_4.0.gff.txt.gz
@@ -97,9 +97,9 @@ cd go/; /usr/bin/wget --timestamping http://current.geneontology.org/metadata/go
 cd go/; /usr/bin/wget --timestamping http://www.geneontology.org/doc/GO.references
 cd go/; /usr/bin/wget --timestamping ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/idmapping/idmapping_selected.tab.gz
 # unlink go/gaf-eco-mapping.txt;cd go/; ln -s ../eco/gaf-eco-mapping.txt gaf-eco-mapping.txt
-if [ ! L "go/gaf-eco-mapping.txt" ] ; then cd  go/;unlink "gaf-eco-mapping.txt"; ln -s "../eco/gaf-eco-mapping.txt" "gaf-eco-mapping.txt"; fi
+if [ ! -L "go/gaf-eco-mapping.txt" ] ; then cd  go/;unlink "gaf-eco-mapping.txt"; ln -s "../eco/gaf-eco-mapping.txt" "gaf-eco-mapping.txt"; fi
 # unlink go/gaf-eco-mapping.yaml;cd go/; ln -s ../eco/gaf-eco-mapping.yaml gaf-eco-mapping.yaml
-if [ ! L "go/gaf-eco-mapping.yaml" ] ; then cd  go/;unlink "gaf-eco-mapping.yaml"; ln -s "../eco/gaf-eco-mapping.yaml" "gaf-eco-mapping.yaml"; fi
+if [ ! -L "go/gaf-eco-mapping.yaml" ] ; then cd  go/;unlink "gaf-eco-mapping.yaml"; ln -s "../eco/gaf-eco-mapping.yaml" "gaf-eco-mapping.yaml"; fi
 
 mkdir gwascatalog/
 cd gwascatalog; /usr/bin/wget --timestamping ftp://ftp.ebi.ac.uk/pub/databases/gwas/releases/latest/gwas-catalog-associations_ontology-annotated.tsv
@@ -141,49 +141,49 @@ mkdir monochrom/
 mkdir monochrom/hg19/
 cd monochrom/hg19; /usr/bin/wget --timestamping http://hgdownload.cse.ucsc.edu/goldenPath/hg19/database/cytoBand.txt.gz
 cd monochrom/ ; unlink 9606cytoBand.txt.gz ; ln -s hg19/cytoBand.txt.gz 9606cytoBand.txt.gz
-# cd monochrom/ ; if [ ! L "monochrom/9606cytoBand.txt.gz" ] ; then cd  monochrom/;unlink "9606cytoBand.txt.gz"; ln -s "../monochrom/hg19/" "9606cytoBand.txt.gz"; fi
+# cd monochrom/ ; if [ ! -L "monochrom/9606cytoBand.txt.gz" ] ; then cd  monochrom/;unlink "9606cytoBand.txt.gz"; ln -s "../monochrom/hg19/" "9606cytoBand.txt.gz"; fi
 cd monochrom/mm10/ ; /usr/bin/wget --timestamping http://hgdownload.cse.ucsc.edu/goldenPath/mm10/database/cytoBandIdeo.txt.gz
 
 mkdir monochrom/mm10/
 cd monochrom/ ; unlink 10090cytoBand.txt.gz ;\
 ln -s mm10/cytoBandIdeo.txt.gz 10090cytoBand.txt.gz  # note dropping 'Ideo' (to fix)
-# cd monochrom/ ; if [ ! L "monochrom/10090cytoBand.txt.gz" ] ; then cd  monochrom/;unlink "10090cytoBand.txt.gz"; ln -s "../monochrom/mm10/cytoBandIdeo.txt.gz" "10090cytoBand.txt.gz"; fi
+# cd monochrom/ ; if [ ! -L "monochrom/10090cytoBand.txt.gz" ] ; then cd  monochrom/;unlink "10090cytoBand.txt.gz"; ln -s "../monochrom/mm10/cytoBandIdeo.txt.gz" "10090cytoBand.txt.gz"; fi
 cd monochrom/danRer10/ ;  /usr/bin/wget --timestamping http://hgdownload.cse.ucsc.edu/goldenPath/danRer10/database/cytoBandIdeo.txt.gz
-# cd monochrom/ ; if [ ! L "monochrom/danRer10/cytoBandIdeo.txt.gz" ] ; then cd  monochrom/danRer10/;unlink "cytoBandIdeo.txt.gz"; ln -s "../" "cytoBandIdeo.txt.gz"; fi
+# cd monochrom/ ; if [ ! -L "monochrom/danRer10/cytoBandIdeo.txt.gz" ] ; then cd  monochrom/danRer10/;unlink "cytoBandIdeo.txt.gz"; ln -s "../" "cytoBandIdeo.txt.gz"; fi
 
 mkdir monochrom/danRer10/
 cd monochrom/ ; unlink 7955cytoBand.txt.gz ; ln -s  danRer10/cytoBandIdeo.txt.gz 7955cytoBand.txt.gz
-# cd monochrom/ ; if [ ! L "monochrom/7955cytoBand.txt.gz" ] ; then cd  monochrom/;unlink "7955cytoBand.txt.gz"; ln -s "../monochrom/danRer10/cytoBandIdeo.txt.gz" "7955cytoBand.txt.gz"; fi
+# cd monochrom/ ; if [ ! -L "monochrom/7955cytoBand.txt.gz" ] ; then cd  monochrom/;unlink "7955cytoBand.txt.gz"; ln -s "../monochrom/danRer10/cytoBandIdeo.txt.gz" "7955cytoBand.txt.gz"; fi
 cd monochrom/rn6/; /usr/bin/wget --timestamping http://hgdownload.cse.ucsc.edu/goldenPath/rn6/database/cytoBandIdeo.txt.gz
 
 mkdir monochrom/rn6/
 cd monochrom/ ; unlink 10116cytoBand.txt.gz ; ln -s rn6/cytoBandIdeo.txt.gz 10116cytoBand.txt.gz
-# cd monochrom/ ; if [ ! L "monochrom/10116cytoBand.txt.gz" ] ; then cd  monochrom/;unlink "10116cytoBand.txt.gz"; ln -s "../monochrom/rn6/cytoBandIdeo.txt.gz" "10116cytoBand.txt.gz"; fi
+# cd monochrom/ ; if [ ! -L "monochrom/10116cytoBand.txt.gz" ] ; then cd  monochrom/;unlink "10116cytoBand.txt.gz"; ln -s "../monochrom/rn6/cytoBandIdeo.txt.gz" "10116cytoBand.txt.gz"; fi
 cd monochrom/bosTau7/; /usr/bin/wget --timestamping http://hgdownload.cse.ucsc.edu/goldenPath/bosTau7/database/cytoBandIdeo.txt.gz
 
 mkdir monochrom/bosTau7/
 cd monochrom/ ; unlink bosTau7cytoBand.txt.gz; ln -s bosTau7/cytoBandIdeo.txt.gz bosTau7cytoBand.txt.gz
-# cd monochrom/ ; if [ ! L "monochrom/bosTau7cytoBand.txt.gz" ] ; then cd  monochrom/;unlink "bosTau7cytoBand.txt.gz"; ln -s "../monochrom/bosTau7/cytoBandIdeo.txt.gz" "bosTau7cytoBand.txt.gz"; fi
+# cd monochrom/ ; if [ ! -L "monochrom/bosTau7cytoBand.txt.gz" ] ; then cd  monochrom/;unlink "bosTau7cytoBand.txt.gz"; ln -s "../monochrom/bosTau7/cytoBandIdeo.txt.gz" "bosTau7cytoBand.txt.gz"; fi
 cd monochrom/galGal4/; /usr/bin/wget --timestamping http://hgdownload.cse.ucsc.edu/goldenPath/galGal4/database/cytoBandIdeo.txt.gz
 
 mkdir monochrom/galGal4/
 cd monochrom/ ; unlink galGal4cytoBand.txt.gz; ln -s galGal4/cytoBandIdeo.txt.gz galGal4cytoBand.txt.gz
-# cd monochrom/ ; if [ ! L "monochrom/galGal4cytoBand.txt.gz" ] ; then cd  monochrom/;unlink "galGal4cytoBand.txt.gz"; ln -s "../monochrom/galGal4/cytoBandIdeo.txt.gz" "galGal4cytoBand.txt.gz"; fi
+# cd monochrom/ ; if [ ! -L "monochrom/galGal4cytoBand.txt.gz" ] ; then cd  monochrom/;unlink "galGal4cytoBand.txt.gz"; ln -s "../monochrom/galGal4/cytoBandIdeo.txt.gz" "galGal4cytoBand.txt.gz"; fi
 cd monochrom/susScr3/; /usr/bin/wget --timestamping http://hgdownload.cse.ucsc.edu/goldenPath/susScr3/database/cytoBandIdeo.txt.gz
 
 mkdir monochrom/susScr3/
 cd monochrom/ ; unlink susScr3cytoBand.txt.gz ; ln -s susScr3/cytoBandIdeo.txt.gz susScr3cytoBand.txt.gz
-# cd monochrom/ ; if [ ! L "monochrom/susScr3cytoBand.txt.gz" ] ; then cd  monochrom/;unlink "susScr3cytoBand.txt.gz"; ln -s "../monochrom/susScr3/cytoBandIdeo.txt.gz" "susScr3cytoBand.txt.gz"; fi
+# cd monochrom/ ; if [ ! -L "monochrom/susScr3cytoBand.txt.gz" ] ; then cd  monochrom/;unlink "susScr3cytoBand.txt.gz"; ln -s "../monochrom/susScr3/cytoBandIdeo.txt.gz" "susScr3cytoBand.txt.gz"; fi
 cd monochrom/oviAri3/; /usr/bin/wget --timestamping http://hgdownload.cse.ucsc.edu/goldenPath/oviAri3/database/cytoBandIdeo.txt.gz
 
 mkdir monochrom/oviAri3/
 cd monochrom/ ; unlink oviAri3cytoBand.txt.gz ; ln -s oviAri3/cytoBandIdeo.txt.gz oviAri3cytoBand.txt.gz
-# cd monochrom/ ; if [ ! L "monochrom/oviAri3cytoBand.txt.gz" ] ; then cd  monochrom/;unlink "oviAri3cytoBand.txt.gz"; ln -s "../monochrom/oviAri3/cytoBandIdeo.txt.gz" "oviAri3cytoBand.txt.gz"; fi
+# cd monochrom/ ; if [ ! -L "monochrom/oviAri3cytoBand.txt.gz" ] ; then cd  monochrom/;unlink "oviAri3cytoBand.txt.gz"; ln -s "../monochrom/oviAri3/cytoBandIdeo.txt.gz" "oviAri3cytoBand.txt.gz"; fi
 cd monochrom/equCab2/; /usr/bin/wget --timestamping http://hgdownload.cse.ucsc.edu/goldenPath/equCab2/database/cytoBandIdeo.txt.gz
 
 mkdir monochrom/equCab2/
 cd monochrom/ ; unlink equCab2cytoBand.txt.gz ; ln -s equCab2/cytoBandIdeo.txt.gz equCab2cytoBand.txt.gz
-# cd monochrom/ ; if [ ! L "monochrom/equCab2cytoBand.txt.gz" ] ; then cd  monochrom/;unlink "equCab2cytoBand.txt.gz"; ln -s "../monochrom/equCab2/cytoBandIdeo.txt.gz" "equCab2cytoBand.txt.gz"; fi
+# cd monochrom/ ; if [ ! -L "monochrom/equCab2cytoBand.txt.gz" ] ; then cd  monochrom/;unlink "equCab2cytoBand.txt.gz"; ln -s "../monochrom/equCab2/cytoBandIdeo.txt.gz" "equCab2cytoBand.txt.gz"; fi
 
 mkdir mpd/
 cd mpd; /usr/bin/wget --timestamping https://phenomedoc.jax.org/MPD_downloads/ontology_mappings.csv
@@ -204,9 +204,9 @@ cd panther; /usr/bin/wget --timestamping ftp://ftp.pantherdb.org/ortholog/curren
 mkdir reactome/
 cd reactome; /usr/bin/wget --timestamping https://www.reactome.org/download/current/Ensembl2Reactome.txt
 cd reactome; /usr/bin/wget --timestamping https://www.reactome.org/download/current/ChEBI2Reactome.txt
-if [ ! L "reactome/gaf-eco-mapping.txt" ] ; then cd  reactome/;unlink "gaf-eco-mapping.txt"; ln -s "../eco/gaf-eco-mapping.txt" "gaf-eco-mapping.txt"; fi
+if [ ! -L "reactome/gaf-eco-mapping.txt" ] ; then cd  reactome/;unlink "gaf-eco-mapping.txt"; ln -s "../eco/gaf-eco-mapping.txt" "gaf-eco-mapping.txt"; fi
 # unlink reactome/gaf-eco-mapping.yaml;cd reactome/; ln -s ../eco/gaf-eco-mapping.yaml gaf-eco-mapping.yaml
-if [ ! L "reactome/gaf-eco-mapping.yaml" ] ; then cd  reactome/;unlink "gaf-eco-mapping.yaml"; ln -s "../eco/gaf-eco-mapping.yaml" "gaf-eco-mapping.yaml"; fi
+if [ ! -L "reactome/gaf-eco-mapping.yaml" ] ; then cd  reactome/;unlink "gaf-eco-mapping.yaml"; ln -s "../eco/gaf-eco-mapping.yaml" "gaf-eco-mapping.yaml"; fi
 
 mkdir rgd/
 cd rgd/; /usr/bin/wget --timestamping ftp://ftp.rgd.mcw.edu/pub/data_release/annotated_rgd_objects_by_ontology/rattus_genes_mp
@@ -266,7 +266,7 @@ ln -s pub/wormbase/releases/current-production-release/ONTOLOGY/rnai_phenotypes.
 cd wormbase/ ; /usr/bin/wget --timestamping -O pub_xrefs.txt \
 http://tazendra.caltech.edu/~azurebrd/cgi-bin/forms/generic.cgi?action=WpaXref
 # unlink wormbase/gaf-eco-mapping.yaml;cd wormbase/; ln -s ../eco/gaf-eco-mapping.yaml gaf-eco-mapping.yaml
-if [ ! L "wormbase/gaf-eco-mapping.yaml" ] ; then cd  wormbase/;unlink "gaf-eco-mapping.yaml"; ln -s "../eco/gaf-eco-mapping.yaml" "gaf-eco-mapping.yaml"; fi
+if [ ! -L "wormbase/gaf-eco-mapping.yaml" ] ; then cd  wormbase/;unlink "gaf-eco-mapping.yaml"; ln -s "../eco/gaf-eco-mapping.yaml" "gaf-eco-mapping.yaml"; fi
 
 mkdir zfin/
 cd zfin/; /usr/bin/wget --timestamping https://zfin.org/downloads/genotype_features.txt
@@ -295,8 +295,8 @@ cd zfin/; /usr/bin/wget --timestamping http://purl.obolibrary.org/obo/zp/id_map_
 
 mkdir zfinslim/
 #cd  zfinslim/; id [ !L "phenoGeneCleanData_fish.txt" ] ; then ln -s "phenoGeneCleanData_fish.txt" "zfin/phenoGeneCleanData_fish.txt"; fi
-if [ ! L "zfinslim/phenoGeneCleanData_fish.txt" ] ; then cd  zfinslim/;unlink "phenoGeneCleanData_fish.txt"; ln -s "../zfin/phenoGeneCleanData_fish.txt" "phenoGeneCleanData_fish.txt"; fi
+if [ ! -L "zfinslim/phenoGeneCleanData_fish.txt" ] ; then cd  zfinslim/;unlink "phenoGeneCleanData_fish.txt"; ln -s "../zfin/phenoGeneCleanData_fish.txt" "phenoGeneCleanData_fish.txt"; fi
 # cd  zfinslim/; id [ ! L "id_map_zfin.tsv" ] ; then ln -s "id_map_zfin.tsv" "zfin/id_map_zfin.tsv"; fi
-if [ ! L "zfinslim/id_map_zfin.tsv" ] ; then cd  zfinslim/;unlink "id_map_zfin.tsv"; ln -s "../zfin/id_map_zfin.tsv" "id_map_zfin.tsv"; fi
+if [ ! -L "zfinslim/id_map_zfin.tsv" ] ; then cd  zfinslim/;unlink "id_map_zfin.tsv"; ln -s "../zfin/id_map_zfin.tsv" "id_map_zfin.tsv"; fi
 # coriell ensembl eom mgi monarch mychem mychem omim ucscbands
 make[1]: Leaving directory '/home/tomc/Projects/Monarch/DipperCache'
