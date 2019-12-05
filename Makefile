@@ -325,7 +325,8 @@ go: eco go/ \
 	go/go-refs.json \
 	go/GO.references \
 	go/idmapping_selected.tab.gz \
-	go/gaf-eco-mapping.txt
+	go/gaf-eco-mapping.txt \
+	go/gaf-eco-mapping.yaml
 
 go/: ; mkdir $@
 
