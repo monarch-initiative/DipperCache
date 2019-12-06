@@ -853,8 +853,8 @@ wormbase/rnai_phenotypes.wb: wormbase/CHECKSUMS
 	ln -s $(WBPROD)/ONTOLOGY/rnai_phenotypes.$$wsnum.wb $(notdir $@)
 wormbase/disease_association.wb: wormbase/CHECKSUMS
 	unlink $@ ; $(CDWB) wsnum=$$($(WSNUM)) ; \
-	$(WGET) $(FULLPTH) $(WBFTP)/$(WBPROD)/ONTOLOGY/rnai_phenotypes.$$wsnum.wb;\
-	ln -s $(WBPROD)/ONTOLOGY/rnai_phenotypes.$$wsnum.wb $(notdir $@)
+	$(WGET) $(FULLPTH) $(WBFTP)/$(WBPROD)/ONTOLOGY/disease_association.$$wsnum.wb;\
+	ln -s $(WBPROD)/ONTOLOGY/disease_association.$$wsnum.wb $(notdir $@)
 # api call so no date or file version
 wormbase/pub_xrefs.txt:
 	$(CDWB) $(WGET) -O $(notdir $@) \
