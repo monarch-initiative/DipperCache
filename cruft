@@ -261,8 +261,8 @@ unlink wormbase/rnai_phenotypes.wb ; cd wormbase/ ; wsnum=$(sed -n '1 s|.*\.\(WS
 /usr/bin/wget --timestamping --force-directories --no-host-directories ftp://ftp.wormbase.org/pub/wormbase/releases/current-production-release/ONTOLOGY/rnai_phenotypes.$wsnum.wb;\
 ln -s pub/wormbase/releases/current-production-release/ONTOLOGY/rnai_phenotypes.$wsnum.wb rnai_phenotypes.wb
 unlink wormbase/disease_association.wb ; cd wormbase/ ; wsnum=$(sed -n '1 s|.*\.\(WS[0-9]\{3\}\)\..*|\1|p' CHECKSUMS) ; \
-/usr/bin/wget --timestamping --force-directories --no-host-directories ftp://ftp.wormbase.org/pub/wormbase/releases/current-production-release/ONTOLOGY/rnai_phenotypes.$wsnum.wb;\
-ln -s pub/wormbase/releases/current-production-release/ONTOLOGY/rnai_phenotypes.$wsnum.wb disease_association.wb
+/usr/bin/wget --timestamping --force-directories --no-host-directories ftp://ftp.wormbase.org/pub/wormbase/releases/current-production-release/ONTOLOGY/disease_association.$wsnum.wb;\
+ln -s pub/wormbase/releases/current-production-release/ONTOLOGY/disease_association.$wsnum.wb disease_association.wb
 cd wormbase/ ; /usr/bin/wget --timestamping -O pub_xrefs.txt \
 http://tazendra.caltech.edu/~azurebrd/cgi-bin/forms/generic.cgi?action=WpaXref
 # unlink wormbase/gaf-eco-mapping.yaml;cd wormbase/; ln -s ../eco/gaf-eco-mapping.yaml gaf-eco-mapping.yaml
