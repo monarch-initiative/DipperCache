@@ -532,7 +532,6 @@ monochrom/: ; mkdir $@
 # accomadate existing ingest given names
 monochrom/9606cytoBand.txt.gz: monochrom/hg19/ monochrom/hg19/cytoBand.txt.gz
 	$(CDMC) unlink 9606cytoBand.txt.gz ; ln -s hg19/cytoBand.txt.gz 9606cytoBand.txt.gz
-	# $(CDMC) $(SYMLINK)
 monochrom/hg19/: ; mkdir $@
 monochrom/hg19/cytoBand.txt.gz:
 	cd monochrom/hg19; $(WGET) $(MCDL)/hg19/database/cytoBand.txt.gz
@@ -540,28 +539,23 @@ monochrom/hg19/cytoBand.txt.gz:
 monochrom/10090cytoBand.txt.gz: monochrom/mm10/$(CBI)  monochrom/mm10/
 	$(CDMC) unlink 10090cytoBand.txt.gz ;\
 	ln -s mm10/$(CBI) 10090cytoBand.txt.gz  # note dropping 'Ideo' (to fix)
-	# $(CDMC) $(SYMLINK)
 monochrom/mm10/: ; mkdir $@
 monochrom/mm10/$(CBI):
 	cd monochrom/mm10/ ; $(WGET) $(MCDL)/mm10/database/$(CBI)
 
 monochrom/7955cytoBand.txt.gz: monochrom/danRer10/$(CBI) monochrom/danRer10/
 	$(CDMC) unlink 7955cytoBand.txt.gz ; ln -s  danRer10/$(CBI) 7955cytoBand.txt.gz
-	# $(CDMC) $(SYMLINK)
 monochrom/danRer10/: ; mkdir $@
 monochrom/danRer10/$(CBI):
 	cd monochrom/danRer10/ ;  $(WGET) $(MCDL)/danRer10/database/$(CBI)
-	# $(CDMC) $(SYMLINK)
 monochrom/10116cytoBand.txt.gz: monochrom/rn6/$(CBI)  monochrom/rn6/
 	$(CDMC) unlink 10116cytoBand.txt.gz ; ln -s rn6/$(CBI) 10116cytoBand.txt.gz
-	# $(CDMC) $(SYMLINK)
 monochrom/rn6/: ; mkdir $@
 monochrom/rn6/$(CBI):
 	cd monochrom/rn6/; $(WGET) $(MCDL)/rn6/database/$(CBI)
 
 monochrom/bosTau7cytoBand.txt.gz: monochrom/bosTau7/$(CBI) monochrom/bosTau7/
 	$(CDMC) unlink bosTau7cytoBand.txt.gz; ln -s bosTau7/$(CBI) bosTau7cytoBand.txt.gz
-	# $(CDMC) $(SYMLINK)
 monochrom/bosTau7/: ; mkdir $@
 
 monochrom/bosTau7/$(CBI):
@@ -569,28 +563,24 @@ monochrom/bosTau7/$(CBI):
 
 monochrom/galGal4cytoBand.txt.gz: monochrom/galGal4/$(CBI) monochrom/galGal4/
 	$(CDMC) unlink galGal4cytoBand.txt.gz; ln -s galGal4/$(CBI) galGal4cytoBand.txt.gz
-	# $(CDMC) $(SYMLINK)
 monochrom/galGal4/: ; mkdir $@
 monochrom/galGal4/cytoBandIdeo.txt.gz:
 	cd monochrom/galGal4/; $(WGET) $(MCDL)/galGal4/database/$(CBI)
 
 monochrom/susScr3cytoBand.txt.gz: monochrom/susScr3/$(CBI) monochrom/susScr3/
 	$(CDMC) unlink susScr3cytoBand.txt.gz ; ln -s susScr3/$(CBI) susScr3cytoBand.txt.gz
-	# $(CDMC) $(SYMLINK)
 monochrom/susScr3/: ; mkdir $@
 monochrom/susScr3/cytoBandIdeo.txt.gz:
 	cd monochrom/susScr3/; $(WGET) $(MCDL)/susScr3/database/$(CBI)
 
 monochrom/oviAri3cytoBand.txt.gz: monochrom/oviAri3/$(CBI) monochrom/oviAri3/
 	$(CDMC) unlink oviAri3cytoBand.txt.gz ; ln -s oviAri3/$(CBI) oviAri3cytoBand.txt.gz
-	# $(CDMC) $(SYMLINK)
 monochrom/oviAri3/: ; mkdir $@
 monochrom/oviAri3/cytoBandIdeo.txt.gz:
 	cd monochrom/oviAri3/; $(WGET) $(MCDL)/oviAri3/database/$(CBI)
 
 monochrom/equCab2cytoBand.txt.gz: monochrom/equCab2/$(CBI) monochrom/equCab2/
 	$(CDMC) unlink equCab2cytoBand.txt.gz ; ln -s equCab2/$(CBI) equCab2cytoBand.txt.gz
-	# $(CDMC) $(SYMLINK)
 monochrom/equCab2/: ; mkdir $@
 monochrom/equCab2/cytoBandIdeo.txt.gz:
 	cd monochrom/equCab2/; $(WGET) $(MCDL)/equCab2/database/$(CBI)
