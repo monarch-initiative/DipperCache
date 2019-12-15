@@ -77,7 +77,8 @@ AQTLGI = gene_info.gz \
 AQTLTMP = QTL_Btau_4.6.gff.txt.gz \
 		QTL_EquCab2.0.gff.txt.gz \
 		QTL_GG_4.0.gff.txt.gz \
-		QTL_OAR_3.1.gff.txt.gz
+		QTL_OAR_3.1.gff.txt.gz \
+		QTL_SS_10.2.gff.txt.gz
 
 AQTLVER = pig_QTLdata.txt \
 		sheep_QTLdata.txt \
@@ -148,13 +149,6 @@ biogrid/BIOGRID-ALL-LATEST.mitab.zip:
 biogrid/BIOGRID-IDENTIFIERS-LATEST.tab.zip:
 	$(CDBOG) $(WGET) $(BGDL)/BIOGRID-IDENTIFIERS-LATEST.tab.zip
 
-# TODO get rid of obsuscating  name changes in py (then delete here too)
-biogrid/identifiers.tab.zip:  biogrid/BIOGRID-IDENTIFIERS-LATEST.tab.zip
-	# unlink $@; $(CDBOG) ln -s BIOGRID-IDENTIFIERS-LATEST.tab.zip identifiers.tab.zip
-	$(SYMLINK)
-biogrid/interactions.mitab.zip: biogrid/BIOGRID-ALL-LATEST.mitab.zip
-	# unlink $@; $(CDBOG) ln -s BIOGRID-ALL-LATEST.mitab.zip interactions.mitab.zip
-	$(SYMLINK)
 biogrid_clean: ;  $(RM) biogrid/*
 ##########################################
 CVFTP = ftp://ftp.ncbi.nlm.nih.gov/pub/clinvar
@@ -277,7 +271,8 @@ $(ENSRDF_TARGET):
 #ensembl_clean: ;  $(RM) ensembl
 ##########################################
 #eom: eom/ ; mkdir $@
-# a dead end fron the 'disco' days?
+#  hp-to-eom-mapping.tsv
+# a dead end from the 'disco' days?
 ##########################################
 FLYFTP = ftp://ftp.flybase.net
 FLYPRE = releases/current/precomputed_files
@@ -592,6 +587,7 @@ mpd: mpd/ \
 	mpd/ontology_mappings.csv \
 	mpd/straininfo.csv \
 	mpd/measurements.csv \
+	mpd/strainmeans.csv.gz
 # 	mpd_datasets_metadata.xml.gz  # TODO should this remain unused?
 
 mpd/: ; mkdir $@
@@ -746,8 +742,9 @@ STRYR = 2018
 
 SRTPTH = protein.links.detailed.v$(STRVER)
 
-STRTAX = 9606 10090 7955 7227 6239 4932
+STRTAX = 9606 10090 7955 7227 6239 4932 10116
 STRSPC = celegans fly human mouse yeast zebrafish
+# no rat
 
 string: string/ \
 		string/version \
