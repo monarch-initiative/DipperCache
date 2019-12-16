@@ -58,8 +58,11 @@ recent:
 cruft:
 	make -n | sed 's|^mkdir |\nmkdir |g' > $@
 
-tree: $(SOURCES)
-	tree $(SOURCES)
+tree: dipper_cache.tree
+
+dipper_cache.tree:
+	/usr/bin/tree --sort=name --timefmt "%Y%0m%0d %0T" -D -si -f -I dipper -o $@ ;\
+	# git diff $@; git add $@ ;git commit -m "generated" $@  # not till in repo
 
 ##########################################
 # animalqtldb
@@ -674,15 +677,23 @@ orphanet/en_product6.xml:
 
 orphanet_clean: ; $(RM) orphanet/*
 ##########################################
+PNTH = ftp://ftp.pantherdb.org/ortholog
 PNTHDL = ftp://ftp.pantherdb.org/ortholog/current_release
+
 panther: panther/ \
+	panther/current_release.ver
 	panther/RefGenomeOrthologs.tar.gz \
 	panther/Orthologs_HCOP.tar.gz
 
 panther/: ; mkdir $@
-panther/RefGenomeOrthologs.tar.gz:
+
+panther/current_release.ver: panther/
+	cd panther; \
+	/usr/bin/curl -s $(PNTH)/|sed -n 's/.*current_release -> \([0-9.]\+\)/\1/p' > $@
+
+panther/RefGenomeOrthologs.tar.gz: panther/current_release.ver
 	cd panther; $(WGET) $(PNTHDL)/RefGenomeOrthologs.tar.gz
-panther/Orthologs_HCOP.tar.gz:
+panther/Orthologs_HCOP.tar.gz: panther/current_release.ver
 	cd panther; $(WGET) $(PNTHDL)/Orthologs_HCOP.tar.gz
 
 panther_clean: ; $(RM) panther/*
