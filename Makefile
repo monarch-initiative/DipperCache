@@ -688,8 +688,8 @@ panther: panther/ \
 panther/: ; mkdir $@
 
 panther/current_release.ver: panther/
-	cd panther; \
-	/usr/bin/curl -s $(PNTH)/|sed -n 's/.*current_release -> \([0-9.]\+\)/\1/p' > $@
+	/usr/bin/curl -s $(PNTH)/ |\
+		/bin/sed -n 's/.*current_release -> \([0-9.]\+\)/\1/p' > $@
 
 panther/RefGenomeOrthologs.tar.gz: panther/current_release.ver
 	cd panther; $(WGET) $(PNTHDL)/RefGenomeOrthologs.tar.gz
