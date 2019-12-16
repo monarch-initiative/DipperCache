@@ -690,10 +690,9 @@ panther/: ; mkdir $@
 panther/current_release.ver: panther/
 	/usr/bin/curl -s $(PNTH)/ |\
 		/bin/sed -n 's/.*current_release -> \([0-9.]\+\)/\1/p' > $@
-
-panther/RefGenomeOrthologs.tar.gz: panther/current_release.ver
+panther/RefGenomeOrthologs.tar.gz:
 	cd panther; $(WGET) $(PNTHDL)/RefGenomeOrthologs.tar.gz
-panther/Orthologs_HCOP.tar.gz: panther/current_release.ver
+panther/Orthologs_HCOP.tar.gz:
 	cd panther; $(WGET) $(PNTHDL)/Orthologs_HCOP.tar.gz
 
 panther_clean: ; $(RM) panther/*
