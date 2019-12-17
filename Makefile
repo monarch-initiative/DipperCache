@@ -61,7 +61,7 @@ cruft:
 tree: dipper_cache.tree
 
 dipper_cache.tree:
-	/usr/bin/tree --sort=name --timefmt "%Y%0m%0d %0T" -D -si -f -I dipper -o $@ ;\
+	/usr/bin/tree --sort=name --timefmt "%Y%0m%0d %0T" -D -si -f -I dipper -n -o $@ ;\
 	# git diff $@; git add $@ ;git commit -m "generated" $@  # not till in repo
 
 ##########################################
@@ -689,7 +689,8 @@ panther/: ; mkdir $@
 
 panther/current_release.ver: panther/
 	/usr/bin/curl -s $(PNTH)/ |\
-		/bin/sed -n 's/.*current_release -> \([0-9.]\+\)/\1/p' > $@
+	/bin/sed -n 's/.*current_release -> \([0-9.]\+\)/\1/p' > $@
+
 panther/RefGenomeOrthologs.tar.gz:
 	cd panther; $(WGET) $(PNTHDL)/RefGenomeOrthologs.tar.gz
 panther/Orthologs_HCOP.tar.gz:
