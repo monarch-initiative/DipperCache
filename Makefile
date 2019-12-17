@@ -15,7 +15,7 @@ CLEAN = rm --force --recursive --verbose $(dir $@)/*
 #  #  || ($(realpath $@) !=  $(realpath $<)) ] ; then
 SYMLINK = if [ ! -L "$@" ] ; then cd  $(dir $@);unlink "$(notdir $@)"; ln -s "../$<" "$(notdir $@)"; fi
 
-.PHONY: cruft recent clean dipper/scripts
+.PHONY: cruft recent clean dipper/scripts tree
 
 SOURCES = animalqtldb \
 	biogrid \
@@ -58,10 +58,8 @@ recent:
 cruft:
 	make -n | sed 's|^mkdir |\nmkdir |g' > $@
 
-tree: dipper_cache.tree
-
-dipper_cache.tree:
-	/usr/bin/tree --sort=name --timefmt "%Y%0m%0d %0T" -D -si -f -I dipper -n -o $@ ;\
+tree:
+	/usr/bin/tree --sort=name --timefmt "%Y%0m%0d %0T" -D -si -f -I dipper -n -o dipper_cache.tree ;\
 	# git diff $@; git add $@ ;git commit -m "generated" $@  # not till in repo
 
 ##########################################
