@@ -91,9 +91,13 @@ AQTLVER = pig_QTLdata.txt \
 animalqtldb: ncbigene animalqtldb/ \
 		$(foreach spc, $(AQTLGI), animalqtldb/$(spc)) \
 		$(foreach spc, $(AQTLTMP), animalqtldb/$(spc)) \
-		$(foreach spc, $(AQTLVER), animalqtldb/$(spc))
+		$(foreach spc, $(AQTLVER), animalqtldb/$(spc)) \
+		animalqtldb/trait_mappings.csv
 
 animalqtldb/: ; mkdir $@
+
+animalqtldb/trait_mappings.csv:
+	$(CDAQTL) $(WGET) $(AQTLDL)/export/$(notdir $@)
 
 # AQTL_TMP_FILES
 $(foreach spc, $(AQTLTMP), animalqtldb/$(spc)):
