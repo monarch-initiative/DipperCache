@@ -683,7 +683,7 @@ PNTH = ftp://ftp.pantherdb.org/ortholog
 PNTHDL = ftp://ftp.pantherdb.org/ortholog/current_release
 
 panther: panther/ \
-	panther/current_release.ver
+	panther/current_release.ver \
 	panther/RefGenomeOrthologs.tar.gz \
 	panther/Orthologs_HCOP.tar.gz
 
