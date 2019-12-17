@@ -1,8 +1,9 @@
-# could run as
-# make  --no-builtin-variables --no-builtin-rules
-# since this is not performing any traditional build tasks
 
-DIPPER = $$HOME/Projects/Monarch/dipper
+# since this is not performing any traditional C build tasks
+MAKEFLAGS += --warn-undefined-variables
+MAKEFLAGS += --no-builtin-rules
+MAKEFLAGS += --no-builtin-variables
+
 WGET = /usr/bin/wget --timestamping
 FULLPTH := --force-directories --no-host-directories
 RM := rm --force --recursive --verbose
@@ -15,7 +16,7 @@ CLEAN = rm --force --recursive --verbose $(dir $@)/*
 #  #  || ($(realpath $@) !=  $(realpath $<)) ] ; then
 SYMLINK = if [ ! -L "$@" ] ; then cd  $(dir $@);unlink "$(notdir $@)"; ln -s "../$<" "$(notdir $@)"; fi
 
-.PHONY: cruft recent clean dipper/scripts tree
+.PHONY: help cruft recent clean dipper/scripts tree
 
 SOURCES = animalqtldb \
 	biogrid \
@@ -49,16 +50,23 @@ SOURCES = animalqtldb \
 all:  $(SOURCES) dipper
 
 # ommited for cause
-	# coriell ensembl eom mgi monarch mychem mychem omim ucscbands
+# coriell ensembl eom mgi monarch mychem mychem omim ucscbands
+
+# Borrowed from https://marmelab.com/blog/2016/02/29/auto-documented-makefile.html
+help: ## Display this help section
+	@awk 'BEGIN {FS = ":.*?## "}\
+		/^[a-zA-Z0-9_-]+:.*?## / {\
+			printf "\033[36m%-38s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
+#    .DEFAULT_GOAL := help
 
 # newish updates
-recent:
+recent:  ##
 	find ./*/ -mtime -5 -ls
 
-cruft:
+cruft:  ## Preview which commands would be executed now
 	make -n | sed 's|^mkdir |\nmkdir |g' > $@
 
-tree:
+tree:  ## Diffable metadata snapshot of results
 	/usr/bin/tree --sort=name --timefmt "%Y%0m%0d %0T" -D -si -f -I dipper -n -o dipper_cache.tree ;\
 	# git diff $@; git add $@ ;git commit -m "generated" $@  # not till in repo
 
