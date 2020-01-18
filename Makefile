@@ -4,7 +4,7 @@ MAKEFLAGS += --warn-undefined-variables
 MAKEFLAGS += --no-builtin-rules
 MAKEFLAGS += --no-builtin-variables
 
-WGET = /usr/bin/wget --timestamping
+WGET = /usr/bin/wget --timestamping --no-verbose
 FULLPTH := --force-directories --no-host-directories
 RM := rm --force --recursive --verbose
 
@@ -137,13 +137,13 @@ bgee: dipper bgee/ \
 
 bgee/: ; mkdir $@
 bgee/bgee.sqlite3.gz: bgee/bgee_sqlite3.sql
-	$(CDBG) gzip --force bgee.sqlite3  # appends .gz
+	gzip --stdout $? > $@
 
 bgee/bgee.sqlite3: bgee/bgee_sqlite3.sql
 	$(CDBGE) /usr/bin/sqlite3 -mmap 3G bgee.sqlite3 < bgee_sqlite3.sql
 
 bgee/bgee_sqlite3.sql:  bgee/sql_lite_dump.sql
-	$(CDBGE) ../dipper/scripts/mysql2sqlite $? > $@ ;\
+	./dipper/scripts/mysql2sqlite $? > $@ ;\
 	echo -e "\nvacuum;analyze;" >> $@
 
 bgee/sql_lite_dump.sql:  bgee/sql_lite_dump.tar.gz
