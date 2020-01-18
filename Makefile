@@ -55,6 +55,10 @@ SOURCES = animalqtldb \
 
 all:  $(SOURCES) dipper
 
+# unsatisifiable target used as a depencency 
+# to force recipies within independent targets
+FORCE:
+
 # ommited for cause
 # coriell ensembl eom mgi monarch mychem mychem omim ucscbands
 
@@ -163,9 +167,9 @@ biogrid: biogrid/ \
 
 biogrid/: ; mkdir $@
 
-biogrid/BIOGRID-ALL-LATEST.mitab.zip:
+biogrid/BIOGRID-ALL-LATEST.mitab.zip: FORCE
 	$(CDBOG) $(WGET) $(BGDL)/BIOGRID-ALL-LATEST.mitab.zip
-biogrid/BIOGRID-IDENTIFIERS-LATEST.tab.zip:
+biogrid/BIOGRID-IDENTIFIERS-LATEST.tab.zip: FORCE
 	$(CDBOG) $(WGET) $(BGDL)/BIOGRID-IDENTIFIERS-LATEST.tab.zip
 
 biogrid_clean: ;  $(RM) biogrid/*
@@ -204,7 +208,7 @@ ctd_clean: ; $(RM) ctd/*
 dipper: dipper/ dipper/scripts
 dipper/: ; git clone https://github.com/monarch-initiative/dipper.git
 
-dipper/scripts:
+dipper/scripts: FORCE
 	cd dipper; git pull
 
 dipper_clean: ; $(RM) dipper
@@ -338,9 +342,9 @@ genereviews: genereviews/ \
 		genereviews/GRtitle_shortname_NBKid.txt
 
 genereviews/: ; mkdir $@
-genereviews/NBKid_shortname_OMIM.txt:
+genereviews/NBKid_shortname_OMIM.txt: FORCE
 	cd genereviews; $(WGET) $(GRDL)/NBKid_shortname_OMIM.txt
-genereviews/GRtitle_shortname_NBKid.txt:
+genereviews/GRtitle_shortname_NBKid.txt: FORCE
 	cd genereviews; $(WGET) $(GRDL)/GRtitle_shortname_NBKid.txt
 
 genereviews_clean: ;  $(RM) genereviews/*
