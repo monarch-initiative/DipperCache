@@ -16,6 +16,12 @@ CLEAN = rm --force --recursive --verbose $(dir $@)/*
 #  #  || ($(realpath $@) !=  $(realpath $<)) ] ; then
 SYMLINK = if [ ! -L "$@" ] ; then cd  $(dir $@);unlink "$(notdir $@)"; ln -s "../$<" "$(notdir $@)"; fi
 
+# used in more than one ingest
+OBO = http://purl.obolibrary.org/obo
+GITRAW = https://raw.githubusercontent.com
+GITMON = $(GITRAW)/monarch-initiative
+
+
 .PHONY: help cruft recent clean dipper/scripts tree
 
 SOURCES = animalqtldb \
@@ -60,7 +66,7 @@ help: ## Display this help section
 #    .DEFAULT_GOAL := help
 
 # newish updates
-recent:  ##
+recent:  ## See what has been renewed in the last several days
 	find ./*/ -mtime -5 -ls
 
 cruft:  ## Preview which commands would be executed now
@@ -203,8 +209,6 @@ dipper/scripts:
 
 dipper_clean: ; $(RM) dipper
 ##########################################
-# used in more than one ingest
-OBO = http://purl.obolibrary.org/obo
 eco: eco/ \
 	eco/gaf-eco-mapping.yaml
 
@@ -233,7 +237,7 @@ eco_clean: ; $(RM) eco/*
 # curl ftp://ftp.ensembl.org/pub/current_rdf/ > ensembl_species_name
 # for ds in $(cat dipper_species_name); do grep -E " $ds$" ensembl_species_name ; done | cut -c57- > names_to_fetch
 
-# ordered by "popularity"
+# ordered by "popularity" == mention in dipper output
 ENSSPC = mus_musculus homo_sapiens drosophila_melanogaster bos_taurus danio_rerio
 #	caenorhabditis_elegans sus_scrofa rattus_norvegicus gallus_gallus \
 #	canis_lupus_familiaris pan_troglodytes macaca_mulatta monodelphis_domestica \
@@ -686,7 +690,64 @@ orphanet/en_product6.xml:
 	cd orphanet/; $(WGET) http://www.orphadata.org/data/xml/en_product6.xml
 
 orphanet_clean: ; $(RM) orphanet/*
+
 ##########################################
+
+owl: owl/ \
+	owl/geno.owl \
+	owl/faldo.ttl \
+	owl/eco.owl \
+	owl/iao.owl \
+	owl/sepio.owl \
+	owl/ero.owl \
+	owl/pw.owl \
+	owl/oban_core.ttl \
+	owl/pco.owl \
+	owl/xco.owl \
+	owl/foaf.rdf \
+	owl/dcelements.rdf \
+	owl/metazoa.owl \
+	owl/clo_core.owl \
+    owl/monarch-merged.owl
+
+owl/: ; mkdir $@
+
+owl/geno.owl:
+	cd owl; $(WGET) $(GITMON)/GENO-ontology/develop/src/ontology/geno.owl
+owl/sepio.owl:
+	cd owl; $(WGET) $(GITMON)/SEPIO-ontology/master/src/ontology/sepio.owl
+owl/faldo.ttl:
+	cd owl; $(WGET) $(GITRAW)/OBF/FALDO/master/faldo.ttl
+owl/eco.owl:
+	cd owl; $(WGET) $(OBO)/eco.owl
+owl/iao.owl:
+	cd owl; $(WGET) $(OBO)/iao.owl
+owl/ero.owl:
+	cd owl; $(WGET) $(OBO)/ero.owl
+owl/pw.owl:
+	cd owl; $(WGET) $(OBO)/pw.owl
+owl/oban_core.ttl:
+	cd owl; $(WGET) $(GITRAW)/jamesmalone/OBAN/master/ontology/oban_core.ttl
+owl/pco.owl:
+	cd owl; $(WGET) $(OBO)/pco.owl
+owl/xco.owl:
+	cd owl; $(WGET) $(OBO)/xco.owl
+owl/foaf.rdf:
+	cd owl; $(WGET) http://xmlns.com/foaf/spec/index.rdf -O foaf.rdf
+owl/dcelements.rdf:  ## had local name dc.rdf
+	cd owl; $(WGET) https://dublincore.org/2012/06/14/dcelements.rdf
+########
+# these next few are far too circular
+owl/metazoa.owl:
+	cd owl; $(WGET) https://data.monarchinitiative.org/owl/metazoa.owl
+owl/clo_core.owl:
+	cd owl; $(WGET) https://data.monarchinitiative.org/owl/clo_core.owl
+# this one shouls be getting rebuilt based on if any if the previous are new
+owl/monarch-merged.owl:
+	cd owl; $(WGET) https://data.monarchinitiative.org/owl/monarch-merged.owl
+
+owl_clean: ; $(RM) owl/*
+########################################################
 PNTH = ftp://ftp.pantherdb.org/ortholog
 PNTHDL = ftp://ftp.pantherdb.org/ortholog/current_release
 
@@ -875,7 +936,7 @@ wormbase_clean: ;  $(RM) wormbase/*
 ##########################################
 ZFDL = https://zfin.org/downloads
 # not        https://purl.obolibrary.org/obo/zp/src/curation
-ZPCURATION = http://purl.obolibrary.org/obo/zp
+ZPCURATION = $(OBO)/zp
 ZFFILES = \
 	genotype_features.txt \
 	phenotype_fish.txt \
