@@ -1,5 +1,6 @@
 
-# since this is not performing any traditional C build tasks
+# Since this is not performing any traditional C build tasks avoid
+# unexpected behavior with accidental collisions with preset variables/rules
 MAKEFLAGS += --warn-undefined-variables
 MAKEFLAGS += --no-builtin-rules
 MAKEFLAGS += --no-builtin-variables
@@ -10,13 +11,19 @@ RM := rm --force --recursive --verbose
 
 CLEAN = rm --force --recursive --verbose $(dir $@)/*
 
-# when the target needs to appear to be the first dependency
+# For the first dependency to appear as the target
 # and both are one dir below PWD
 # note $(realpath) does not seem to be available for
-#  #  || ($(realpath $@) !=  $(realpath $<)) ] ; then
+# || ($(realpath $@) !=  $(realpath $<)) ] ; then
 SYMLINK = if [ ! -L "$@" ] ; then cd  $(dir $@);unlink "$(notdir $@)"; ln -s "../$<" "$(notdir $@)"; fi
 
-# used in more than one ingest
+
+# when a remote server does not set last-modified headers we can only test
+# if a new file is the same or different from the one we already heve.
+# Last-modified header missing workaround
+COPYCHANGED = if [ "$$(md5sum $?|cut -c 1-32)" != "$$(md5sum $@|cut -c 1-32)" ] ; then cp -fp $? $@ ; fi
+
+# May be used in more than one ingest
 OBO = http://purl.obolibrary.org/obo
 GITRAW = https://raw.githubusercontent.com
 GITMON = $(GITRAW)/monarch-initiative
@@ -55,7 +62,7 @@ SOURCES = animalqtldb \
 
 all:  $(SOURCES) dipper
 
-# unsatisifiable target used as a depencency 
+# unsatisifiable target used as a depencency
 # to force recipies within independent targets
 FORCE:
 
@@ -69,7 +76,6 @@ help: ## Display this help section
 			printf "\033[36m%-38s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
 #    .DEFAULT_GOAL := help
 
-# newish updates
 recent:  ## See what has been renewed in the last several days
 	find ./*/ -mtime -5 -ls
 
@@ -106,7 +112,7 @@ AQTLVER = pig_QTLdata.txt \
 		horse_QTLdata.txt \
 		rainbow_trout_QTLdata.txt
 
-animalqtldb: ncbigene animalqtldb/ \
+animalqtldb: ncbigene animalqtldb/ ## \
 		$(foreach spc, $(AQTLGI), animalqtldb/$(spc)) \
 		$(foreach spc, $(AQTLTMP), animalqtldb/$(spc)) \
 		$(foreach spc, $(AQTLVER), animalqtldb/$(spc)) \
@@ -158,19 +164,28 @@ bgee/sql_lite_dump.tar.gz: FORCE
 
 bgee_clean: ; $(RM) bgee/*
 ########################################
-BGDL = https://downloads.thebiogrid.org/Download/BioGRID/Latest-Release
+BGFP = Download/BioGRID/Latest-Release
+BGDL = https://downloads.thebiogrid.org/$(BGFP)
 
 CDBOG = cd biogrid ;
 biogrid: biogrid/ \
+	biogrid/$(BGFP)/BIOGRID-ALL-LATEST.mitab.zip \
 	biogrid/BIOGRID-ALL-LATEST.mitab.zip \
+	biogrid/$(BGFP)/BIOGRID-IDENTIFIERS-LATEST.tab.zip \
 	biogrid/BIOGRID-IDENTIFIERS-LATEST.tab.zip
 
 biogrid/: ; mkdir $@
 
-biogrid/BIOGRID-ALL-LATEST.mitab.zip: FORCE
-	$(CDBOG) $(WGET) $(BGDL)/BIOGRID-ALL-LATEST.mitab.zip
-biogrid/BIOGRID-IDENTIFIERS-LATEST.tab.zip: FORCE
-	$(CDBOG) $(WGET) $(BGDL)/BIOGRID-IDENTIFIERS-LATEST.tab.zip
+biogrid/$(BGFP)/BIOGRID-ALL-LATEST.mitab.zip: FORCE
+	$(CDBOG) $(WGET) $(FULLPTH) $(BGDL)/BIOGRID-ALL-LATEST.mitab.zip
+biogrid/BIOGRID-ALL-LATEST.mitab.zip: biogrid/$(BGFP)/BIOGRID-ALL-LATEST.mitab.zip
+	# Last-modified header missing workaround
+	$(COPYCHANGED)
+biogrid/$(BGFP)/BIOGRID-IDENTIFIERS-LATEST.tab.zip: FORCE
+	$(CDBOG) $(WGET) $(FULLPTH) $(BGDL)/BIOGRID-IDENTIFIERS-LATEST.tab.zip
+biogrid/BIOGRID-IDENTIFIERS-LATEST.tab.zip: biogrid/$(BGFP)/BIOGRID-IDENTIFIERS-LATEST.tab.zip
+	# Last-modified header missing workaround
+	$(COPYCHANGED)
 
 biogrid_clean: ;  $(RM) biogrid/*
 ##########################################
@@ -467,43 +482,75 @@ kegg: kegg/ \
 
 kegg/: 	; mkdir $@
 # note choosing native name except when there is a conflict
-# conflicts interfer with --timestamping
+# conflicts would interfer with --timestamping
+# if their server supported Last-modified headers
 kegg/disease: FORCE
 	cd kegg; $(WGET) $(KEGGG)/list/disease
+	# Last-modified header missing workaround
+
 kegg/pathway: FORCE
 	cd kegg; $(WGET) $(KEGGG)/list/pathway
+	# Last-modified header missing workaround
+
 kegg/hsa_genes: FORCE
 	cd kegg; $(WGET) $(KEGGG)/list/hsa -O hsa_genes
+	# Last-modified header missing workaround
+
 kegg/orthology: FORCE
 	cd kegg; $(WGET) $(KEGGG)/list/orthology
+	# Last-modified header missing workaround
+
 kegg/disease_gene: FORCE
 	cd kegg; $(WGET) $(KEGGK)/link/disease/hsa -O disease_gene
+	# Last-modified header missing workaround
+
 kegg/omim: FORCE
 	cd kegg; $(WGET) $(KEGGG)/link/disease/omim
+	# Last-modified header missing workaround
+
 kegg/omim2gene: FORCE
 	cd kegg; $(WGET) $(KEGGG)/link/omim/hsa -O omim2gene
+	# Last-modified header missing workaround
 kegg/ncbi: FORCE
 	cd kegg; $(WGET) $(KEGGG)/conv/ncbi-geneid/hsa -O ncbi
+	# Last-modified header missing workaround
 kegg/human_gene2pathway: FORCE
 	cd kegg; $(WGET) $(KEGGK)/link/pathway/hsa -O human_gene2pathway
+	# Last-modified header missing workaround
 kegg/hsa_orthologs: FORCE
 	cd kegg; $(WGET) $(KEGGK)/link/orthology/hsa -O hsa_orthologs
+	# Last-modified header missing workaround
 kegg/mmu: FORCE
 	cd kegg; $(WGET) $(KEGGK)/link/orthology/mmu
+	# Last-modified header missing workaround
+
 kegg/rno: FORCE
 	cd kegg; $(WGET) $(KEGGK)/link/orthology/rno
+	# Last-modified header missing workaround
+
 kegg/dme: FORCE
 	cd kegg; $(WGET) $(KEGGK)/link/orthology/dme
+	# Last-modified header missing workaround
+
 kegg/dre: FORCE
 	cd kegg; $(WGET) $(KEGGK)/link/orthology/dre
+	# Last-modified header missing workaround
+
 kegg/cel: FORCE
 	cd kegg; $(WGET) $(KEGGK)/link/orthology/cel
+	# Last-modified header missing workaround
+
 kegg/pubmed: FORCE
 	cd kegg; $(WGET) $(KEGGK)/link/pathway/pubmed
+	# Last-modified header missing workaround
+
 kegg/ds: FORCE
 	cd kegg; $(WGET) $(KEGGK)/link/pathway/ds
+	# Last-modified header missing workaround
+
 kegg/ko: FORCE
 	cd kegg; $(WGET) $(KEGGK)/link/pathway/ko
+	# Last-modified header missing workaround
 
 kegg_clean:  ;  $(RM) kegg/*
 ##########################################
@@ -731,8 +778,12 @@ owl/pco.owl: FORCE
 	cd owl; $(WGET) $(OBO)/pco.owl
 owl/xco.owl: FORCE
 	cd owl; $(WGET) $(OBO)/xco.owl
+
+
 owl/foaf.rdf: FORCE
 	cd owl; $(WGET) http://xmlns.com/foaf/spec/index.rdf -O foaf.rdf
+	# Last-modified header missing workaround
+
 owl/dcelements.rdf:  ## had local name dc.rdf
 	cd owl; $(WGET) https://dublincore.org/2012/06/14/dcelements.rdf
 ########
@@ -828,14 +879,19 @@ STRSPC = celegans fly human mouse yeast zebrafish
 # no rat
 
 string: string/ \
+		string/$(STRFP)/version \
 		string/version \
 		$(foreach txid, $(STRTAX), string/$(txid).$(SRTPTH).txt.gz) \
 		$(foreach species, $(STRSPC), string/$(species).entrez_2_string.$(STRYR).tsv.gz)
 
 string/: ; mkdir $@
 
-string/version: FORCE
-	cd string ; $(WGET) $(STRING)/api/tsv-no-header/version  ; \
+STRFP = api/tsv-no-header
+string/$(STRFP)/version: FORCE
+    # Last-modified header missing workaround
+	cd string ; $(WGET) $(FULLPATH) $(STRING)/$(STRFP)/version
+	string/version: string/$(STRFP)/version
+	$(COPYCHANGED); \
 	if [ "$(STRVER)" != "$$(cut -f 1 version)" ] ;then echo "NEW VERSION of STRING!" ; \
 	else  echo "same version of STRING" ; fi
 
@@ -927,6 +983,7 @@ wormbase/disease_association.wb: wormbase/CHECKSUMS
 wormbase/pub_xrefs.txt:
 	$(CDWB) $(WGET) -O $(notdir $@) \
 	http://tazendra.caltech.edu/~azurebrd/cgi-bin/forms/generic.cgi?action=WpaXref
+	# Last-modified header missing workaround
 wormbase/gaf-eco-mapping.yaml: eco/gaf-eco-mapping.yaml
 	# unlink $@;cd wormbase/; ln -s ../$< $(notdir $@)
 	$(SYMLINK)
