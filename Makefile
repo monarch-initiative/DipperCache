@@ -6,22 +6,23 @@ MAKEFLAGS += --no-builtin-rules
 MAKEFLAGS += --no-builtin-variables
 
 WGET = /usr/bin/wget --timestamping --no-verbose
+# addtional wget arguments
 FULLPTH := --force-directories --no-host-directories
+
 RM := rm --force --recursive --verbose
 
 CLEAN = rm --force --recursive --verbose $(dir $@)/*
 
 # For the first dependency to appear as the target
-# and both are one dir below PWD
 # note $(realpath) does not seem to be available for
-# || ($(realpath $@) !=  $(realpath $<)) ] ; then
-SYMLINK = if [ ! -L "$@" ] ; then cd  $(dir $@);unlink "$(notdir $@)"; ln -s "../$<" "$(notdir $@)"; fi
-
+# || ($(realpath $@) !=  $(realpath $<)) ] ; then ...
+#SYMLINK = if [ ! -L "$@" ] ; then cd  $(dir $@); unlink "$(notdir $@)"; ln -sf "../$<" "$(notdir $@)"; fi
+SYMLINK = if [ ! -L "$@" ] ; then ln --force --no-dereference --symbolic $< $@; fi
 
 # when a remote server does not set last-modified headers we can only test
 # if a new file is the same or different from the one we already heve.
 # Last-modified header missing workaround
-COPYCHANGED = if [ "$$(md5sum $?|cut -c 1-32)" != "$$(md5sum $@|cut -c 1-32)" ] ; then cp -fp $? $@ ; fi
+COPYCHANGED = if [ "$$(md5sum $<|cut -c 1-32)" != "$$(md5sum $@|cut -c 1-32)" ] ; then cp -fp $< $@ ; fi
 
 # May be used in more than one ingest
 OBO = http://purl.obolibrary.org/obo
@@ -877,6 +878,7 @@ SRTPTH = protein.links.detailed.v$(STRVER)
 STRTAX = 9606 10090 7955 7227 6239 4932 10116
 STRSPC = celegans fly human mouse yeast zebrafish
 # no rat
+STRFP = api/tsv-no-header
 
 string: string/ \
 		string/$(STRFP)/version \
@@ -886,11 +888,10 @@ string: string/ \
 
 string/: ; mkdir $@
 
-STRFP = api/tsv-no-header
 string/$(STRFP)/version: FORCE
     # Last-modified header missing workaround
-	cd string ; $(WGET) $(FULLPATH) $(STRING)/$(STRFP)/version
-	string/version: string/$(STRFP)/version
+	cd string ; $(WGET) $(FULLPTH) $(STRING)/$(STRFP)/version
+string/version: string/$(STRFP)/version
 	$(COPYCHANGED); \
 	if [ "$(STRVER)" != "$$(cut -f 1 version)" ] ;then echo "NEW VERSION of STRING!" ; \
 	else  echo "same version of STRING" ; fi
