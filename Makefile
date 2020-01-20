@@ -140,7 +140,6 @@ $(foreach spc, $(AQTLVER), animalqtldb/$(spc)): FORCE
 # so the distinction of the locally generated ones becomes moot
 
 $(foreach spc, $(AQTLGI), animalqtldb/$(spc)): $(foreach spc, $(AQTLGI),ncbigene/$(spc))
-	# unlink $@; $(CDAQTL) ln -s ../ncbigene/$(notdir $@) $(notdir $@)
 	$(SYMLINK)
 
 animalqtldb_clean: ;  $(CLEAN)  # $(RM) animalqtldb/*
@@ -334,8 +333,7 @@ flybase/disease_model_annotations.tsv.gz: flybase/md5sum.txt
 	$(CDFLY)  \
 	fname=$$(fgrep "/human_disease/disease_model_annotations" md5sum.txt| cut -f2- -d'/') ; \
 	$(WGET) $(FULLPTH) $(FLYFTP)/$(FLYPRE)/$$fname ; \
-	unlink disease_model_annotations.tsv.gz; \
-	ln -s $(FLYPRE)/$$fname  disease_model_annotations.tsv.gz
+	ln -snf $(FLYPRE)/$$fname  disease_model_annotations.tsv.gz
 
 flybase/species.ab.gz: flybase/md5sum.txt
 	$(CDFLY) $(WGET) $(FLYFTP)/$(FLYPRE)/species/species.ab.gz
@@ -344,13 +342,13 @@ flybase/fbal_to_fbgn_fb.tsv.gz: flybase/md5sum.txt
 	$(CDFLY)  \
 	fname=$$(fgrep "alleles/fbal_to_fbgn_fb" md5sum.txt| cut -f2- -d'/') ; \
 	$(WGET) $(FULLPTH) $(FLYFTP)/$(FLYPRE)/$$fname ; \
-	unlink $(notdir $@) ; ln -s $(FLYPRE)/$$fname $(notdir $@)
+	ln -snf $(FLYPRE)/$$fname $(notdir $@)
 
 flybase/fbrf_pmid_pmcid_doi_fb.tsv.gz: flybase/md5sum.txt
 	$(CDFLY) \
 	fname=$$(fgrep "references/fbrf_pmid_pmcid_doi_fb" md5sum.txt| cut -f2- -d'/') ; \
 	$(WGET) $(FULLPTH) $(FLYFTP)/$(FLYPRE)/$$fname ; \
-	unlink $(notdir $@); ln -s $(FLYPRE)/$$fname $(notdir $@)
+	ln -snf $(FLYPRE)/$$fname $(notdir $@)
 
 flybase_clean: ;  $(RM) flybase/*
 
@@ -404,10 +402,8 @@ go/go-refs.json: FORCE
 go/idmapping_selected.tab.gz:  FORCE  # expensive
 	cd go/; $(WGET) $(FTPEBI)/$(UPCRKB)/idmapping/idmapping_selected.tab.gz
 go/gaf-eco-mapping.txt: eco/gaf-eco-mapping.txt
-	# unlink $@;cd go/; ln -s ../$< $(notdir $@)
 	$(SYMLINK)
 go/gaf-eco-mapping.yaml: eco/gaf-eco-mapping.yaml
-	# unlink $@;cd go/; ln -s ../$< $(notdir $@)
 	$(SYMLINK)
 
 go_clean: ; $(RM) go/*
@@ -640,56 +636,55 @@ monochrom/: ; mkdir $@
 
 # accomadate existing ingest given names
 monochrom/9606cytoBand.txt.gz: monochrom/hg19/ monochrom/hg19/cytoBand.txt.gz
-	$(CDMC) unlink 9606cytoBand.txt.gz ; ln -s hg19/cytoBand.txt.gz 9606cytoBand.txt.gz
+	ln -snf hg19/cytoBand.txt.gz 9606cytoBand.txt.gz
 monochrom/hg19/: ; mkdir $@
 monochrom/hg19/cytoBand.txt.gz: FORCE
 	cd monochrom/hg19; $(WGET) $(MCDL)/hg19/database/cytoBand.txt.gz
 
 monochrom/10090cytoBand.txt.gz: monochrom/mm10/$(CBI)  monochrom/mm10/
-	$(CDMC) unlink 10090cytoBand.txt.gz ;\
-	ln -s mm10/$(CBI) 10090cytoBand.txt.gz  # note dropping 'Ideo' (to fix)
+	$(CDMC) ln -snf mm10/$(CBI) 10090cytoBand.txt.gz  # note dropping 'Ideo' (to fix)
 monochrom/mm10/: ; mkdir $@
 monochrom/mm10/$(CBI): FORCE
 	cd monochrom/mm10/ ; $(WGET) $(MCDL)/mm10/database/$(CBI)
 
 monochrom/7955cytoBand.txt.gz: monochrom/danRer10/$(CBI) monochrom/danRer10/
-	$(CDMC) unlink 7955cytoBand.txt.gz ; ln -s  danRer10/$(CBI) 7955cytoBand.txt.gz
+	$(CDMC) ln -snf  danRer10/$(CBI) 7955cytoBand.txt.gz
 monochrom/danRer10/: ; mkdir $@
 monochrom/danRer10/$(CBI): FORCE
 	cd monochrom/danRer10/ ;  $(WGET) $(MCDL)/danRer10/database/$(CBI)
 monochrom/10116cytoBand.txt.gz: monochrom/rn6/$(CBI)  monochrom/rn6/
-	$(CDMC) unlink 10116cytoBand.txt.gz ; ln -s rn6/$(CBI) 10116cytoBand.txt.gz
+	$(CDMC) ln -snf rn6/$(CBI) 10116cytoBand.txt.gz
 monochrom/rn6/: ; mkdir $@
 monochrom/rn6/$(CBI): FORCE
 	cd monochrom/rn6/; $(WGET) $(MCDL)/rn6/database/$(CBI)
 
 monochrom/bosTau7cytoBand.txt.gz: monochrom/bosTau7/$(CBI) monochrom/bosTau7/
-	$(CDMC) unlink bosTau7cytoBand.txt.gz; ln -s bosTau7/$(CBI) bosTau7cytoBand.txt.gz
+	$(CDMC) ln -snf bosTau7/$(CBI) bosTau7cytoBand.txt.gz
 monochrom/bosTau7/: ; mkdir $@
 
 monochrom/bosTau7/$(CBI): FORCE
 	cd monochrom/bosTau7/; $(WGET) $(MCDL)/bosTau7/database/$(CBI)
 
 monochrom/galGal4cytoBand.txt.gz: monochrom/galGal4/$(CBI) monochrom/galGal4/
-	$(CDMC) unlink galGal4cytoBand.txt.gz; ln -s galGal4/$(CBI) galGal4cytoBand.txt.gz
+	$(CDMC) ln -snf galGal4/$(CBI) galGal4cytoBand.txt.gz
 monochrom/galGal4/: ; mkdir $@
 monochrom/galGal4/cytoBandIdeo.txt.gz: FORCE
 	cd monochrom/galGal4/; $(WGET) $(MCDL)/galGal4/database/$(CBI)
 
 monochrom/susScr3cytoBand.txt.gz: monochrom/susScr3/$(CBI) monochrom/susScr3/
-	$(CDMC) unlink susScr3cytoBand.txt.gz ; ln -s susScr3/$(CBI) susScr3cytoBand.txt.gz
+	$(CDMC) ln -snf susScr3/$(CBI) susScr3cytoBand.txt.gz
 monochrom/susScr3/: ; mkdir $@
 monochrom/susScr3/cytoBandIdeo.txt.gz: FORCE
 	cd monochrom/susScr3/; $(WGET) $(MCDL)/susScr3/database/$(CBI)
 
 monochrom/oviAri3cytoBand.txt.gz: monochrom/oviAri3/$(CBI) monochrom/oviAri3/
-	$(CDMC) unlink oviAri3cytoBand.txt.gz ; ln -s oviAri3/$(CBI) oviAri3cytoBand.txt.gz
+	$(CDMC) ln -snf oviAri3/$(CBI) oviAri3cytoBand.txt.gz
 monochrom/oviAri3/: ; mkdir $@
 monochrom/oviAri3/cytoBandIdeo.txt.gz: FORCE
 	cd monochrom/oviAri3/; $(WGET) $(MCDL)/oviAri3/database/$(CBI)
 
 monochrom/equCab2cytoBand.txt.gz: monochrom/equCab2/$(CBI) monochrom/equCab2/
-	$(CDMC) unlink equCab2cytoBand.txt.gz ; ln -s equCab2/$(CBI) equCab2cytoBand.txt.gz
+	$(CDMC) ln -snf equCab2/$(CBI) equCab2cytoBand.txt.gz
 monochrom/equCab2/: ; mkdir $@
 monochrom/equCab2/cytoBandIdeo.txt.gz: FORCE
 	cd monochrom/equCab2/; $(WGET) $(MCDL)/equCab2/database/$(CBI)
@@ -884,11 +879,10 @@ reactome/ChEBI2Reactome.txt: FORCE
 	cd reactome; $(WGET) $(RCTDL)/ChEBI2Reactome.txt
 
 reactome/gaf-eco-mapping.txt:  eco/gaf-eco-mapping.txt
- 	#cd reactome; unlink $(notdir $@); ln -s ../$< $(notdir $@)
 	$(SYMLINK)
 reactome/gaf-eco-mapping.yaml: eco/gaf-eco-mapping.yaml
-	# unlink $@;cd reactome/; ln -s ../$< $(notdir $@)
 	$(SYMLINK)
+
 # curl -X GET "https://reactome.org/ContentService/data/diseases/doid" -H  "accept: text/plain"
 
 reactome_clean: ; $(RM) rectome/*
@@ -1000,43 +994,42 @@ wormbase/: ; mkdir $@
 wormbase/CHECKSUMS: FORCE
 	$(CDWB) $(WGET) $(WBFTP)/$(WBPROD)/$(notdir $@)
 wormbase/letter: wormbase/CHECKSUMS
-	unlink $@ ; $(CDWB) wsnum=$$($(WSNUM)); \
+	$(CDWB) wsnum=$$($(WSNUM)); \
 	$(WGET) $(WBFTP)/$(WBPROD)/letter.$$wsnum ; \
-	ln -s letter.$$wsnum $(notdir $@)
+	ln -snf letter.$$wsnum $(notdir $@)
 wormbase/c_elegans.PRJNA13758.geneIDs.txt.gz:  wormbase/CHECKSUMS
 	#species/c_elegans/PRJNA13758/annotation/c_elegans.PRJNA13758.WS273.geneIDs.txt.gz
-	unlink $@ ; $(CDWB) wsnum=$$($(WSNUM)) ; \
+	$(CDWB) wsnum=$$($(WSNUM)) ; \
 	$(WGET) $(FULLPTH) $(WBFTP)/$(WBPROD)/species/$(WBSPC)/annotation/$(subst /,.,$(WBSPC)).$$wsnum.geneIDs.txt.gz;\
-	ln -s $(WBPROD)/species/$(WBSPC)/annotation/$(subst /,.,$(WBSPC)).$$wsnum.geneIDs.txt.gz $(notdir $@)
+	ln -snf $(WBPROD)/species/$(WBSPC)/annotation/$(subst /,.,$(WBSPC)).$$wsnum.geneIDs.txt.gz $(notdir $@)
 wormbase/c_elegans.PRJNA13758.annotations.gff3.gz: wormbase/CHECKSUMS
 	# species/c_elegans/PRJNA13758/c_elegans.PRJNA13758.WS273.annotations.gff3.gz
-	unlink $@ ; $(CDWB) wsnum=$$($(WSNUM)) ; \
+	$(CDWB) wsnum=$$($(WSNUM)) ; \
 	$(WGET) $(FULLPTH) $(WBFTP)/$(WBPROD)/species/$(WBSPC)/$(subst /,.,$(WBSPC)).$$wsnum.annotations.gff3.gz;\
-	ln -s $(WBPROD)/species/$(WBSPC)/$(subst /,.,$(WBSPC)).$$wsnum.annotations.gff3.gz $(notdir $@)
+	ln -snf $(WBPROD)/species/$(WBSPC)/$(subst /,.,$(WBSPC)).$$wsnum.annotations.gff3.gz $(notdir $@)
 wormbase/c_elegans.PRJNA13758.xrefs.txt.gz: wormbase/CHECKSUMS
 	# species/c_elegans/PRJNA13758/annotation/c_elegans.PRJNA13758.WS273.xrefs.txt.gz
-	unlink $@ ; $(CDWB) wsnum=$$($(WSNUM)) ; \
+	$(CDWB) wsnum=$$($(WSNUM)) ; \
 	$(WGET) $(FULLPTH) $(WBFTP)/$(WBPROD)/species/$(WBSPC)/annotation/$(subst /,.,$(WBSPC)).$$wsnum.xrefs.txt.gz;\
-	ln -s $(WBPROD)/species/$(WBSPC)/annotation/$(subst /,.,$(WBSPC)).$$wsnum.xrefs.txt.gz $(notdir $@)
+	ln -snf $(WBPROD)/species/$(WBSPC)/annotation/$(subst /,.,$(WBSPC)).$$wsnum.xrefs.txt.gz $(notdir $@)
 wormbase/phenotype_association.wb: wormbase/CHECKSUMS
-	unlink $@ ; $(CDWB) wsnum=$$($(WSNUM)) ; \
+	$(CDWB) wsnum=$$($(WSNUM)) ; \
 	$(WGET) $(FULLPTH) $(WBFTP)/$(WBPROD)/ONTOLOGY/phenotype_association.$$wsnum.wb;\
-	ln -s $(WBPROD)/ONTOLOGY/phenotype_association.$$wsnum.wb $(notdir $@)
+	ln -snf $(WBPROD)/ONTOLOGY/phenotype_association.$$wsnum.wb $(notdir $@)
 wormbase/rnai_phenotypes.wb: wormbase/CHECKSUMS
-	unlink $@ ; $(CDWB) wsnum=$$($(WSNUM)) ; \
+	$(CDWB) wsnum=$$($(WSNUM)) ; \
 	$(WGET) $(FULLPTH) $(WBFTP)/$(WBPROD)/ONTOLOGY/rnai_phenotypes.$$wsnum.wb;\
-	ln -s $(WBPROD)/ONTOLOGY/rnai_phenotypes.$$wsnum.wb $(notdir $@)
+	ln -snf $(WBPROD)/ONTOLOGY/rnai_phenotypes.$$wsnum.wb $(notdir $@)
 wormbase/disease_association.wb: wormbase/CHECKSUMS
-	unlink $@ ; $(CDWB) wsnum=$$($(WSNUM)) ; \
+	$(CDWB) wsnum=$$($(WSNUM)) ; \
 	$(WGET) $(FULLPTH) $(WBFTP)/$(WBPROD)/ONTOLOGY/disease_association.$$wsnum.wb;\
-	ln -s $(WBPROD)/ONTOLOGY/disease_association.$$wsnum.wb $(notdir $@)
+	ln -snf $(WBPROD)/ONTOLOGY/disease_association.$$wsnum.wb $(notdir $@)
 # api call so no date or file version
 wormbase/pub_xrefs.txt:
 	$(CDWB) $(WGET) -O $(notdir $@) \
 	http://tazendra.caltech.edu/~azurebrd/cgi-bin/forms/generic.cgi?action=WpaXref
 	# Last-modified header missing workaround
 wormbase/gaf-eco-mapping.yaml: eco/gaf-eco-mapping.yaml
-	# unlink $@;cd wormbase/; ln -s ../$< $(notdir $@)
 	$(SYMLINK)
 
 wormbase_clean: ;  $(RM) wormbase/*
@@ -1089,10 +1082,8 @@ zfinslim:  zfin/ zfinslim/ \
 zfinslim/: ; mkdir $@
 
 zfinslim/phenoGeneCleanData_fish.txt: zfin/phenoGeneCleanData_fish.txt
-	#cd  $(dir $@); id [ !L "$(notdir $@)" ] ; then ln -s "$(notdir $@)" "$<"; fi
 	$(SYMLINK)
 zfinslim/id_map_zfin.tsv: zfin/id_map_zfin.tsv
-	# cd  $(dir $@); id [ ! L "$(notdir $@)" ] ; then ln -s "$(notdir $@)" "$<"; fi
 	$(SYMLINK)
 
 zfinslim_clean: ; $(RM) zfin/id_map_zfin.tsv zfin/phenoGeneCleanData_fish.txt
