@@ -636,7 +636,7 @@ monochrom/: ; mkdir $@
 
 # accomadate existing ingest given names
 monochrom/9606cytoBand.txt.gz: monochrom/hg19/ monochrom/hg19/cytoBand.txt.gz
-	ln -snf hg19/cytoBand.txt.gz 9606cytoBand.txt.gz
+	$(CDMC) ln -snf hg19/cytoBand.txt.gz 9606cytoBand.txt.gz
 monochrom/hg19/: ; mkdir $@
 monochrom/hg19/cytoBand.txt.gz: FORCE
 	cd monochrom/hg19; $(WGET) $(MCDL)/hg19/database/cytoBand.txt.gz
