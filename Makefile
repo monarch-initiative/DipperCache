@@ -87,6 +87,9 @@ tree:  ## Diffable metadata snapshot of results
 	/usr/bin/tree --sort=name --timefmt "%Y%0m%0d %0T" -D -si -f -I dipper -n -o dipper_cache.tree ;\
 	# git diff $@; git add $@ ;git commit -m "generated" $@  # not till in repo
 
+# report:  ## A set of metrics to help track and access the health of the cache
+
+
 ##########################################
 # animalqtldb
 AQTLDL = https://www.animalgenome.org/QTLdb
@@ -462,7 +465,43 @@ KEGGG = http://rest.genome.jp
 # link
 KEGGK = http://rest.kegg.jp
 
+KGFP = list/disease \
+    list/pathway \
+    list/orthology \
+    link/disease/omim \
+    link/omim/hsa \
+    list/hsa
+
+KKFP = link/orthology/mmu \
+    link/orthology/rno \
+    link/orthology/dme \
+    link/orthology/dre \
+    link/orthology/cel \
+    link/pathway/pubmed \
+    link/pathway/ds \
+    link/pathway/ko  \
+    link/orthology/hsa \
+    link/pathway/hsa \
+    link/disease/hsa
+
 kegg: kegg/ \
+	kegg/list/disease \
+	kegg/list/pathway \
+	kegg/list/orthology \
+	kegg/link/disease/omim \
+	kegg/link/omim/hsa \
+	kegg/list/hsa \
+	kegg/link/orthology/mmu \
+	kegg/link/orthology/rno \
+	kegg/link/orthology/dme \
+	kegg/link/orthology/dre \
+	kegg/link/orthology/cel \
+	kegg/link/pathway/pubmed \
+	kegg/link/pathway/ds \
+	kegg/link/pathway/ko \
+	kegg/link/orthology/hsa \
+	kegg/link/pathway/hsa \
+	kegg/link/disease/hsa \
 	kegg/disease \
 	kegg/pathway \
 	kegg/hsa_genes \
@@ -482,76 +521,87 @@ kegg: kegg/ \
     kegg/ko
 
 kegg/: 	; mkdir $@
-# note choosing native name except when there is a conflict
+
+#kg_orig: $(foreach file, $(KGFP), kegg/$(file))
+#	for fp in $^; do $(WGET) $(FULLPTH) $(KEGGG)/$$fp; done
+#kk_orig: $(foreach file, $(KKFP), kegg/$(file))
+#	for fp in $^; do $(WGET) $(FULLPTH) $(KEGGK)/$$fp; done
+
+kegg/list/disease :  FORCE
+	cd kegg; $(WGET) $(FULLPTH) $(KEGGG)/$(subst kegg/,,$@)
+kegg/list/pathway : FORCE
+	cd kegg; $(WGET) $(FULLPTH) $(KEGGG)/$(subst kegg/,,$@)
+kegg/list/orthology : FORCE
+	cd kegg; $(WGET) $(FULLPTH) $(KEGGG)/$(subst kegg/,,$@)
+kegg/link/disease/omim : FORCE
+	cd kegg; $(WGET) $(FULLPTH) $(KEGGG)/$(subst kegg/,,$@)
+kegg/link/omim/hsa : FORCE
+	cd kegg; $(WGET) $(FULLPTH) $(KEGGG)/$(subst kegg/,,$@)
+kegg/list/hsa : FORCE
+	cd kegg; $(WGET) $(FULLPTH) $(KEGGG)/$(subst kegg/,,$@)
+kegg/link/orthology/mmu : FORCE
+	cd kegg; $(WGET) $(FULLPTH) $(KEGGK)/$(subst kegg/,,$@)
+kegg/link/orthology/rno : FORCE
+	cd kegg; $(WGET) $(FULLPTH) $(KEGGK)/$(subst kegg/,,$@)
+kegg/link/orthology/dme : FORCE
+	cd kegg; $(WGET) $(FULLPTH) $(KEGGK)/$(subst kegg/,,$@)
+kegg/link/orthology/dre : FORCE
+	cd kegg; $(WGET) $(FULLPTH) $(KEGGK)/$(subst kegg/,,$@)
+kegg/link/orthology/cel : FORCE
+	cd kegg; $(WGET) $(FULLPTH) $(KEGGK)/$(subst kegg/,,$@)
+kegg/link/pathway/pubmed: FORCE
+	cd kegg; $(WGET) $(FULLPTH) $(KEGGK)/$(subst kegg/,,$@)
+kegg/link/pathway/ds : FORCE
+	cd kegg; $(WGET) $(FULLPTH) $(KEGGK)/$(subst kegg/,,$@)
+kegg/link/pathway/ko : FORCE
+	cd kegg; $(WGET) $(FULLPTH) $(KEGGK)/$(subst kegg/,,$@)
+kegg/link/orthology/hsa : FORCE
+	cd kegg; $(WGET) $(FULLPTH) $(KEGGK)/$(subst kegg/,,$@)
+kegg/link/pathway/hsa : FORCE
+	cd kegg; $(WGET) $(FULLPTH) $(KEGGK)/$(subst kegg/,,$@)
+kegg/link/disease/hsa : FORCE
+	cd kegg; $(WGET) $(FULLPTH) $(KEGGK)/$(subst kegg/,,$@)
+
+# note choosing native name except when there is a conflict  (hsa)
 # conflicts would interfer with --timestamping
-# if their server supported Last-modified headers
-kegg/disease: FORCE
-	cd kegg; $(WGET) $(KEGGG)/list/disease
-	# Last-modified header missing workaround
+#   ... if their server supported Last-modified headers
 
-kegg/pathway: FORCE
-	cd kegg; $(WGET) $(KEGGG)/list/pathway
-	# Last-modified header missing workaround
-
-kegg/hsa_genes: FORCE
-	cd kegg; $(WGET) $(KEGGG)/list/hsa -O hsa_genes
-	# Last-modified header missing workaround
-
-kegg/orthology: FORCE
-	cd kegg; $(WGET) $(KEGGG)/list/orthology
-	# Last-modified header missing workaround
-
-kegg/disease_gene: FORCE
-	cd kegg; $(WGET) $(KEGGK)/link/disease/hsa -O disease_gene
-	# Last-modified header missing workaround
-
-kegg/omim: FORCE
-	cd kegg; $(WGET) $(KEGGG)/link/disease/omim
-	# Last-modified header missing workaround
-
-kegg/omim2gene: FORCE
-	cd kegg; $(WGET) $(KEGGG)/link/omim/hsa -O omim2gene
-	# Last-modified header missing workaround
-kegg/ncbi: FORCE
-	cd kegg; $(WGET) $(KEGGG)/conv/ncbi-geneid/hsa -O ncbi
-	# Last-modified header missing workaround
-kegg/human_gene2pathway: FORCE
-	cd kegg; $(WGET) $(KEGGK)/link/pathway/hsa -O human_gene2pathway
-	# Last-modified header missing workaround
-kegg/hsa_orthologs: FORCE
-	cd kegg; $(WGET) $(KEGGK)/link/orthology/hsa -O hsa_orthologs
-	# Last-modified header missing workaround
-kegg/mmu: FORCE
-	cd kegg; $(WGET) $(KEGGK)/link/orthology/mmu
-	# Last-modified header missing workaround
-
-kegg/rno: FORCE
-	cd kegg; $(WGET) $(KEGGK)/link/orthology/rno
-	# Last-modified header missing workaround
-
-kegg/dme: FORCE
-	cd kegg; $(WGET) $(KEGGK)/link/orthology/dme
-	# Last-modified header missing workaround
-
-kegg/dre: FORCE
-	cd kegg; $(WGET) $(KEGGK)/link/orthology/dre
-	# Last-modified header missing workaround
-
-kegg/cel: FORCE
-	cd kegg; $(WGET) $(KEGGK)/link/orthology/cel
-	# Last-modified header missing workaround
-
-kegg/pubmed: FORCE
-	cd kegg; $(WGET) $(KEGGK)/link/pathway/pubmed
-	# Last-modified header missing workaround
-
-kegg/ds: FORCE
-	cd kegg; $(WGET) $(KEGGK)/link/pathway/ds
-	# Last-modified header missing workaround
-
-kegg/ko: FORCE
-	cd kegg; $(WGET) $(KEGGK)/link/pathway/ko
-	# Last-modified header missing workaround
+kegg/disease:  kegg/list/disease
+	$(COPYCHANGED)
+kegg/pathway: kegg/list/pathway
+	$(COPYCHANGED)
+kegg/hsa_genes: kegg/list/hsa
+	$(COPYCHANGED)
+kegg/orthology: kegg/list/orthology
+	$(COPYCHANGED)
+kegg/disease_gene: kegg/link/disease/hsa
+	$(COPYCHANGED)
+kegg/omim: kegg/link/disease/omim
+	$(COPYCHANGED)
+kegg/omim2gene: kegg/link/omim/hsa
+	$(COPYCHANGED)
+kegg/ncbi: kegg/conv/ncbi-geneid/hsa
+	$(COPYCHANGED)
+kegg/human_gene2pathway: kegg/link/pathway/hsa
+	$(COPYCHANGED)
+kegg/hsa_orthologs: kegg/link/orthology/hsa
+	$(COPYCHANGED)
+kegg/mmu: kegg/link/orthology/mmu
+	$(COPYCHANGED)
+kegg/rno: kegg/link/orthology/rno
+	$(COPYCHANGED)
+kegg/dme: kegg/link/orthology/dme
+	$(COPYCHANGED)
+kegg/dre: kegg/link/orthology/dre
+	$(COPYCHANGED)
+kegg/cel: kegg/link/orthology/cel
+	$(COPYCHANGED)
+kegg/pubmed: kegg/link/pathway/pubmed
+	$(COPYCHANGED)
+kegg/ds: kegg/link/pathway/ds
+	$(COPYCHANGED)
+kegg/ko: kegg/link/pathway/ko
+	$(COPYCHANGED)
 
 kegg_clean:  ;  $(RM) kegg/*
 ##########################################
