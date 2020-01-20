@@ -17,7 +17,7 @@ CLEAN = rm --force --recursive --verbose $(dir $@)/*
 # note $(realpath) does not seem to be available for
 # || ($(realpath $@) !=  $(realpath $<)) ] ; then ...
 #SYMLINK = if [ ! -L "$@" ] ; then cd  $(dir $@); unlink "$(notdir $@)"; ln -sf "../$<" "$(notdir $@)"; fi
-SYMLINK = if [ ! -L "$@" ] ; then ln --force --no-dereference --symbolic $< $@; fi
+SYMLINK = ln --force --no-dereference --symbolic $< $@; fi
 
 # when a remote server does not set last-modified headers we can only test
 # if a new file is the same or different from the one we already heve.
