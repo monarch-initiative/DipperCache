@@ -52,6 +52,7 @@ SOURCES = animalqtldb \
 	ncbigene \
 	omia  \
 	orphanet \
+	owl \
 	panther \
 	reactome \
 	rgd \
