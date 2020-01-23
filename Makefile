@@ -861,9 +861,10 @@ owl/foaf/spec/index.rdf: FORCE
 	cd owl; $(WGET) $(FULLPTH) http://xmlns.com/foaf/spec/index.rdf
 owl/foaf.rdf: owl/foaf/spec/index.rdf
 	$(COPYCHANGED)
-owl/dcelements.rdf : FORCE ## had local name dc.rdf
-	cd owl; $(WGET) https://dublincore.org/2012/06/14/dcelements.rdf
-owl/dc.rdf : owl/dcelements.rdf
+owl/dublin_core_elements.rdf : FORCE ## had local name dc.rdf
+	#cd owl; $(WGET) https://dublincore.org/2012/06/14/dcelements.rdf # moved to a 404
+	cd owl; $(WGET) https://www.dublincore.org/specifications/dublin-core/dcmi-terms/dublin_core_elements.rdf
+owl/dc.rdf : owl/dublin_core_elements.rdf  # todo: figure out how is this rename can be avoided
 	$(COPYCHANGED)
 ########
 # these next few are far too circular
