@@ -20,11 +20,11 @@ CLEAN = rm --force --recursive --verbose $(dir $@)/*
 
 # ABANDON for now. copy is being more reailable for me
 # SYMLINK = ln --force --no-dereference --symbolic $(patsubst /%,%,$<) $(patsubst /%,%,$@)
+
+
 # when a remote server does not set last-modified headers we can only test
 # if a new file is the same or different from the one we already heve.
 # Last-modified header missing workaround
-
-
 COPYCHANGED = if [ "$$(md5sum $<|cut -c 1-32)" != "$$(md5sum $@|cut -c 1-32)" ] ; then cp -fp $< $@ ; fi
 
 # May be used in more than one ingest
@@ -338,16 +338,17 @@ flybase/disease_model_annotations.tsv.gz: flybase/md5sum.txt
 	$(CDFLY) \
 	fname=$$(fgrep "/human_disease/disease_model_annotations" md5sum.txt| cut -f2- -d'/') ; \
 	$(WGET) $(FULLPTH) $(FLYFTP)/$(FLYPRE)/$$fname ; \
-	ln -snf $(FLYPRE)/$$fname disease_model_annotations.tsv.gz
+	ln -snf $(FLYPRE)/$$fname $(notdir $@)
 
 flybase/species.ab.gz: flybase/md5sum.txt
 	$(CDFLY) $(WGET) $(FLYFTP)/$(FLYPRE)/species/species.ab.gz
 
 flybase/fbal_to_fbgn_fb.tsv.gz: flybase/md5sum.txt
 	$(CDFLY) \
-	fname=$$(fgrep "alleles/fbal_to_fbgn_fb" md5sum.txt| cut -f2- -d'/') ; \
-	$(WGET) $(FULLPTH) $(FLYFTP)/$(FLYPRE)/$$fname ; \
+	fname=$$(fgrep "fbal_to_fbgn_fb" md5sum.txt| cut -f2- -d'/') ; \
+	$(WGET) $(FULLPTH) $(FLYFTP)/$(FLYPRE)/alleles/ $$fname ; \
 	ln -snf $(FLYPRE)/$$fname $(notdir $@)
+	# formaly disease_model_annotations.tsv.gz
 
 flybase/fbrf_pmid_pmcid_doi_fb.tsv.gz: flybase/md5sum.txt
 	$(CDFLY) \
