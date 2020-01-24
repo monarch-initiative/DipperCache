@@ -84,7 +84,7 @@ help: ## Display this help section
 recent: ## See what has been renewed in the last several days
 	find ./*/ -mtime -5 -ls
 
-cruft: ## Preview which commands would be executed now
+cruft: ## Preview recipes that would be executed now
 	make -n | sed 's|^mkdir |\nmkdir |g' > $@
 
 tree: ## Diffable metadata snapshot of results
@@ -93,6 +93,9 @@ tree: ## Diffable metadata snapshot of results
 
 # report: ## A set of metrics to help track and access the health of the cache
 
+
+symlnk_check:  ## Show symlinks
+	find . -type l -ls
 
 ##########################################
 # animalqtldb
@@ -872,7 +875,7 @@ owl/metazoa.owl: FORCE
 	cd owl; $(WGET) https://data.monarchinitiative.org/owl/metazoa.owl
 owl/clo_core.owl: FORCE
 	cd owl; $(WGET) https://data.monarchinitiative.org/owl/clo_core.owl
-# this one shouls be getting rebuilt based on if any if the previous are new
+# this one should be getting rebuilt based on if any if the previous are new
 owl/monarch-merged.owl: FORCE
 	cd owl; $(WGET) https://data.monarchinitiative.org/owl/monarch-merged.owl
 
@@ -970,7 +973,7 @@ string/: ; mkdir $@
 string/$(STRFP)/version: FORCE
 	cd string ; $(WGET) $(FULLPTH) $(STRING)/$(STRFP)/version
 string/version: string/$(STRFP)/version
-	$(COPYCHANGED); \
+	$(COPYCHANGED); cd string ;\
 	if [ "$(STRVER)" != "$$(cut -f 1 version)" ] ;then echo "NEW VERSION of STRING!" ; \
 	else echo "same version of STRING" ; fi
 
