@@ -189,12 +189,10 @@ biogrid/: ; mkdir $@
 biogrid/$(BGFP)/BIOGRID-ALL-LATEST.mitab.zip: FORCE
 	$(CDBOG) $(WGET) $(FULLPTH) $(BGDL)/BIOGRID-ALL-LATEST.mitab.zip
 biogrid/BIOGRID-ALL-LATEST.mitab.zip: biogrid/$(BGFP)/BIOGRID-ALL-LATEST.mitab.zip
-	# Last-modified header missing workaround
 	$(COPYCHANGED)
 biogrid/$(BGFP)/BIOGRID-IDENTIFIERS-LATEST.tab.zip: FORCE
 	$(CDBOG) $(WGET) $(FULLPTH) $(BGDL)/BIOGRID-IDENTIFIERS-LATEST.tab.zip
 biogrid/BIOGRID-IDENTIFIERS-LATEST.tab.zip: biogrid/$(BGFP)/BIOGRID-IDENTIFIERS-LATEST.tab.zip
-	# Last-modified header missing workaround
 	$(COPYCHANGED)
 
 biogrid_clean: ; $(RM) biogrid/*
@@ -341,7 +339,8 @@ flybase/disease_model_annotations.tsv.gz: flybase/md5sum.txt
 	$(CDFLY) \
 	fname=$$(fgrep "/human_disease/disease_model_annotations" md5sum.txt| cut -f2- -d'/') ; \
 	$(WGET) $(FULLPTH) $(FLYFTP)/$(FLYPRE)/$$fname ; \
-	ln -snf $(FLYPRE)/$$fname $(notdir $@)
+	ln -snf $(FLYPRE)/$$fname $(notdir $@) ; \
+	touch --no-dereference $(notdir $@)
 
 flybase/species.ab.gz: flybase/md5sum.txt
 	$(CDFLY) $(WGET) $(FLYFTP)/$(FLYPRE)/species/species.ab.gz
@@ -350,14 +349,16 @@ flybase/fbal_to_fbgn_fb.tsv.gz: flybase/md5sum.txt
 	$(CDFLY) \
 	fname=$$(fgrep "fbal_to_fbgn_fb" md5sum.txt| cut -f2- -d'/') ; \
 	$(WGET) $(FULLPTH) $(FLYFTP)/$(FLYPRE)/alleles/ $$fname ; \
-	ln -snf $(FLYPRE)/$$fname $(notdir $@)
+	ln -snf $(FLYPRE)/$$fname $(notdir $@); \
+	touch --no-dereference $(notdir $@)
 	# formaly disease_model_annotations.tsv.gz
 
 flybase/fbrf_pmid_pmcid_doi_fb.tsv.gz: flybase/md5sum.txt
 	$(CDFLY) \
 	fname=$$(fgrep "references/fbrf_pmid_pmcid_doi_fb" md5sum.txt| cut -f2- -d'/') ; \
 	$(WGET) $(FULLPTH) $(FLYFTP)/$(FLYPRE)/$$fname ; \
-	ln -snf $(FLYPRE)/$$fname $(notdir $@)
+	ln -snf $(FLYPRE)/$$fname $(notdir $@); \
+	touch --no-dereference $(notdir $@)
 
 flybase_clean: ; $(RM) flybase/*
 
@@ -647,24 +648,28 @@ monochrom/: ; mkdir $@
 
 # accomadate existing ingest given names
 monochrom/9606cytoBand.txt.gz: monochrom/hg19/ monochrom/hg19/cytoBand.txt.gz
-	$(CDMC) ln -snf hg19/cytoBand.txt.gz 9606cytoBand.txt.gz
+	$(CDMC) ln -snf hg19/cytoBand.txt.gz $(notdir $@); \
+	touch --no-dereference $(notdir $@)
 monochrom/hg19/: ; mkdir $@
 monochrom/hg19/cytoBand.txt.gz: FORCE
 	cd monochrom/hg19; $(WGET) $(MCDL)/hg19/database/cytoBand.txt.gz
-
 monochrom/10090cytoBand.txt.gz: monochrom/mm10/$(CBI) monochrom/mm10/
-	$(CDMC) ln -snf mm10/$(CBI) 10090cytoBand.txt.gz # note dropping 'Ideo' (to fix)
+	$(CDMC) ln -snf mm10/$(CBI) $(notdir $@); \
+	touch --no-dereference $(notdir $@) # note dropping 'Ideo' (to fix)
+
 monochrom/mm10/: ; mkdir $@
 monochrom/mm10/$(CBI): FORCE
 	cd monochrom/mm10/ ; $(WGET) $(MCDL)/mm10/database/$(CBI)
 
 monochrom/7955cytoBand.txt.gz: monochrom/danRer10/$(CBI) monochrom/danRer10/
-	$(CDMC) ln -snf danRer10/$(CBI) 7955cytoBand.txt.gz
+	$(CDMC) ln -snf danRer10/$(CBI) $(notdir $@); \
+	touch --no-dereference $(notdir $@)
 monochrom/danRer10/: ; mkdir $@
 monochrom/danRer10/$(CBI): FORCE
 	cd monochrom/danRer10/ ; $(WGET) $(MCDL)/danRer10/database/$(CBI)
 monochrom/10116cytoBand.txt.gz: monochrom/rn6/$(CBI) monochrom/rn6/
-	$(CDMC) ln -snf rn6/$(CBI) 10116cytoBand.txt.gz
+	$(CDMC) ln -snf rn6/$(CBI) $(notdir $@); \
+	touch --no-dereference $(notdir $@)
 monochrom/rn6/: ; mkdir $@
 monochrom/rn6/$(CBI): FORCE
 	cd monochrom/rn6/; $(WGET) $(MCDL)/rn6/database/$(CBI)
@@ -677,25 +682,29 @@ monochrom/bosTau7/$(CBI): FORCE
 	cd monochrom/bosTau7/; $(WGET) $(MCDL)/bosTau7/database/$(CBI)
 
 monochrom/galGal4cytoBand.txt.gz: monochrom/galGal4/$(CBI) monochrom/galGal4/
-	$(CDMC) ln -snf galGal4/$(CBI) galGal4cytoBand.txt.gz
+	$(CDMC) ln -snf galGal4/$(CBI) $(notdir $@); \
+	touch --no-dereference $(notdir $@)
 monochrom/galGal4/: ; mkdir $@
 monochrom/galGal4/cytoBandIdeo.txt.gz: FORCE
 	cd monochrom/galGal4/; $(WGET) $(MCDL)/galGal4/database/$(CBI)
 
 monochrom/susScr3cytoBand.txt.gz: monochrom/susScr3/$(CBI) monochrom/susScr3/
-	$(CDMC) ln -snf susScr3/$(CBI) susScr3cytoBand.txt.gz
+	$(CDMC) ln -snf susScr3/$(CBI) $(notdir $@); \
+	touch --no-dereference $(notdir $@)
 monochrom/susScr3/: ; mkdir $@
 monochrom/susScr3/cytoBandIdeo.txt.gz: FORCE
 	cd monochrom/susScr3/; $(WGET) $(MCDL)/susScr3/database/$(CBI)
 
 monochrom/oviAri3cytoBand.txt.gz: monochrom/oviAri3/$(CBI) monochrom/oviAri3/
-	$(CDMC) ln -snf oviAri3/$(CBI) oviAri3cytoBand.txt.gz
+	$(CDMC) ln -snf oviAri3/$(CBI) $(notdir $@); \
+	touch --no-dereference $(notdir $@)
 monochrom/oviAri3/: ; mkdir $@
 monochrom/oviAri3/cytoBandIdeo.txt.gz: FORCE
 	cd monochrom/oviAri3/; $(WGET) $(MCDL)/oviAri3/database/$(CBI)
 
 monochrom/equCab2cytoBand.txt.gz: monochrom/equCab2/$(CBI) monochrom/equCab2/
-	$(CDMC) ln -snf equCab2/$(CBI) equCab2cytoBand.txt.gz
+	$(CDMC) ln -snf equCab2/$(CBI) $(notdir $@); \
+	touch --no-dereference $(notdir $@)
 monochrom/equCab2/: ; mkdir $@
 monochrom/equCab2/cytoBandIdeo.txt.gz: FORCE
 	cd monochrom/equCab2/; $(WGET) $(MCDL)/equCab2/database/$(CBI)
@@ -1033,39 +1042,45 @@ wormbase/CHECKSUMS: FORCE
 wormbase/letter: wormbase/CHECKSUMS
 	$(CDWB) wsnum=$$($(WSNUM)); \
 	$(WGET) $(WBFTP)/$(WBPROD)/letter.$$wsnum ; \
-	ln -snf letter.$$wsnum $(notdir $@)
+	ln -snf letter.$$wsnum $(notdir $@); \
+	touch --no-dereference $(notdir $@)
 wormbase/c_elegans.PRJNA13758.geneIDs.txt.gz: wormbase/CHECKSUMS
 	#species/c_elegans/PRJNA13758/annotation/c_elegans.PRJNA13758.WS273.geneIDs.txt.gz
 	$(CDWB) wsnum=$$($(WSNUM)) ; \
 	$(WGET) $(FULLPTH) $(WBFTP)/$(WBPROD)/species/$(WBSPC)/annotation/$(subst /,.,$(WBSPC)).$$wsnum.geneIDs.txt.gz;\
-	ln -snf $(WBPROD)/species/$(WBSPC)/annotation/$(subst /,.,$(WBSPC)).$$wsnum.geneIDs.txt.gz $(notdir $@)
+	ln -snf $(WBPROD)/species/$(WBSPC)/annotation/$(subst /,.,$(WBSPC)).$$wsnum.geneIDs.txt.gz $(notdir $@); \
+	touch --no-dereference $(notdir $@)
 wormbase/c_elegans.PRJNA13758.annotations.gff3.gz: wormbase/CHECKSUMS
 	# species/c_elegans/PRJNA13758/c_elegans.PRJNA13758.WS273.annotations.gff3.gz
 	$(CDWB) wsnum=$$($(WSNUM)) ; \
 	$(WGET) $(FULLPTH) $(WBFTP)/$(WBPROD)/species/$(WBSPC)/$(subst /,.,$(WBSPC)).$$wsnum.annotations.gff3.gz;\
-	ln -snf $(WBPROD)/species/$(WBSPC)/$(subst /,.,$(WBSPC)).$$wsnum.annotations.gff3.gz $(notdir $@)
+	ln -snf $(WBPROD)/species/$(WBSPC)/$(subst /,.,$(WBSPC)).$$wsnum.annotations.gff3.gz $(notdir $@); \
+	touch --no-dereference $(notdir $@)
 wormbase/c_elegans.PRJNA13758.xrefs.txt.gz: wormbase/CHECKSUMS
 	# species/c_elegans/PRJNA13758/annotation/c_elegans.PRJNA13758.WS273.xrefs.txt.gz
 	$(CDWB) wsnum=$$($(WSNUM)) ; \
 	$(WGET) $(FULLPTH) $(WBFTP)/$(WBPROD)/species/$(WBSPC)/annotation/$(subst /,.,$(WBSPC)).$$wsnum.xrefs.txt.gz;\
-	ln -snf $(WBPROD)/species/$(WBSPC)/annotation/$(subst /,.,$(WBSPC)).$$wsnum.xrefs.txt.gz $(notdir $@)
+	ln -snf $(WBPROD)/species/$(WBSPC)/annotation/$(subst /,.,$(WBSPC)).$$wsnum.xrefs.txt.gz $(notdir $@); \
+	touch --no-dereference $(notdir $@)
 wormbase/phenotype_association.wb: wormbase/CHECKSUMS
 	$(CDWB) wsnum=$$($(WSNUM)) ; \
 	$(WGET) $(FULLPTH) $(WBFTP)/$(WBPROD)/ONTOLOGY/phenotype_association.$$wsnum.wb;\
-	ln -snf $(WBPROD)/ONTOLOGY/phenotype_association.$$wsnum.wb $(notdir $@)
+	ln -snf $(WBPROD)/ONTOLOGY/phenotype_association.$$wsnum.wb $(notdir $@); \
+	touch --no-dereference $(notdir $@)
 wormbase/rnai_phenotypes.wb: wormbase/CHECKSUMS
 	$(CDWB) wsnum=$$($(WSNUM)) ; \
 	$(WGET) $(FULLPTH) $(WBFTP)/$(WBPROD)/ONTOLOGY/rnai_phenotypes.$$wsnum.wb;\
-	ln -snf $(WBPROD)/ONTOLOGY/rnai_phenotypes.$$wsnum.wb $(notdir $@)
+	ln -snf $(WBPROD)/ONTOLOGY/rnai_phenotypes.$$wsnum.wb $(notdir $@); \
+	touch --no-dereference $(notdir $@)
 wormbase/disease_association.wb: wormbase/CHECKSUMS
 	$(CDWB) wsnum=$$($(WSNUM)) ; \
 	$(WGET) $(FULLPTH) $(WBFTP)/$(WBPROD)/ONTOLOGY/disease_association.$$wsnum.wb;\
-	ln -snf $(WBPROD)/ONTOLOGY/disease_association.$$wsnum.wb $(notdir $@)
+	ln -snf $(WBPROD)/ONTOLOGY/disease_association.$$wsnum.wb $(notdir $@); \
+	touch --no-dereference $(notdir $@)
 # api call so no date or file version
 wormbase/pub_xrefs.txt:
 	$(CDWB) $(WGET) -O $(notdir $@) \
 	http://tazendra.caltech.edu/~azurebrd/cgi-bin/forms/generic.cgi?action=WpaXref
-	# Last-modified header missing workaround
 wormbase/gaf-eco-mapping.yaml: eco/gaf-eco-mapping.yaml
 	$(COPYCHANGED)
 
