@@ -348,7 +348,7 @@ flybase/species.ab.gz: flybase/md5sum.txt
 flybase/fbal_to_fbgn_fb.tsv.gz: flybase/md5sum.txt
 	$(CDFLY) \
 	fname=$$(fgrep "fbal_to_fbgn_fb" md5sum.txt| cut -f2- -d'/') ; \
-	$(WGET) $(FULLPTH) $(FLYFTP)/$(FLYPRE)/alleles/ $$fname ; \
+	$(WGET) $(FULLPTH) $(FLYFTP)/$(FLYPRE)/alleles/$$fname ; \
 	ln -snf $(FLYPRE)/$$fname $(notdir $@); \
 	touch --no-dereference $(notdir $@)
 	# formaly disease_model_annotations.tsv.gz
