@@ -9,15 +9,14 @@ WGET = /usr/bin/wget --timestamping --no-verbose
 # addtional wget arguments
 FULLPTH := --force-directories --no-host-directories
 
-RM := rm --force --recursive --verbose
+RM := rm --force --recursive --verbose --preserve-root --one-file-system
 
-CLEAN = rm --force --recursive --verbose $(dir $@)/*
+CLEAN = rm --force --recursive --verbose --preserve-root --one-file-system $(dir $@)/*
 
 # For the first dependency to appear as the target
 # note $(realpath) does not seem to be available for
 # || ($(realpath $@) != $(realpath $<)) ] ; then ...
 #SYMLINK = if [ ! -L "$@" ] ; then cd $(dir $@); unlink "$(notdir $@)"; ln -sf "../$<" "$(notdir $@)"; fi
-
 # ABANDON for now. copy is being more reailable for me
 # SYMLINK = ln --force --no-dereference --symbolic $(patsubst /%,%,$<) $(patsubst /%,%,$@)
 
@@ -205,9 +204,9 @@ clinvar: clinvar/ \
 clinvar/: ; mkdir $@
 
 clinvar/ClinVarFullRelease_00-latest.xml.gz: FORCE
-	cd clinvar; $(WGET) $(CVFTP)/xml/ClinVarFullRelease_00-latest.xml.gz
+	cd clinvar; $(WGET) $(CVFTP)/xml/$(notdir $@)
 clinvar/gene_condition_source_id: FORCE
-	cd clinvar; $(WGET) $(CVFTP)/gene_condition_source_id
+	cd clinvar; $(WGET) $(CVFTP)/$(notdir $@)
 
 clinvar_clean: ; $(RM) clinvar/*
 ##########################################
@@ -224,7 +223,7 @@ ctd: 	ctd/ \
 ctd/: ; mkdir $@
 
 ctd/CTD_chemicals_diseases.tsv.gz: FORCE
-	cd ctd; $(WGET) http://ctdbase.org/reports/CTD_chemicals_diseases.tsv.gz
+	cd ctd; $(WGET) http://ctdbase.org/reports/$(notdir $@)
 
 ctd_clean: ; $(RM) ctd/*
 ##########################################
@@ -244,7 +243,7 @@ eco:	eco/ \
 eco/: ; mkdir $@
 
 eco/gaf-eco-mapping.txt: eco/
-	cd eco/; $(WGET) $(OBO)/eco/gaf-eco-mapping.txt
+	cd eco/; $(WGET) $(OBO)/eco/$(notdir $@)
 
 eco/gaf-eco-mapping.yaml: eco/gaf-eco-mapping.txt
 	awk -F'\t' 'BEGIN{print "---"} \
@@ -333,7 +332,7 @@ flybase: flybase/ \
 flybase/: ; mkdir $@
 
 flybase/md5sum.txt: FORCE
-	$(CDFLY) $(WGET) $(FLYFTP)/$(FLYPRE)/md5sum.txt
+	$(CDFLY) $(WGET) $(FLYFTP)/$(FLYPRE)$(notdir $@)
 
 flybase/disease_model_annotations.tsv.gz: flybase/md5sum.txt
 	$(CDFLY) \
@@ -343,7 +342,7 @@ flybase/disease_model_annotations.tsv.gz: flybase/md5sum.txt
 	touch --no-dereference $(notdir $@)
 
 flybase/species.ab.gz: flybase/md5sum.txt
-	$(CDFLY) $(WGET) $(FLYFTP)/$(FLYPRE)/species/species.ab.gz
+	$(CDFLY) $(WGET) $(FLYFTP)/$(FLYPRE)/species/$(notdir $@)
 
 flybase/fbal_to_fbgn_fb.tsv.gz: flybase/md5sum.txt
 	$(CDFLY) \
@@ -370,9 +369,9 @@ genereviews: genereviews/ \
 
 genereviews/: ; mkdir $@
 genereviews/NBKid_shortname_OMIM.txt: FORCE
-	cd genereviews; $(WGET) $(GRDL)/NBKid_shortname_OMIM.txt
+	cd genereviews; $(WGET) $(GRDL)/$(notdir $@)
 genereviews/GRtitle_shortname_NBKid.txt: FORCE
-	cd genereviews; $(WGET) $(GRDL)/GRtitle_shortname_NBKid.txt
+	cd genereviews; $(WGET) $(GRDL)/$(notdir $@)
 
 genereviews_clean: ; $(RM) genereviews/*
 
@@ -408,9 +407,9 @@ go/: ; mkdir $@
 $(foreach species, $(GOASPC), go/$(species).gaf.gz): FORCE
 	cd go/; $(WGET) $(GOADL)/annotations/$(notdir $@)
 go/go-refs.json: FORCE
-	cd go/; $(WGET) http://current.geneontology.org/metadata/go-refs.json
+	cd go/; $(WGET) http://current.geneontology.org/metadata/$(notdir $@)
 go/idmapping_selected.tab.gz: FORCE # expensive
-	cd go/; $(WGET) $(FTPEBI)/$(UPCRKB)/idmapping/idmapping_selected.tab.gz
+	cd go/; $(WGET) $(FTPEBI)/$(UPCRKB)/idmapping/$(notdir $@)
 go/gaf-eco-mapping.txt: eco/gaf-eco-mapping.txt
 	$(COPYCHANGED)
 go/gaf-eco-mapping.yaml: eco/gaf-eco-mapping.yaml
@@ -436,7 +435,7 @@ hgnc:	hgnc/ \
 
 hgnc/: ; mkdir $@
 hgnc/hgnc_complete_set.txt: FORCE
-	cd hgnc/; $(WGET) $(EBIFTP)/$(EBIPTH)/hgnc_complete_set.txt
+	cd hgnc/; $(WGET) $(EBIFTP)/$(EBIPTH)/$(notdir $@)
 
 # Warning: File 'hgnc/hgnc_complete_set.txt' has modification time 18212 s in the future
 
@@ -450,7 +449,7 @@ hpoa:	hpoa/ \
 
 hpoa/: ; mkdir $@
 hpoa/phenotype.hpoa: FORCE
-	cd hgnc; $(WGET) $(HPOADL2)/phenotype.hpoa
+	cd hgnc; $(WGET) $(HPOADL2)/$(notdir $@)
 
 hpoa_clean: ; $(RM) hpoa/*
 ##########################################
@@ -461,9 +460,9 @@ impc:	impc/ \
 
 impc/: ; mkdir $@
 impc/checksum.md5: FORCE
-	cd impc; $(WGET) $(IMPCDL)/checksum.md5
+	cd impc; $(WGET) $(IMPCDL)/$(notdir $@)
 impc/ALL_genotype_phenotype.csv.gz: impc/checksum.md5
-	cd impc; $(WGET) $(IMPCDL)/ALL_genotype_phenotype.csv.gz
+	cd impc; $(WGET) $(IMPCDL)/$(notdir $@)
 
 impc_clean: ; $(RM) impc/*
 ##########################################
@@ -620,7 +619,7 @@ mmrrc: 	mmrrc/ \
 		mmrrc/mmrrc_catalog_data.csv
 mmrrc/: ; mkdir $@
 mmrrc/mmrrc_catalog_data.csv: FORCE
-	cd mmrrc; $(WGET) https://www.mmrrc.org/about/mmrrc_catalog_data.csv
+	cd mmrrc; $(WGET) https://www.mmrrc.org/about/$(notdir $@)
 
 mmrrc_clean: ; $(RM) mmrrc/*
 ##########################################
@@ -652,7 +651,7 @@ monochrom/9606cytoBand.txt.gz: monochrom/hg19/ monochrom/hg19/cytoBand.txt.gz
 	touch --no-dereference $(notdir $@)
 monochrom/hg19/: ; mkdir $@
 monochrom/hg19/cytoBand.txt.gz: FORCE
-	cd monochrom/hg19; $(WGET) $(MCDL)/hg19/database/cytoBand.txt.gz
+	cd monochrom/hg19; $(WGET) $(MCDL)/hg19/database/$(notdir $@)
 monochrom/10090cytoBand.txt.gz: monochrom/mm10/$(CBI) monochrom/mm10/
 	$(CDMC) ln -snf mm10/$(CBI) $(notdir $@); \
 	touch --no-dereference $(notdir $@) # note dropping 'Ideo' (to fix)
@@ -721,13 +720,13 @@ mpd: 	mpd/ \
 
 mpd/: ; mkdir $@
 mpd/ontology_mappings.csv: FORCE
-	cd mpd; $(WGET) $(MPDDL)/ontology_mappings.csv
+	cd mpd; $(WGET) $(MPDDL)/$(notdir $@)
 mpd/straininfo.csv: FORCE
-	cd mpd; $(WGET) $(MPDDL)/straininfo.csv
+	cd mpd; $(WGET) $(MPDDL)/$(notdir $@)
 mpd/measurements.csv: FORCE
-	cd mpd; $(WGET) $(MPDDL)/measurements.csv
+	cd mpd; $(WGET) $(MPDDL)/$(notdir $@)
 mpd/strainmeans.csv.gz: FORCE
-	cd mpd; $(WGET) $(MPDDL)/strainmeans.csv.gz
+	cd mpd; $(WGET) $(MPDDL)/$(notdir $@)
 
 mpd_clean: ; $(RM) mpd/*
 ##########################################
@@ -750,32 +749,32 @@ ncbigene: ncbigene/ \
 ncbigene/: ; mkdir $@
 
 ncbigene/gene_info.gz: FORCE
-	cd ncbigene/ ; $(WGET) $(NCBIFTP)/gene_info.gz
+	cd ncbigene/ ; $(WGET) $(NCBIFTP)/$(notdir $@)
 	@ # test if in the future (GMT?)
 	@ # touch -r "gene_info.gz" -d '-8 hour' "gene_info.gz"
 ncbigene/gene_history.gz: FORCE
-	cd ncbigene/ ; $(WGET) $(NCBIFTP)/gene_history.gz
+	cd ncbigene/ ; $(WGET) $(NCBIFTP)/$(notdir $@)
 ncbigene/gene2pubmed.gz: FORCE
-	cd ncbigene/ ; $(WGET) $(NCBIFTP)/gene2pubmed.gz
+	cd ncbigene/ ; $(WGET) $(NCBIFTP)/$(notdir $@)
 ncbigene/gene_group.gz: FORCE
-	cd ncbigene/ ; $(WGET) $(NCBIFTP)/gene_group.gz
+	cd ncbigene/ ; $(WGET) $(NCBIFTP)/$(notdir $@)
 
 GENEINFO = $(NCBIFTP)/GENE_INFO
 
 ncbigene/Gallus_gallus.gene_info.gz: FORCE
-	cd ncbigene/ ; $(WGET) $(GENEINFO)/Non-mammalian_vertebrates/Gallus_gallus.gene_info.gz
+	cd ncbigene/ ; $(WGET) $(GENEINFO)/Non-mammalian_vertebrates/$(notdir $@)
 ncbigene/Sus_scrofa.gene_info.gz: FORCE
-	cd ncbigene/ ; $(WGET) $(GENEINFO)/Mammalia/Sus_scrofa.gene_info.gz
+	cd ncbigene/ ; $(WGET) $(GENEINFO)/Mammalia/$(notdir $@)
 ncbigene/Bos_taurus.gene_info.gz: FORCE
-	cd ncbigene/ ; $(WGET) $(GENEINFO)/Mammalia/Bos_taurus.gene_info.gz
+	cd ncbigene/ ; $(WGET) $(GENEINFO)/Mammalia/$(notdir $@)
 
 # GENEINFO_LOCAL_FILES	(maybe partion out more if they could help with other ingests)
 ncbigene/Equus_caballus.gene_info.gz: ncbigene/gene_info.gz
-	cd ncbigene/ ; /bin/zgrep "^9796[^0-9]" gene_info.gz | /bin/gzip > Equus_caballus.gene_info.gz
+	cd ncbigene/ ; /bin/zgrep "^9796[^0-9]" gene_info.gz | /bin/gzip > $(notdir $@)
 ncbigene/Ovis_aries.gene_info.gz: ncbigene/gene_info.gz
-	cd ncbigene/ ; /bin/zgrep "^9940[^0-9]" gene_info.gz | /bin/gzip > Ovis_aries.gene_info.gz
+	cd ncbigene/ ; /bin/zgrep "^9940[^0-9]" gene_info.gz | /bin/gzip > $(notdir $@)
 ncbigene/Oncorhynchus_mykiss.gene_info.gz: ncbigene/gene_info.gz
-	cd ncbigene/ ; /bin/zgrep "^8022[^0-9]" gene_info.gz | /bin/gzip > Oncorhynchus_mykiss.gene_info.gz
+	cd ncbigene/ ; /bin/zgrep "^8022[^0-9]" gene_info.gz | /bin/gzip > $(notdir $@)
 
 ncbigene_clean: ; $(RM) ncbigene/*
 ##########################################
@@ -786,7 +785,7 @@ omia:	omia/ \
 
 omia/: ; mkdir $@
 omia/omia.xml.gz: FORCE
-	cd omia; $(WGET) http://compldb.angis.org.au/dumps/omia.xml.gz
+	cd omia; $(WGET) http://compldb.angis.org.au/dumps/$(notdir $@)
 	# http://omia.angis.org.au/dumps/omia.xml.gz # broken alt
 
 omia_clean: ; $(RM) omia/*
@@ -799,7 +798,7 @@ orphanet: orphanet/ \
 
 orphanet/: ; mkdir $@
 orphanet/en_product6.xml: FORCE
-	cd orphanet/; $(WGET) http://www.orphadata.org/data/xml/en_product6.xml
+	cd orphanet/; $(WGET) http://www.orphadata.org/data/xml/$(notdir $@)
 
 orphanet_clean: ; $(RM) orphanet/*
 
@@ -838,19 +837,19 @@ owl/OBF/FALDO/master/faldo.ttl: FORCE
 owl/faldo.ttl: owl/OBF/FALDO/master/faldo.ttl
 	$(COPYCHANGED)
 owl/obo/eco.owl: FORCE
-	cd owl; $(WGET) $(FULLPTH) $(OBO)/eco.owl
+	cd owl; $(WGET) $(FULLPTH) $(OBO)/$(notdir $@)
 obo/eco.owl: owl/obo/eco.owl
 	$(COPYCHANGED)
 owl/obo/iao.owl: FORCE
-	cd owl; $(WGET) $(FULLPTH) $(OBO)/iao.owl
+	cd owl; $(WGET) $(FULLPTH) $(OBO)/$(notdir $@)
 owl/iao.owl: owl/obo/iao.owl
 	$(COPYCHANGED)
 owl/obo/ero.owl: FORCE
-	cd owl; $(WGET) $(FULLPTH) $(OBO)/ero.owl
+	cd owl; $(WGET) $(FULLPTH) $(OBO)/$(notdir $@)
 owl/ero.owl: owl/obo/ero.owl
 	$(COPYCHANGED)
 owl/obo/pw.owl: FORCE
-	cd owl; $(WGET) $(FULLPTH) $(OBO)/pw.owl
+	cd owl; $(WGET) $(FULLPTH) $(OBO)/$(notdir $@)
 owl/pw.owl: owl/obo/pw.owl
 	$(COPYCHANGED)
 owl/jamesmalone/OBAN/master/ontology/oban_core.ttl: FORCE
@@ -875,18 +874,19 @@ owl/foaf.rdf: owl/foaf/spec/index.rdf
 	$(COPYCHANGED)
 owl/dublin_core_elements.rdf : FORCE ## had local name dc.rdf
 	#cd owl; $(WGET) https://dublincore.org/2012/06/14/dcelements.rdf # moved to a 404
-	cd owl; $(WGET) https://www.dublincore.org/specifications/dublin-core/dcmi-terms/dublin_core_elements.rdf
+	cd owl; $(WGET) https://www.dublincore.org/specifications/dublin-core/dcmi-terms/$(notdir $@)
 owl/dc.rdf : owl/dublin_core_elements.rdf  # todo: figure out how is this rename can be avoided
 	$(COPYCHANGED)
 ########
 # these next few are far too circular
 owl/metazoa.owl: FORCE
-	cd owl; $(WGET) https://data.monarchinitiative.org/owl/metazoa.owl
+	cd owl; $(WGET) https://data.monarchinitiative.org/owl/$(notdir $@)
 owl/clo_core.owl: FORCE
-	cd owl; $(WGET) https://data.monarchinitiative.org/owl/clo_core.owl
+	cd owl; $(WGET) https://data.monarchinitiative.org/owl/$(notdir $@)
 # this one should be getting rebuilt based on if any if the previous are new
+# note it is currently regenerated by the Jenkins "dipper-pipeline" which pulls its data from here.
 owl/monarch-merged.owl: FORCE
-	cd owl; $(WGET) https://data.monarchinitiative.org/owl/monarch-merged.owl
+	cd owl; $(WGET) https://data.monarchinitiative.org/owl/$(notdir $@)
 
 owl_clean: ; $(RM) owl/*
 ########################################################
@@ -905,9 +905,9 @@ panther/current_release.ver: panther/
 	/bin/sed -n 's/.*current_release -> \([0-9.]\+\)/\1/p' > $@
 
 panther/RefGenomeOrthologs.tar.gz: FORCE
-	cd panther; $(WGET) $(PNTHDL)/RefGenomeOrthologs.tar.gz
+	cd panther; $(WGET) $(PNTHDL)/$(notdir $@)
 panther/Orthologs_HCOP.tar.gz: FORCE
-	cd panther; $(WGET) $(PNTHDL)/Orthologs_HCOP.tar.gz
+	cd panther; $(WGET) $(PNTHDL)/$(notdir $@)
 
 panther_clean: ; $(RM) panther/*
 ##########################################
@@ -920,9 +920,9 @@ reactome: reactome/ \
 
 reactome/: ; mkdir $@
 reactome/Ensembl2Reactome.txt: FORCE
-	cd reactome; $(WGET) $(RCTDL)/Ensembl2Reactome.txt
+	cd reactome; $(WGET) $(RCTDL)/$(notdir $@)
 reactome/ChEBI2Reactome.txt: FORCE
-	cd reactome; $(WGET) $(RCTDL)/ChEBI2Reactome.txt
+	cd reactome; $(WGET) $(RCTDL)/$(notdir $@)
 
 reactome/gaf-eco-mapping.txt: eco/gaf-eco-mapping.txt
 	$(COPYCHANGED)
@@ -940,7 +940,7 @@ rgd:	rgd/ \
 
 rgd/: ; mkdir $@
 rgd/rattus_genes_mp: FORCE
-	cd rgd/; $(WGET) $(RGDFTP)/rattus_genes_mp
+	cd rgd/; $(WGET) $(RGDFTP)/$(notdir $@)
 
 rgd_clean: ; $(RM) rdg/*
 ##########################################
@@ -950,7 +950,7 @@ sgd:	sgd/ \
 
 sgd/: ; mkdir $@
 sgd/phenotype_data.tab: FORCE
-	cd sgd; $(WGET) $(SGDDL)/phenotype_data.tab
+	cd sgd; $(WGET) $(SGDDL)/$(notdir $@)
 sgd_clean: ; $(RM) sgd/*
 ##########################################
 STRING = https://string-db.org
