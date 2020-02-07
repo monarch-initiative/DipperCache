@@ -847,7 +847,7 @@ owl/obo/sepio.owl: FORCE
 owl/sepio.owl: owl/obo/sepio.owl
 	$(COPYCHANGED)
 owl/OBF/FALDO/master/faldo.ttl: FORCE
-	cd owl; $(WGET) $(FULLPTH) $(GITRAW)/OBF/FALDO/master/faldo.ttl
+	cd owl; $(WGET) $(FULLPTH) $(GITRAW)/OBF/FALDO/master/$(notdir $@)
 owl/faldo.ttl: owl/OBF/FALDO/master/faldo.ttl
 	$(COPYCHANGED)
 owl/obo/eco.owl: FORCE
@@ -871,22 +871,22 @@ owl/jamesmalone/OBAN/master/ontology/oban_core.ttl: FORCE
 owl/oban_core.ttl: owl/jamesmalone/OBAN/master/ontology/oban_core.ttl
 	$(COPYCHANGED)
 owl/obo/pco.owl: FORCE
-	cd owl; $(WGET) $(FULLPTH) $(OBO)/pco.owl
+	cd owl; $(WGET) $(FULLPTH) $(OBO)/$(notdir $@)
 owl/pco.owl: owl/obo/pco.owl
 	$(COPYCHANGED)
 owl/obo/xco.owl: FORCE
-	cd owl; $(WGET) $(FULLPTH) $(OBO)/xco.owl
+	cd owl; $(WGET) $(FULLPTH) $(OBO)/$(notdir $@)
 owl/xco.owl: owl/obo/xco.owl
 	$(COPYCHANGED)
 owl/obo/upheno/monarch.owl: FORCE
-	cd owl; $(WGET) $(FULLPTH) $(OBO)/upheno/monarch.owl
+	cd owl; $(WGET) $(FULLPTH) $(OBO)/upheno/$(notdir $@)
 owl/monarch.owl: owl/obo/upheno/monarch.owl
 	$(COPYCHANGED)
 owl/foaf/spec/index.rdf: FORCE
-	cd owl; $(WGET) $(FULLPTH) http://xmlns.com/foaf/spec/index.rdf
+	cd owl; $(WGET) $(FULLPTH) http://xmlns.com/foaf/spec/$(notdir $@)
 owl/foaf.rdf: owl/foaf/spec/index.rdf
 	$(COPYCHANGED)
-owl/dublin_core_elements.rdf : FORCE ## had local name dc.rdf
+owl/dublin_core_elements.rdf : FORCE
 	#cd owl; $(WGET) https://dublincore.org/2012/06/14/dcelements.rdf # moved to a 404
 	cd owl; $(WGET) https://www.dublincore.org/specifications/dublin-core/dcmi-terms/$(notdir $@)
 #owl/dc.rdf : owl/dublin_core_elements.rdf  # todo: figure out how is this rename can be avoided
