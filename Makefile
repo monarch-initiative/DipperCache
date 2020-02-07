@@ -805,6 +805,20 @@ orphanet_clean: ; $(RM) orphanet/*
 ##########################################
 
 owl: 	owl/ \
+		owl/obo/geno.owl \
+		owl/obo/eco.owl \
+		owl/obo/ro.owl \
+		owl/obo/iao.owl \
+		owl/obo/sepio.owl \
+		owl/obo/ero.owl \
+		owl/obo/pco.owl \
+		owl/obo/xco.owl \
+		owl/obo/upheno/monarch.owl \
+		owl/obo/pw.owl \
+		owl/foaf/spec/index.rdf \
+		owl/dublin_core_elements.rdf \
+		owl/OBF/FALDO/master/faldo.ttl \
+		owl/jamesmalone/OBAN/master/ontology/oban_core.ttl \
 		owl/geno.owl \
 		owl/faldo.ttl \
 		owl/eco.owl \
@@ -822,6 +836,7 @@ owl: 	owl/ \
 		owl/metazoa.owl \
 		owl/clo_core.owl \
 		owl/monarch-merged.owl
+
 
 owl/: ; mkdir $@
 
@@ -876,8 +891,8 @@ owl/foaf.rdf: owl/foaf/spec/index.rdf
 owl/dublin_core_elements.rdf : FORCE ## had local name dc.rdf
 	#cd owl; $(WGET) https://dublincore.org/2012/06/14/dcelements.rdf # moved to a 404
 	cd owl; $(WGET) https://www.dublincore.org/specifications/dublin-core/dcmi-terms/$(notdir $@)
-owl/dc.rdf : owl/dublin_core_elements.rdf  # todo: figure out how is this rename can be avoided
-	$(COPYCHANGED)
+#owl/dc.rdf : owl/dublin_core_elements.rdf  # todo: figure out how is this rename can be avoided
+#	$(COPYCHANGED)
 owl/obo/ro.owl: FORCE
 	cd owl; $(WGET) $(FULLPTH) $(OBO)/$(notdir $@)
 owl/ro.owl: owl/obo/ro.owl
