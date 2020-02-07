@@ -808,6 +808,7 @@ owl: 	owl/ \
 		owl/geno.owl \
 		owl/faldo.ttl \
 		owl/eco.owl \
+		owl/ro.owl \
 		owl/iao.owl \
 		owl/sepio.owl \
 		owl/ero.owl \
@@ -838,7 +839,7 @@ owl/faldo.ttl: owl/OBF/FALDO/master/faldo.ttl
 	$(COPYCHANGED)
 owl/obo/eco.owl: FORCE
 	cd owl; $(WGET) $(FULLPTH) $(OBO)/$(notdir $@)
-obo/eco.owl: owl/obo/eco.owl
+owl/eco.owl: owl/obo/eco.owl
 	$(COPYCHANGED)
 owl/obo/iao.owl: FORCE
 	cd owl; $(WGET) $(FULLPTH) $(OBO)/$(notdir $@)
@@ -876,6 +877,10 @@ owl/dublin_core_elements.rdf : FORCE ## had local name dc.rdf
 	#cd owl; $(WGET) https://dublincore.org/2012/06/14/dcelements.rdf # moved to a 404
 	cd owl; $(WGET) https://www.dublincore.org/specifications/dublin-core/dcmi-terms/$(notdir $@)
 owl/dc.rdf : owl/dublin_core_elements.rdf  # todo: figure out how is this rename can be avoided
+	$(COPYCHANGED)
+owl/obo/ro.owl: FORCE
+	cd owl; $(WGET) $(FULLPTH) $(OBO)/$(notdir $@)
+owl/ro.owl: owl/obo/ro.owl
 	$(COPYCHANGED)
 ########
 # these next few are far too circular
