@@ -816,7 +816,6 @@ owl: 	owl/ \
 		owl/obo/upheno/monarch.owl \
 		owl/obo/pw.owl \
 		owl/foaf/spec/index.rdf \
-		owl/dublin_core_elements.rdf \
 		owl/OBF/FALDO/master/faldo.ttl \
 		owl/jamesmalone/OBAN/master/ontology/oban_core.ttl \
 		owl/geno.owl \
@@ -832,11 +831,10 @@ owl: 	owl/ \
 		owl/xco.owl \
 		owl/monarch.owl \
 		owl/foaf.rdf \
-		owl/dc.rdf \
+		owl/dublin_core_elements.rdf \
 		owl/metazoa.owl \
 		owl/clo_core.owl \
 		owl/monarch-merged.owl
-
 
 owl/: ; mkdir $@
 
