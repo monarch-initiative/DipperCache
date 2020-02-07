@@ -824,13 +824,13 @@ owl: 	owl/ \
 
 owl/: ; mkdir $@
 
-owl/monarch-initiative/GENO-ontology/develop/src/ontology/geno.owl: FORCE
-	cd owl; $(WGET) $(FULLPTH) $(GITMON)/GENO-ontology/develop/src/ontology/geno.owl
-owl/geno.owl: owl/monarch-initiative/GENO-ontology/develop/src/ontology/geno.owl
+owl/obo/geno.owl: FORCE
+	cd owl; $(WGET) $(FULLPTH) $(OBO)/$(notdir $@)
+owl/geno.owl: owl/obo/geno.owl
 	$(COPYCHANGED)
-owl/monarch-initiative/SEPIO-ontology/master/src/ontology/sepio.owl: FORCE
-	cd owl; $(WGET) $(FULLPTH) $(GITMON)/SEPIO-ontology/master/src/ontology/sepio.owl
-owl/sepio.owl: owl/monarch-initiative/SEPIO-ontology/master/src/ontology/sepio.owl
+owl/obo/sepio.owl: FORCE
+	cd owl; $(WGET) $(FULLPTH) $(OBO)/$(notdir $@)
+owl/sepio.owl: owl/obo/sepio.owl
 	$(COPYCHANGED)
 owl/OBF/FALDO/master/faldo.ttl: FORCE
 	cd owl; $(WGET) $(FULLPTH) $(GITRAW)/OBF/FALDO/master/faldo.ttl
