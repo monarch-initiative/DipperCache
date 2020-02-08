@@ -1159,4 +1159,4 @@ zfinslim_clean: ; $(RM) zfin/id_map_zfin.tsv zfin/phenoGeneCleanData_fish.txt
 ##########################################
 
 
-clean: $(foreach target, $(SOURCES), $(target)_clean)
+clean: ; $(foreach target, $(SOURCES), $(target)_clean)
