@@ -332,7 +332,7 @@ flybase: flybase/ \
 flybase/: ; mkdir $@
 
 flybase/md5sum.txt: FORCE
-	$(CDFLY) $(WGET) $(FLYFTP)/$(FLYPRE)$(notdir $@)
+	$(CDFLY) $(WGET) $(FLYFTP)/$(FLYPRE/$(notdir $@)
 
 flybase/disease_model_annotations.tsv.gz: flybase/md5sum.txt
 	$(CDFLY) \
@@ -998,7 +998,7 @@ string: string/ \
 string/: ; mkdir $@
 
 string/$(STRFP)/version: FORCE
-	cd string ; $(WGET) $(FULLPTH) $(STRING)/$(STRFP)/version
+	cd string ; $(WGET) $(FULLPTH) $(STRING)/$(STRFP)/$(notdir $@)
 string/version: string/$(STRFP)/version
 	$(COPYCHANGED); cd string ;\
 	if [ "$(STRVER)" != "$$(cut -f 1 version)" ] ;then echo "NEW VERSION of STRING!" ; \
