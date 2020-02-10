@@ -95,32 +95,27 @@ tree: ## Diffable metadata snapshot of results
 bad_symlink:  ## Show broken symlinks
 	find . -xtype l
 
-date_megs.txt:  ## collect number of Meg per day according to last modified time stamp; best effort to de-dup 
-	find . -type f -exec stat -c"%n %Y %s" {} \;|
-		sed 's|^.*/||' |
-		awk '{print $1,strftime("%Y%m%d",$2),$3/1000000}' |
-		sort -u | cut -f2- -d' ' | sort -n |
-		awk 'BRGIN{getline;t=$1;g=$2}$1==t{g+=$2}$1!=t{print t,g;t=$1;g=$2}END{print t,g}' > date_megs.txt
+date_megs.txt: FORCE ## collect number of Meg per day according to last modified time stamp; best effort to de-dup 
+	find . -type f -exec stat -c"%n %Y %s" {} \; |sed 's|^.*/||' |\
+	awk '{print $$1,strftime("%Y%m%d",$$2),$$3/1000000}' |\
+	sort -u | cut -f2- -d' ' | sort -n |\
+	awk 'BRGIN{getline;t=$$1;m=$$2}$$1==t{m+=$$2}$$1!=t{print t,m;t=$$1;m=$$2}END{print t,m}' > $@
 
-GNUPLT_SETTING = 'set title "Meg on Day":set xdata time;set timefmt "%Y%m%d";set boxwidth 0.5'
-GNUPLT_SETTING = '$(GNUPLT_SETTING);set logscale y;plot "/dev/stdin" using 1:2 with boxes'
+GNUPLT_SET := set title "Meg on Day";set xdata time;set timefmt "%Y%m%d";set boxwidth 0.5
+GNUPLT_SETTING := $(GNUPLT_SET);set logscale y;plot "/dev/stdin" using 1:2 with boxes
 megs_on_day.txt: date_megs.txt
 	gnuplot -d -e 'set terminal dumb size 200,50;$(GNUPLT_SETTING)' < $< > $@
 
 megs_on_day.png: date_megs.txt
 	gnuplot -d -e 'set terminal png size 1500,500;$(GNUPLT_SETTING)' < $< > $@
 
-oldest:  FORCE ## Surface the stalest resources present
-	find . -type f -exec stat -c"%Y %n %s" {} \;|
-		sort -n |
-		head -20 |
-		awk '{print strftime("%Y %m ",$1),$2}
+oldest:  FORCE  ## Surface the stalest resources present
+	find . -type f -exec stat -c "%Y %n %s" {} \; | sort -n |head -20 |\
+	awk '{print strftime("%Y %m",$$1),$$2}'
 
-newest: FORCE ## Surface the freshest resources present
-	find . -type f -exec stat -c"%Y %n %s" {} \;|
-		sort -nr |
-		head -20 |
-		awk '{print strftime("%Y %m ",$1),$2}
+newest: FORCE  ## Surface the freshest resources present
+	find . -type f -exec stat -c "%Y %n %s" {} \; |sort -nr |head -20 |\
+	awk '{print strftime("%Y %m %d",$$1),$$2}'
 
 ##########################################
 # animalqtldb
@@ -148,7 +143,7 @@ AQTLVER = pig_QTLdata.txt \
 		horse_QTLdata.txt \
 		rainbow_trout_QTLdata.txt
 
-animalqtldb: ncbigene animalqtldb/ ## \
+animalqtldb: ncbigene animalqtldb/
 		$(foreach spc, $(AQTLGI), animalqtldb/$(spc)) \
 		$(foreach spc, $(AQTLTMP), animalqtldb/$(spc)) \
 		$(foreach spc, $(AQTLVER), animalqtldb/$(spc)) \
