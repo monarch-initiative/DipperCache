@@ -102,11 +102,25 @@ date_megs.txt:  ## collect number of Meg per day according to last modified time
 		sort -u | cut -f2- -d' ' | sort -n |
 		awk 'BRGIN{getline;t=$1;g=$2}$1==t{g+=$2}$1!=t{print t,g;t=$1;g=$2}END{print t,g}' > date_megs.txt
 
-megs_on_day.text: date_megs.txt
-	gnuplot -d -e 'set terminal dumb size 200,50;set xdata time;set title "Meg on Day";set timefmt "%Y%m%d";set boxwidth 0.5;set logscale y;plot "/dev/stdin" using 1:2 with boxes' < date_megs.txt > megs_on_day.txt
+GNUPLT_SETTING = 'set title "Meg on Day":set xdata time;set timefmt "%Y%m%d";set boxwidth 0.5'
+GNUPLT_SETTING = '$(GNUPLT_SETTING);set logscale y;plot "/dev/stdin" using 1:2 with boxes'
+megs_on_day.txt: date_megs.txt
+	gnuplot -d -e 'set terminal dumb size 200,50;$(GNUPLT_SETTING)' < $< > $@
 
 megs_on_day.png: date_megs.txt
-	gnuplot -d -e 'set terminal png size 1500,500;set xdata time;set title "Meg on Day";set timefmt "%Y%m%d"; set boxwidth 0.5;set logscale y; plot "/dev/stdin" using 1:2 with boxes' < date_megs.txt > megs_on_day.png
+	gnuplot -d -e 'set terminal png size 1500,500;$(GNUPLT_SETTING)' < $< > $@
+
+oldest:  FORCE ## Surface the stalest resources present
+	find . -type f -exec stat -c"%Y %n %s" {} \;|
+		sort -n |
+		head -20 |
+		awk '{print strftime("%Y %m ",$1),$2}
+
+newest: FORCE ## Surface the freshest resources present
+	find . -type f -exec stat -c"%Y %n %s" {} \;|
+		sort -nr |
+		head -20 |
+		awk '{print strftime("%Y %m ",$1),$2}
 
 ##########################################
 # animalqtldb
