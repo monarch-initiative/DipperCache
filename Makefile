@@ -26,6 +26,8 @@ CLEAN = rm --force --recursive --verbose --preserve-root --one-file-system
 # Last-modified header missing workaround
 COPYCHANGED = if [ "$$(md5sum $<|cut -c 1-32)" != "$$(md5sum $@|cut -c 1-32)" ] ; then cp -fp $< $@ ; fi
 
+COPYNEW = if [ "$$(md5sum $$NEW|cut -c 1-32)" != "$$(md5sum $(notdir $@)|cut -c 1-32)" ] ; then cp -fp $$NEW $(notdir $@); fi
+
 # May be used in more than one ingest
 OBO = http://purl.obolibrary.org/obo
 GITRAW = https://raw.githubusercontent.com
@@ -358,9 +360,9 @@ flybase/md5sum.txt: FORCE
 flybase/disease_model_annotations.tsv.gz: flybase/md5sum.txt
 	$(CDFLY) \
 	fname=$$(fgrep "/human_disease/disease_model_annotations" md5sum.txt| cut -f2- -d'/') ; \
-	$(WGET) $(FULLPTH) $(FLYFTP)/$(FLYPRE)/$$fname ; \
-	ln -snf $(FLYPRE)/$$fname $(notdir $@) ; \
-	touch --no-dereference $(notdir $@)
+	NEW=$(FLYPRE)/$$fname ; \
+	$(WGET) $(FULLPTH) $(FLYFTP)/$$NEW ; \
+	$(COPYNEW)
 
 flybase/species.ab.gz: flybase/md5sum.txt
 	$(CDFLY) $(WGET) $(FLYFTP)/$(FLYPRE)/species/$(notdir $@)
@@ -368,17 +370,17 @@ flybase/species.ab.gz: flybase/md5sum.txt
 flybase/fbal_to_fbgn_fb.tsv.gz: flybase/md5sum.txt
 	$(CDFLY) \
 	fname=$$(fgrep "fbal_to_fbgn_fb" md5sum.txt| cut -f2- -d'/') ; \
-	$(WGET) $(FULLPTH) $(FLYFTP)/$(FLYPRE)/alleles/$$fname ; \
-	ln -snf $(FLYPRE)/$$fname $(notdir $@); \
-	touch --no-dereference $(notdir $@)
-	# formaly disease_model_annotations.tsv.gz
+	NEW=$(FLYPRE)/$$fname ; \
+	$(WGET) $(FULLPTH) $(FLYFTP)/$$NEW ; \
+	$(COPYNEW)
+	# formally disease_model_annotations.tsv.gz
 
 flybase/fbrf_pmid_pmcid_doi_fb.tsv.gz: flybase/md5sum.txt
 	$(CDFLY) \
 	fname=$$(fgrep "references/fbrf_pmid_pmcid_doi_fb" md5sum.txt| cut -f2- -d'/') ; \
-	$(WGET) $(FULLPTH) $(FLYFTP)/$(FLYPRE)/$$fname ; \
-	ln -snf $(FLYPRE)/$$fname $(notdir $@); \
-	touch --no-dereference $(notdir $@)
+	NEW=$(FLYPRE)/$$fname ; \
+	$(WGET) $(FULLPTH) $(FLYFTP)/$$NEW ; \
+	$(COPYNEW)
 
 flybase_clean: ; $(CLEAN) flybase/*
 
