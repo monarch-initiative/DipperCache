@@ -13,19 +13,10 @@ RM := rm --force --recursive --verbose --preserve-root --one-file-system
 
 CLEAN = rm --force --recursive --verbose --preserve-root --one-file-system
 
-# For the first dependency to appear as the target
-# note $(realpath) does not seem to be available for
-# || ($(realpath $@) != $(realpath $<)) ] ; then ...
-#SYMLINK = if [ ! -L "$@" ] ; then cd $(dir $@); unlink "$(notdir $@)"; ln -sf "../$<" "$(notdir $@)"; fi
-# ABANDON for now. copy is being more reailable for me
-# SYMLINK = ln --force --no-dereference --symbolic $(patsubst /%,%,$<) $(patsubst /%,%,$@)
-
-
 # when a remote server does not set last-modified headers we can only test
 # if a new file is the same or different from the one we already have.
 # Last-modified header missing workaround
 COPYCHANGED = if [ "$$(md5sum $<|cut -c 1-32)" != "$$(md5sum $@|cut -c 1-32)" ] ; then cp -fp $< $@ ; fi
-
 COPYNEW = if [ "$$(md5sum $$NEW|cut -c 1-32)" != "$$(md5sum $(notdir $@)|cut -c 1-32)" ] ; then cp -fp $$NEW $(notdir $@); fi
 
 # May be used in more than one ingest
