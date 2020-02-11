@@ -1081,42 +1081,42 @@ wormbase/CHECKSUMS: FORCE
 	$(CDWB) $(WGET) $(WBFTP)/$(WBPROD)/$(notdir $@)
 wormbase/letter: wormbase/CHECKSUMS
 	$(CDWB) wsnum=$$($(WSNUM)); \
-	$(WGET) $(WBFTP)/$(WBPROD)/letter.$$wsnum ; \
-	ln -snf letter.$$wsnum $(notdir $@); \
-	touch --no-dereference $(notdir $@)
+	NEW=$(WBPROD)/letter.$$wsnum ; \
+	$(WGET) $(WBFTP)/$$NEW ; \
+	$(COPYNEW)
 wormbase/c_elegans.PRJNA13758.geneIDs.txt.gz: wormbase/CHECKSUMS
 	#species/c_elegans/PRJNA13758/annotation/c_elegans.PRJNA13758.WS273.geneIDs.txt.gz
 	$(CDWB) wsnum=$$($(WSNUM)) ; \
-	$(WGET) $(FULLPTH) $(WBFTP)/$(WBPROD)/species/$(WBSPC)/annotation/$(subst /,.,$(WBSPC)).$$wsnum.geneIDs.txt.gz;\
-	ln -snf $(WBPROD)/species/$(WBSPC)/annotation/$(subst /,.,$(WBSPC)).$$wsnum.geneIDs.txt.gz $(notdir $@); \
-	touch --no-dereference $(notdir $@)
+	NEW=$(WBPROD)/species/$(WBSPC)/annotation/$(subst /,.,$(WBSPC)).$$wsnum.geneIDs.txt.gz ; \
+	$(WGET) $(FULLPTH) $(WBFTP)/$$NEW ;\
+	$(COPYNEW)
 wormbase/c_elegans.PRJNA13758.annotations.gff3.gz: wormbase/CHECKSUMS
 	# species/c_elegans/PRJNA13758/c_elegans.PRJNA13758.WS273.annotations.gff3.gz
 	$(CDWB) wsnum=$$($(WSNUM)) ; \
-	$(WGET) $(FULLPTH) $(WBFTP)/$(WBPROD)/species/$(WBSPC)/$(subst /,.,$(WBSPC)).$$wsnum.annotations.gff3.gz;\
-	ln -snf $(WBPROD)/species/$(WBSPC)/$(subst /,.,$(WBSPC)).$$wsnum.annotations.gff3.gz $(notdir $@); \
-	touch --no-dereference $(notdir $@)
+	NEW=$(WBPROD)/species/$(WBSPC)/$(subst /,.,$(WBSPC)).$$wsnum.annotations.gff3.gz ; \
+	$(WGET) $(FULLPTH) $(WBFTP)/$$NEW ;\
+	$(COPYNEW)
 wormbase/c_elegans.PRJNA13758.xrefs.txt.gz: wormbase/CHECKSUMS
 	# species/c_elegans/PRJNA13758/annotation/c_elegans.PRJNA13758.WS273.xrefs.txt.gz
 	$(CDWB) wsnum=$$($(WSNUM)) ; \
-	$(WGET) $(FULLPTH) $(WBFTP)/$(WBPROD)/species/$(WBSPC)/annotation/$(subst /,.,$(WBSPC)).$$wsnum.xrefs.txt.gz;\
-	ln -snf $(WBPROD)/species/$(WBSPC)/annotation/$(subst /,.,$(WBSPC)).$$wsnum.xrefs.txt.gz $(notdir $@); \
-	touch --no-dereference $(notdir $@)
+	NEW=$(WBPROD)/species/$(WBSPC)/annotation/$(subst /,.,$(WBSPC)).$$wsnum.xrefs.txt.gz  ; \
+	$(WGET) $(FULLPTH) $(WBFTP)/$$NEW ;\
+	$(COPYNEW)
 wormbase/phenotype_association.wb: wormbase/CHECKSUMS
 	$(CDWB) wsnum=$$($(WSNUM)) ; \
-	$(WGET) $(FULLPTH) $(WBFTP)/$(WBPROD)/ONTOLOGY/phenotype_association.$$wsnum.wb;\
-	ln -snf $(WBPROD)/ONTOLOGY/phenotype_association.$$wsnum.wb $(notdir $@); \
-	touch --no-dereference $(notdir $@)
+	NEW=$(WBPROD)/ONTOLOGY/phenotype_association.$$wsnum.wb  ; \
+	$(WGET) $(FULLPTH) $(WBFTP)/$$NEW ;\
+	$(COPYNEW)
 wormbase/rnai_phenotypes.wb: wormbase/CHECKSUMS
 	$(CDWB) wsnum=$$($(WSNUM)) ; \
-	$(WGET) $(FULLPTH) $(WBFTP)/$(WBPROD)/ONTOLOGY/rnai_phenotypes.$$wsnum.wb;\
-	ln -snf $(WBPROD)/ONTOLOGY/rnai_phenotypes.$$wsnum.wb $(notdir $@); \
-	touch --no-dereference $(notdir $@)
+	NEW=$(WBPROD)/ONTOLOGY/rnai_phenotypes.$$wsnum.wb ; \
+	$(WGET) $(FULLPTH) $(WBFTP)/$$NEW ;\
+	$(COPYNEW)
 wormbase/disease_association.wb: wormbase/CHECKSUMS
 	$(CDWB) wsnum=$$($(WSNUM)) ; \
-	$(WGET) $(FULLPTH) $(WBFTP)/$(WBPROD)/ONTOLOGY/disease_association.$$wsnum.wb;\
-	ln -snf $(WBPROD)/ONTOLOGY/disease_association.$$wsnum.wb $(notdir $@); \
-	touch --no-dereference $(notdir $@)
+	NEW=$(WBPROD)/ONTOLOGY/disease_association.$$wsnum.wb ; \
+	$(WGET) $(FULLPTH) $(WBFTP)/$$NEW ;\
+	$(COPYNEW)
 # api call so no date or file version
 wormbase/pub_xrefs.txt:
 	$(CDWB) $(WGET) -O $(notdir $@) \
