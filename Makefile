@@ -353,7 +353,7 @@ flybase: flybase/ \
 flybase/: ; mkdir $@
 
 flybase/md5sum.txt: FORCE
-	$(CDFLY) $(WGET) $(FLYFTP)/$(FLYPRE/$(notdir $@)
+	$(CDFLY) $(WGET) $(FLYFTP)/$(FLYPRE)/$(notdir $@)
 
 flybase/disease_model_annotations.tsv.gz: flybase/md5sum.txt
 	$(CDFLY) \
