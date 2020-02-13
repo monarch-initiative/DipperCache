@@ -434,12 +434,21 @@ go_clean: ; $(CLEAN) go/*
 ##########################################
 GWASFTP = ftp://ftp.ebi.ac.uk/pub/databases/gwas/releases/latest
 GWASFILE = gwas-catalog-associations_ontology-annotated.tsv
-gwascatalog: gwascatalog/ gwascatalog/$(GWASFILE)
+gwascatalog: owl \
+		gwascatalog/ \
+		gwascatalog/$(GWASFILE) \
+		gwascatalog/so.owl \
+		gwascatalog/mondo.json
 
 gwascatalog/: ; mkdir $@
 gwascatalog/$(GWASFILE): FORCE
 	cd gwascatalog; $(WGET) $(GWASFTP)/$(GWASFILE)
-# SO & MONDO ontologies need their own ontology cache
+
+gwascatalog/so.owl: owl/so.owl
+	$(COPYCHANGED)
+gwascatalog/mondo.json: owl/mondo.json
+	$(COPYCHANGED)
+
 gwascatalog_clean: ; $(CLEAN) gwascatalog/*
 ##########################################
 EBIFTP := ftp://ftp.ebi.ac.uk
@@ -823,6 +832,9 @@ orphanet/en_product6.xml: FORCE
 orphanet_clean: ; $(CLEAN) orphanet/*
 
 ##########################################
+# WIP  move to batch process obo files
+OBOFILE = geno.owl eco.owl ro.owl iao.owl sepio.owl ero.owl pco.owl xco.owl pw.owl oid.owl mondo.json
+		# upheno/monarch.owl
 
 owl: 	owl/ \
 		owl/obo/geno.owl \
@@ -836,6 +848,7 @@ owl: 	owl/ \
 		owl/obo/upheno/monarch.owl \
 		owl/obo/pw.owl \
 		owl/obo/doid.owl \
+		owl/obo/mondo.json \
 		owl/foaf/spec/index.rdf \
 		owl/OBF/FALDO/master/faldo.ttl \
 		owl/jamesmalone/OBAN/master/ontology/oban_core.ttl \
@@ -848,6 +861,7 @@ owl: 	owl/ \
 		owl/ero.owl \
 		owl/pw.owl \
 		owl/doid.owl \
+		owl/mondo.json \
 		owl/oban_core.ttl \
 		owl/pco.owl \
 		owl/xco.owl \
@@ -892,6 +906,11 @@ owl/obo/doid.owl: FORCE
 	cd owl; $(WGET) $(FULLPTH) $(OBO)/$(notdir $@)
 owl/doid.owl: owl/obo/doid.owl
 	$(COPYCHANGED)
+owl/obo/mondo.json: FORCE
+	cd owl; $(WGET) $(FULLPTH) $(OBO)/$(notdir $@)
+owl/mondo.json: owl/obo/mondo.json
+	$(COPYCHANGED)
+
 owl/jamesmalone/OBAN/master/ontology/oban_core.ttl: FORCE
 	cd owl; $(WGET) $(FULLPTH) $(GITRAW)/jamesmalone/OBAN/master/ontology/oban_core.ttl
 owl/oban_core.ttl: owl/jamesmalone/OBAN/master/ontology/oban_core.ttl
@@ -1039,7 +1058,7 @@ $(foreach species, $(STRSPC), string/$(species).entrez_2_string.$(STRYR).tsv.gz)
 string_clean: ; $(CLEAN) string/*
 ##########################################
 # this data is shared with Monochrom.
-# need to choose one (this one) and make the other symlinks
+# need to choose one (this one) and make the other a clone
 #
 #HGGP = http://hgdownload.cse.ucsc.edu/goldenPath
 #ucscbands: ucscbands/ \
@@ -1153,7 +1172,8 @@ ZFFILES = genotype_features.txt \
 		E_zfin_gene_alias.gff3 \
 		fish_model_disease.txt \
 		fish_components_fish.txt \
-		phenoGeneCleanData_fish.txt
+		phenoGeneCleanData_fish.txt \
+		wildtypes_fish.txt
 
 zfin: zfin/ \
 		$(addprefix zfin/, $(ZFFILES)) \
