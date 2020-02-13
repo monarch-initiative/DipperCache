@@ -459,12 +459,17 @@ hgnc_clean: ; $(CLEAN) hgnc/*
 # fragile
 PNR = http://compbio.charite.de/jenkins/job/hpo.annotations.current
 HPOADL2 = $(PNR)/lastSuccessfulBuild/artifact/misc_2018
-hpoa:	hpoa/ \
-		hpoa/phenotype.hpoa
+hpoa:	owl \
+		hpoa/ \
+		hpoa/phenotype.hpoa \
+		hpoa/doid.owl
 
 hpoa/: ; mkdir $@
 hpoa/phenotype.hpoa: FORCE
-	cd hgnc; $(WGET) $(HPOADL2)/$(notdir $@)
+	cd hpoa; $(WGET) $(HPOADL2)/$(notdir $@)
+
+hpoa/doid.owl: owl/doid.owl
+	$(COPYCHANGED)
 
 hpoa_clean: ; $(CLEAN) hpoa/*
 ##########################################
@@ -830,6 +835,7 @@ owl: 	owl/ \
 		owl/obo/xco.owl \
 		owl/obo/upheno/monarch.owl \
 		owl/obo/pw.owl \
+		owl/obo/doid.owl \
 		owl/foaf/spec/index.rdf \
 		owl/OBF/FALDO/master/faldo.ttl \
 		owl/jamesmalone/OBAN/master/ontology/oban_core.ttl \
@@ -841,6 +847,7 @@ owl: 	owl/ \
 		owl/sepio.owl \
 		owl/ero.owl \
 		owl/pw.owl \
+		owl/doid.owl \
 		owl/oban_core.ttl \
 		owl/pco.owl \
 		owl/xco.owl \
@@ -880,6 +887,10 @@ owl/ero.owl: owl/obo/ero.owl
 owl/obo/pw.owl: FORCE
 	cd owl; $(WGET) $(FULLPTH) $(OBO)/$(notdir $@)
 owl/pw.owl: owl/obo/pw.owl
+	$(COPYCHANGED)
+owl/obo/doid.owl: FORCE
+	cd owl; $(WGET) $(FULLPTH) $(OBO)/$(notdir $@)
+owl/doid.owl: owl/obo/doid.owl
 	$(COPYCHANGED)
 owl/jamesmalone/OBAN/master/ontology/oban_core.ttl: FORCE
 	cd owl; $(WGET) $(FULLPTH) $(GITRAW)/jamesmalone/OBAN/master/ontology/oban_core.ttl
