@@ -110,6 +110,7 @@ newest: FORCE  ## Surface the freshest resources present
 	find . -type f -exec stat -c "%Y %n %s" {} \; |sort -nr |head -20 |\
 	awk '{print strftime("%Y %m %d",$$1),$$2}'
 
+
 ##########################################
 # animalqtldb
 AQTLDL = https://www.animalgenome.org/QTLdb
@@ -136,7 +137,7 @@ AQTLVER = pig_QTLdata.txt \
 		horse_QTLdata.txt \
 		rainbow_trout_QTLdata.txt
 
-animalqtldb: ncbigene animalqtldb/
+animalqtldb: ncbigene animalqtldb/ \
 		$(foreach spc, $(AQTLGI), animalqtldb/$(spc)) \
 		$(foreach spc, $(AQTLTMP), animalqtldb/$(spc)) \
 		$(foreach spc, $(AQTLVER), animalqtldb/$(spc)) \
