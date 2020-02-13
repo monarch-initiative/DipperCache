@@ -833,7 +833,7 @@ orphanet_clean: ; $(CLEAN) orphanet/*
 
 ##########################################
 # WIP  move to batch process obo files
-OBOFILE = geno.owl eco.owl ro.owl iao.owl sepio.owl ero.owl pco.owl xco.owl pw.owl oid.owl mondo.json
+OBOFILE = geno.owl eco.owl ro.owl iao.owl sepio.owl ero.owl pco.owl xco.owl pw.owl oid.owl so.owl mondo.json
 		# upheno/monarch.owl
 
 owl: 	owl/ \
@@ -849,6 +849,7 @@ owl: 	owl/ \
 		owl/obo/pw.owl \
 		owl/obo/doid.owl \
 		owl/obo/mondo.json \
+		owl/obo/so.owl \
 		owl/foaf/spec/index.rdf \
 		owl/OBF/FALDO/master/faldo.ttl \
 		owl/jamesmalone/OBAN/master/ontology/oban_core.ttl \
@@ -862,6 +863,7 @@ owl: 	owl/ \
 		owl/pw.owl \
 		owl/doid.owl \
 		owl/mondo.json \
+		owl/so.owl \
 		owl/oban_core.ttl \
 		owl/pco.owl \
 		owl/xco.owl \
@@ -909,6 +911,10 @@ owl/doid.owl: owl/obo/doid.owl
 owl/obo/mondo.json: FORCE
 	cd owl; $(WGET) $(FULLPTH) $(OBO)/$(notdir $@)
 owl/mondo.json: owl/obo/mondo.json
+	$(COPYCHANGED)
+owl/obo/so.owl: FORCE
+	cd owl; $(WGET) $(FULLPTH) $(OBO)/$(notdir $@)
+owl/so.owl: owl/obo/so.owl
 	$(COPYCHANGED)
 
 owl/jamesmalone/OBAN/master/ontology/oban_core.ttl: FORCE
