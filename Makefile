@@ -88,7 +88,7 @@ tree: ## Diffable metadata snapshot of results
 bad_symlink:  ## Show broken symlinks
 	find . -xtype l
 
-date_megs.txt: FORCE ## collect number of Meg per day according to last modified time stamp; best effort to de-dup 
+date_megs.txt: FORCE ## collect number of Meg per day according to last modified time stamp; best effort to de-dup
 	find . -type f -exec stat -c"%n %Y %s" {} \; |sed 's|^.*/||' |\
 	awk '{print $$1,strftime("%Y%m%d",$$2),$$3/1000000}' |\
 	sort -u | cut -f2- -d' ' | sort -n |\
@@ -467,7 +467,9 @@ hgnc_clean: ; $(CLEAN) hgnc/*
 ##########################################
 # fragile
 PNR = http://compbio.charite.de/jenkins/job/hpo.annotations.current
-HPOADL2 = $(PNR)/lastSuccessfulBuild/artifact/misc_2018
+#HPOADL2 = $(PNR)/lastSuccessfulBuild/artifact/misc_2018
+HPOADL2 = $(PNR)/lastSuccessfulBuild/artifact/current
+
 hpoa:	owl \
 		hpoa/ \
 		hpoa/phenotype.hpoa \
