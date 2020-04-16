@@ -167,24 +167,25 @@ animalqtldb_clean: ; $(CLEAN) animalqtldb/*
 ##########################################
 CDBGE = cd bgee/ ;
 bgee:	dipper bgee/ \
-		bgee/bgee.sqlite3.gz
+		bgee/easybgee.sqlite3.gz
 
 bgee/: ; mkdir $@
-bgee/bgee.sqlite3.gz: bgee/bgee_sqlite3.sql
+bgee/easybgee.sqlite3.gz: bgee/easybgee_sqlite3.sql
 	gzip --stdout $? > $@
 
-bgee/bgee.sqlite3: bgee/bgee_sqlite3.sql
-	$(CDBGE) /usr/bin/sqlite3 -mmap 3G bgee.sqlite3 < bgee_sqlite3.sql
+bgee/easybgee.sqlite3: bgee/easybgee_sqlite3.sql
+	$(CDBGE) /usr/bin/sqlite3 -mmap 3G easybgee.sqlite3 < easybgee_sqlite3.sql
 
-bgee/bgee_sqlite3.sql: bgee/sql_lite_dump.sql
+bgee/easybgee_sqlite3.sql: bgee/easybgee.sql
 	./dipper/scripts/mysql2sqlite $? > $@ ;\
 	echo -e "\nvacuum;analyze;" >> $@
 
-bgee/sql_lite_dump.sql: bgee/sql_lite_dump.tar.gz
-	$(CDBGE) /bin/tar -xzf sql_lite_dump.tar.gz $(notdir $@)
+bgee/easybgee.sql: bgee/easybgee_dump.tar.gz
+	$(CDBGE) /bin/tar -xzf easybgee_dump.tar.gz $(notdir $@)
+	# $(CDBGE) /bin/gunzip -xzf sql_lite_dump.tar.gz $(notdir $@)
 
-bgee/sql_lite_dump.tar.gz: FORCE
-	$(CDBGE) $(WGET) ftp://ftp.bgee.org/current/sql_lite_dump.tar.gz
+bgee/easybgee_dump.tar.gz: FORCE
+	$(CDBGE) $(WGET) ftp://ftp.bgee.org/current/easybgee_dump.tar.gz
 
 bgee_clean: ; $(CLEAN) bgee/*
 ########################################
