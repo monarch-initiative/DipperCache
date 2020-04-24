@@ -31,7 +31,6 @@ SOURCES = animalqtldb \
 		biogrid \
 		bgee \
 		clinvar \
-		ctd \
 		eco \
 		flybase \
 		genereviews \
@@ -56,6 +55,7 @@ SOURCES = animalqtldb \
 		wormbase \
 		zfin \
 		zfinslim
+#       ctd \
 
 all: $(SOURCES) dipper
 
