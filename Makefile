@@ -31,6 +31,7 @@ SOURCES = animalqtldb \
 		biogrid \
 		bgee \
 		clinvar \
+		ctd \
 		eco \
 		flybase \
 		genereviews \
@@ -55,7 +56,6 @@ SOURCES = animalqtldb \
 		wormbase \
 		zfin \
 		zfinslim
-#       ctd \
 
 all: $(SOURCES) dipper
 
@@ -644,8 +644,13 @@ kegg/ko: kegg/link/pathway/ko
 kegg_clean: ; $(CLEAN) kegg/*
 ##########################################
 # pulls via sql queries
-#mgi: mgi/
+# SQLDIR=dipper/resource/mgi/SQL
+#mgi: mgi/ \
+#	  $(SQLDIR)/monarch_*.sql
+#
 #mgi/; mkdir $@
+#
+
 ##########################################
 mmrrc: 	mmrrc/ \
 		mmrrc/mmrrc_catalog_data.csv
