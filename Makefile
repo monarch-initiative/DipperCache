@@ -8,6 +8,8 @@ MAKEFLAGS += --no-builtin-variables
 WGET = /usr/bin/wget --timestamping --no-verbose
 # additional wget arguments
 FULLPTH := --force-directories --no-host-directories
+# add temporal noise to smooth things out
+JITTER :=  --wait=2 --random-wait
 
 RM := rm --force --recursive --verbose --preserve-root --one-file-system
 
@@ -18,6 +20,7 @@ CLEAN = rm --force --recursive --verbose --preserve-root --one-file-system
 # Last-modified header missing workaround
 COPYCHANGED = if [ "$$(md5sum $<|cut -c 1-32)" != "$$(md5sum $@|cut -c 1-32)" ] ; then cp -fp $< $@ ; fi
 COPYNEW = if [ "$$(md5sum $$NEW|cut -c 1-32)" != "$$(md5sum $(notdir $@)|cut -c 1-32)" ] ; then cp -fp $$NEW $(notdir $@); fi
+
 
 # May be used in more than one ingest
 OBO = http://purl.obolibrary.org/obo
@@ -121,14 +124,15 @@ AQTLGI = gene_info.gz \
 		Sus_scrofa.gene_info.gz \
 		Gallus_gallus.gene_info.gz \
 		Ovis_aries.gene_info.gz \
-		Oncorhynchus_mykiss.gene_info.gz \
-		Equus_caballus.gene_info.gz
+		Equus_caballus.gene_info.gz \
+		Oncorhynchus_mykiss.gene_info.gz
 
-AQTLTMP = QTL_Btau_4.6.gff.txt.gz \
-		QTL_EquCab2.0.gff.txt.gz \
-		QTL_GG_4.0.gff.txt.gz \
-		QTL_OAR_3.1.gff.txt.gz \
-		QTL_SS_10.2.gff.txt.gz
+
+#AQTLTMP =  QTL_Btau_4.6.gff.txt.gz \
+#		QTL_EquCab2.0.gff.txt.gz \
+#		QTL_GG_4.0.gff.txt.gz \
+#		QTL_OAR_3.1.gff.txt.gz \
+#		QTL_SS_10.2.gff.txt.gz
 
 AQTLVER = pig_QTLdata.txt \
 		sheep_QTLdata.txt \
@@ -137,20 +141,47 @@ AQTLVER = pig_QTLdata.txt \
 		horse_QTLdata.txt \
 		rainbow_trout_QTLdata.txt
 
+AQTLWTF = qdwnld36733FHNN.txt.gz \
+		qdwnld71856WZCV.txt.gz \
+		qdwnld89753EDJH.txt.gz \
+		qdwnld99343QYJI.txt.gz \
+		mapDwnLd77393ZPPA.txt.gz \
+		mapDwnLd13790IFPT.txt.gz
+
 animalqtldb: ncbigene animalqtldb/ \
 		$(foreach spc, $(AQTLGI), animalqtldb/$(spc)) \
-		$(foreach spc, $(AQTLTMP), animalqtldb/$(spc)) \
 		$(foreach spc, $(AQTLVER), animalqtldb/$(spc)) \
+		$(foreach spc, $(AQTLWTF), animalqtldb/$(spc)) \
 		animalqtldb/trait_mappings.csv
+		#$(foreach spc, $(AQTLTMP), animalqtldb/$(spc)) \
 
 animalqtldb/: ; mkdir $@
 
 animalqtldb/trait_mappings.csv: FORCE
 	$(CDAQTL) $(WGET) $(AQTLDL)/export/$(notdir $@)
 
-# AQTL_TMP_FILES
-$(foreach spc, $(AQTLTMP), animalqtldb/$(spc)): FORCE
+# AQTL_TMP_FILES 2020-May hidden by source.
+# $(foreach spc, $(AQTLTMP), animalqtldb/$(spc)): FORCE
+#	@ #$(CDAQTL) $(WGET) $(AQTLDL)/tmp/$(notdir $@)
+
+# expect this to be brittle... I may have underguesstimated how brittle
+# not we also loose horse & fish version info
+
+$(foreach spc, $(AQTLWTF), animalqtldb/$(spc)): FORCE
 	$(CDAQTL) $(WGET) $(AQTLDL)/tmp/$(notdir $@)
+
+animalqtldb/QTL_GG_5.0.gff.txt : animalqtldb/qdwnld36733FHNN.txt.gz
+	$(COPYCHANGED)
+animalqtldb/QTL_OAR_4.0.gff.txt : animalqtldb/qdwnld71856WZCV.txt.gz
+	$(COPYCHANGED)
+animalqtldb/QTL_SS_11.1.gff.txt : animalqtldb/qdwnld89753EDJH.txt.gz
+	$(COPYCHANGED)
+animalqtldb/QTL_Btau_4.6.gff.txt : animalqtldb/qdwnld99343QYJI.txt.gz
+	$(COPYCHANGED)
+animalqtldb/eQTL.txt.gz : animalqtldb/mapDwnLd77393ZPPA.txt.gz
+	$(COPYCHANGED)
+animalqtldb/RainbowTroutQTL.txt.gz : animalqtldb/mapDwnLd13790IFPT.txt.gz
+	$(COPYCHANGED)
 
 # AQTL_VER_FILES
 $(foreach spc, $(AQTLVER), animalqtldb/$(spc)): FORCE
@@ -566,39 +597,39 @@ kegg/: 	; mkdir $@
 #	for fp in $^; do $(WGET) $(FULLPTH) $(KEGGK)/$$fp; done
 
 kegg/list/disease : FORCE
-	cd kegg; $(WGET) $(FULLPTH) $(KEGGG)/$(subst kegg/,,$@)
+	cd kegg; $(WGET) $(JITTER) $(FULLPTH) $(KEGGG)/$(subst kegg/,,$@)
 kegg/list/pathway : FORCE
-	cd kegg; $(WGET) $(FULLPTH) $(KEGGG)/$(subst kegg/,,$@)
+	cd kegg; $(WGET) $(JITTER) $(FULLPTH) $(KEGGG)/$(subst kegg/,,$@)
 kegg/list/orthology : FORCE
-	cd kegg; $(WGET) $(FULLPTH) $(KEGGG)/$(subst kegg/,,$@)
+	cd kegg; $(WGET) $(JITTER) $(FULLPTH) $(KEGGG)/$(subst kegg/,,$@)
 kegg/link/disease/omim : FORCE
-	cd kegg; $(WGET) $(FULLPTH) $(KEGGG)/$(subst kegg/,,$@)
+	cd kegg; $(WGET) $(JITTER) $(FULLPTH) $(KEGGG)/$(subst kegg/,,$@)
 kegg/link/omim/hsa : FORCE
-	cd kegg; $(WGET) $(FULLPTH) $(KEGGG)/$(subst kegg/,,$@)
+	cd kegg; $(WGET) $(JITTER) $(FULLPTH) $(KEGGG)/$(subst kegg/,,$@)
 kegg/list/hsa : FORCE
-	cd kegg; $(WGET) $(FULLPTH) $(KEGGG)/$(subst kegg/,,$@)
+	cd kegg; $(WGET) $(JITTER) $(FULLPTH) $(KEGGG)/$(subst kegg/,,$@)
 kegg/link/orthology/mmu : FORCE
-	cd kegg; $(WGET) $(FULLPTH) $(KEGGK)/$(subst kegg/,,$@)
+	cd kegg; $(WGET) $(JITTER) $(FULLPTH) $(KEGGK)/$(subst kegg/,,$@)
 kegg/link/orthology/rno : FORCE
-	cd kegg; $(WGET) $(FULLPTH) $(KEGGK)/$(subst kegg/,,$@)
+	cd kegg; $(WGET) $(JITTER) $(FULLPTH) $(KEGGK)/$(subst kegg/,,$@)
 kegg/link/orthology/dme : FORCE
-	cd kegg; $(WGET) $(FULLPTH) $(KEGGK)/$(subst kegg/,,$@)
+	cd kegg; $(WGET) $(JITTER) $(FULLPTH) $(KEGGK)/$(subst kegg/,,$@)
 kegg/link/orthology/dre : FORCE
-	cd kegg; $(WGET) $(FULLPTH) $(KEGGK)/$(subst kegg/,,$@)
+	cd kegg; $(WGET) $(JITTER) $(FULLPTH) $(KEGGK)/$(subst kegg/,,$@)
 kegg/link/orthology/cel : FORCE
-	cd kegg; $(WGET) $(FULLPTH) $(KEGGK)/$(subst kegg/,,$@)
+	cd kegg; $(WGET) $(JITTER) $(FULLPTH) $(KEGGK)/$(subst kegg/,,$@)
 kegg/link/pathway/pubmed: FORCE
-	cd kegg; $(WGET) $(FULLPTH) $(KEGGK)/$(subst kegg/,,$@)
+	cd kegg; $(WGET) $(JITTER) $(FULLPTH) $(KEGGK)/$(subst kegg/,,$@)
 kegg/link/pathway/ds : FORCE
-	cd kegg; $(WGET) $(FULLPTH) $(KEGGK)/$(subst kegg/,,$@)
+	cd kegg; $(WGET) $(JITTER) $(FULLPTH) $(KEGGK)/$(subst kegg/,,$@)
 kegg/link/pathway/ko : FORCE
-	cd kegg; $(WGET) $(FULLPTH) $(KEGGK)/$(subst kegg/,,$@)
+	cd kegg; $(WGET) $(JITTER) $(FULLPTH) $(KEGGK)/$(subst kegg/,,$@)
 kegg/link/orthology/hsa : FORCE
-	cd kegg; $(WGET) $(FULLPTH) $(KEGGK)/$(subst kegg/,,$@)
+	cd kegg; $(WGET) $(JITTER) $(FULLPTH) $(KEGGK)/$(subst kegg/,,$@)
 kegg/link/pathway/hsa : FORCE
-	cd kegg; $(WGET) $(FULLPTH) $(KEGGK)/$(subst kegg/,,$@)
+	cd kegg; $(WGET) $(JITTER) $(FULLPTH) $(KEGGK)/$(subst kegg/,,$@)
 kegg/link/disease/hsa : FORCE
-	cd kegg; $(WGET) $(FULLPTH) $(KEGGK)/$(subst kegg/,,$@)
+	cd kegg; $(WGET) $(JITTER) $(FULLPTH) $(KEGGK)/$(subst kegg/,,$@)
 
 # note choosing native name except when there is a conflict (hsa)
 # conflicts would interfere with --timestamping
