@@ -34,7 +34,7 @@ GITMON = $(GITRAW)/monarch-initiative
 
 .PHONY: help cruft recent clean dipper/scripts tree FORCE all
 
-SOURCES =biogrid \
+SOURCES = biogrid \
 		bgee \
 		clinvar \
 		ctd \
@@ -161,8 +161,8 @@ animalqtldb: ncbigene animalqtldb/ \
 
 animalqtldb/: ; mkdir $@
 
-animalqtldb/trait_mappings.csv: FORCE
-	$(CDAQTL) $(WGET) $(AQTLDL)/export/$(notdir $@)
+#animalqtldb/trait_mappings.csv: FORCE
+#	$(CDAQTL) $(WGET) $(AQTLDL)/export/$(notdir $@)
 
 # AQTL_TMP_FILES 2020-May hidden by source.
 # $(foreach spc, $(AQTLTMP), animalqtldb/$(spc)): FORCE
@@ -171,32 +171,32 @@ animalqtldb/trait_mappings.csv: FORCE
 # expect this to be brittle... I may have underguesstimated how brittle
 # not we also loose horse & fish version info
 
-$(foreach spc, $(AQTLWTF), animalqtldb/$(spc)): FORCE
-	$(CDAQTL) $(WGET) $(AQTLDL)/tmp/$(notdir $@)
+#$(foreach spc, $(AQTLWTF), animalqtldb/$(spc)): FORCE
+#	$(CDAQTL) $(WGET) $(AQTLDL)/tmp/$(notdir $@)
 
-animalqtldb/QTL_GG_5.0.gff.txt : animalqtldb/qdwnld36733FHNN.txt.gz
-	$(COPYCHANGED)
-animalqtldb/QTL_OAR_4.0.gff.txt : animalqtldb/qdwnld71856WZCV.txt.gz
-	$(COPYCHANGED)
-animalqtldb/QTL_SS_11.1.gff.txt : animalqtldb/qdwnld89753EDJH.txt.gz
-	$(COPYCHANGED)
-animalqtldb/QTL_Btau_4.6.gff.txt : animalqtldb/qdwnld99343QYJI.txt.gz
-	$(COPYCHANGED)
-animalqtldb/eQTL.txt.gz : animalqtldb/mapDwnLd77393ZPPA.txt.gz
-	$(COPYCHANGED)
-animalqtldb/RainbowTroutQTL.txt.gz : animalqtldb/mapDwnLd13790IFPT.txt.gz
-	$(COPYCHANGED)
+#animalqtldb/QTL_GG_5.0.gff.txt : animalqtldb/qdwnld36733FHNN.txt.gz
+#	$(COPYCHANGED)
+#animalqtldb/QTL_OAR_4.0.gff.txt : animalqtldb/qdwnld71856WZCV.txt.gz
+#	$(COPYCHANGED)
+#animalqtldb/QTL_SS_11.1.gff.txt : animalqtldb/qdwnld89753EDJH.txt.gz
+#	$(COPYCHANGED)
+#animalqtldb/QTL_Btau_4.6.gff.txt : animalqtldb/qdwnld99343QYJI.txt.gz
+#	$(COPYCHANGED)
+#animalqtldb/eQTL.txt.gz : animalqtldb/mapDwnLd77393ZPPA.txt.gz
+#	$(COPYCHANGED)
+#animalqtldb/RainbowTroutQTL.txt.gz : animalqtldb/mapDwnLd13790IFPT.txt.gz
+#	$(COPYCHANGED)
 
 # AQTL_VER_FILES
-$(foreach spc, $(AQTLVER), animalqtldb/$(spc)): FORCE
-	$(CDAQTL) $(WGET) $(AQTLDL)/export/KSUI8GFHOT6/$(notdir $@)
+# $(foreach spc, $(AQTLVER), animalqtldb/$(spc)): FORCE
+#	$(CDAQTL) $(WGET) $(AQTLDL)/export/KSUI8GFHOT6/$(notdir $@)
 
 # GENEINFO_FILES
 # these are created under ncbigene first then copied here
 # so the distinction of the locally generated ones becomes moot
 
-$(foreach spc, $(AQTLGI), animalqtldb/$(spc)): $(foreach spc, $(AQTLGI),ncbigene/$(spc))
-	$(COPYCHANGED)
+#$(foreach spc, $(AQTLGI), animalqtldb/$(spc)): $(foreach spc, $(AQTLGI),ncbigene/$(spc))
+#	$(COPYCHANGED)
 
 animalqtldb_clean: ; $(CLEAN) animalqtldb/*
 ##########################################
