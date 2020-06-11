@@ -4,6 +4,8 @@
 MAKEFLAGS += --warn-undefined-variables
 MAKEFLAGS += --no-builtin-rules
 MAKEFLAGS += --no-builtin-variables
+MAKEFLAGS += --keep-going
+
 
 # So we can be alerted if our scripts go rogue or are unwelcome
 WGETHEADER  =  --header="User-Agent: info+dipper_cache@monarchinitiative.org"
@@ -852,13 +854,19 @@ ncbigene_clean: ; $(CLEAN) ncbigene/*
 ##########################################
 #
 omia:	omia/ \
-		omia/omia.xml.gz
-#	causal_mutations.tab  # TODO not in use
+		omia/omia.xml.gz \
+		omia/causal_mutations.tab
+# TODO  causal_mutations.tab   is not in use.
 
 omia/: ; mkdir $@
 omia/omia.xml.gz: FORCE
-	cd omia; $(WGET) http://compldb.angis.org.au/dumps/$(notdir $@)
+	cd omia; $(WGET) https://omia.org/dumps/$(notdir $@)
+
+	# https://omia.org/static/dumps/omia.xml.gz  # resolves to this
 	# http://omia.angis.org.au/dumps/omia.xml.gz # broken alt
+	# http://compldb.angis.org.au/dumps/  # gone walkabout
+omia/causal_mutations.tab: FORCE
+	cd omia; $(WGET) https://omia.org/curate/causal_mutations/?format=gene_table -O $(notdir $@)
 
 omia_clean: ; $(CLEAN) omia/*
 ##########################################
