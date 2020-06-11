@@ -32,10 +32,9 @@ GITRAW = https://raw.githubusercontent.com
 GITMON = $(GITRAW)/monarch-initiative
 
 
-.PHONY: help cruft recent clean dipper/scripts tree
+.PHONY: help cruft recent clean dipper/scripts tree FORCE all
 
-SOURCES = animalqtldb \
-		biogrid \
+SOURCES =biogrid \
 		bgee \
 		clinvar \
 		ctd \
@@ -63,6 +62,7 @@ SOURCES = animalqtldb \
 		wormbase \
 		zfin \
 		zfinslim
+		#  animalqtldb \   on timeout, for randomizing filenames
 
 all: $(SOURCES) dipper
 
