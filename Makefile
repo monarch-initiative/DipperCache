@@ -5,7 +5,11 @@ MAKEFLAGS += --warn-undefined-variables
 MAKEFLAGS += --no-builtin-rules
 MAKEFLAGS += --no-builtin-variables
 
-WGET = /usr/bin/wget --timestamping --no-verbose
+# So we can be alerted if our scripts go rogue or are unwelcome
+WGETHEADER  =  --header="User-Agent: info+dipper_cache@monarchinitiative.org"
+WGETHEADER +=  --header="Accept-Encoding: compress, gzip"
+
+WGET = /usr/bin/wget --timestamping --no-verbose ${WGETHEADER}
 # additional wget arguments
 FULLPTH := --force-directories --no-host-directories
 # add temporal noise to smooth things out
