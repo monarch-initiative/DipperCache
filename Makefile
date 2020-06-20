@@ -9,6 +9,7 @@ MAKEFLAGS += --keep-going
 
 # So we can be alerted if our scripts go rogue or are unwelcome
 WGETHEADER  =  --header="User-Agent: info+dipper_cache@monarchinitiative.org"
+# note: accepting gzip may mean needing to unzip
 WGETHEADER +=  --header="Accept-Encoding: compress, gzip"
 
 WGET = /usr/bin/wget --timestamping --no-verbose ${WGETHEADER}
@@ -27,6 +28,8 @@ CLEAN = rm --force --recursive --verbose --preserve-root --one-file-system
 COPYCHANGED = if [ "$$(md5sum $<|cut -c 1-32)" != "$$(md5sum $@|cut -c 1-32)" ] ; then cp -fp $< $@ ; fi
 COPYNEW = if [ "$$(md5sum $$NEW|cut -c 1-32)" != "$$(md5sum $(notdir $@)|cut -c 1-32)" ] ; then cp -fp $$NEW $(notdir $@); fi
 
+# accepting zipped encoding may require unzipping (although when used would be better)
+UNZIP_INSITU = [[ $(gzip -t $@ 2>/dev/null) -eq 0 ]] && zcat $@| sponge -a $@
 
 # May be used in more than one ingest
 OBO = http://purl.obolibrary.org/obo
@@ -203,19 +206,21 @@ animalqtldb/: ; mkdir $@
 animalqtldb_clean: ; $(CLEAN) animalqtldb/*
 ##########################################
 CDBGE = cd bgee/ ;
-bgee:	dipper bgee/ \
-		bgee/easybgee.sqlite3.gz
+bgee:	dipper \
+		bgee/ \
+		bgee/easybgee.db.gz
 
 bgee/: ; mkdir $@
-bgee/easybgee.sqlite3.gz: bgee/easybgee_sqlite3.sql
+bgee/easybgee.db.gz: bgee/easybgee.db
 	gzip --stdout $? > $@
 
-bgee/easybgee.sqlite3: bgee/easybgee_sqlite3.sql
-	$(CDBGE) /usr/bin/sqlite3 -mmap 3G easybgee.sqlite3 < easybgee_sqlite3.sql
+bgee/easybgee.db: bgee/easybgee_sqlite3.sql
+	$(CDBGE) /usr/bin/sqlite3 easybgee.db < easybgee_sqlite3.sql
+# -mmap 3G  -batch
 
 bgee/easybgee_sqlite3.sql: bgee/easybgee.sql
 	./dipper/scripts/mysql2sqlite $? > $@ ;\
-	echo -e "\nvacuum;analyze;" >> $@
+	echo "\nvacuum;analyze;" >> $@
 
 bgee/easybgee.sql: bgee/easybgee_dump.tar.gz
 	$(CDBGE) /bin/tar -xzf easybgee_dump.tar.gz $(notdir $@)
@@ -297,6 +302,7 @@ eco/: ; mkdir $@
 
 eco/gaf-eco-mapping.txt: eco/
 	cd eco/; $(WGET) $(OBO)/eco/$(notdir $@)
+	#$(GUNZIP_INSITU)
 
 eco/gaf-eco-mapping.yaml: eco/gaf-eco-mapping.txt
 	awk -F'\t' 'BEGIN{print "---"} \
@@ -423,8 +429,10 @@ genereviews: genereviews/ \
 genereviews/: ; mkdir $@
 genereviews/NBKid_shortname_OMIM.txt: FORCE
 	cd genereviews; $(WGET) $(GRDL)/$(notdir $@)
+	$(GUNZIP_INSITU)
 genereviews/GRtitle_shortname_NBKid.txt: FORCE
 	cd genereviews; $(WGET) $(GRDL)/$(notdir $@)
+	$(GUNZIP_INSITU)
 
 genereviews_clean: ; $(CLEAN) genereviews/*
 
@@ -795,10 +803,13 @@ mpd: 	mpd/ \
 mpd/: ; mkdir $@
 mpd/ontology_mappings.csv: FORCE
 	cd mpd; $(WGET) $(MPDDL)/$(notdir $@)
+	$(GUNZIP_INSITU)
 mpd/straininfo.csv: FORCE
 	cd mpd; $(WGET) $(MPDDL)/$(notdir $@)
+	$(GUNZIP_INSITU)
 mpd/measurements.csv: FORCE
 	cd mpd; $(WGET) $(MPDDL)/$(notdir $@)
+	$(GUNZIP_INSITU)
 mpd/strainmeans.csv.gz: FORCE
 	cd mpd; $(WGET) $(MPDDL)/$(notdir $@)
 
@@ -879,6 +890,7 @@ orphanet: orphanet/ \
 orphanet/: ; mkdir $@
 orphanet/en_product6.xml: FORCE
 	cd orphanet/; $(WGET) http://www.orphadata.org/data/xml/$(notdir $@)
+	$(GUNZIP_INSITU)
 
 orphanet_clean: ; $(CLEAN) orphanet/*
 
@@ -1040,8 +1052,10 @@ reactome: reactome/ \
 reactome/: ; mkdir $@
 reactome/Ensembl2Reactome.txt: FORCE
 	cd reactome; $(WGET) $(RCTDL)/$(notdir $@)
+	$(GUNZIP_INSITU)
 reactome/ChEBI2Reactome.txt: FORCE
 	cd reactome; $(WGET) $(RCTDL)/$(notdir $@)
+	$(GUNZIP_INSITU)
 
 reactome/gaf-eco-mapping.txt: eco/gaf-eco-mapping.txt
 	$(COPYCHANGED)
