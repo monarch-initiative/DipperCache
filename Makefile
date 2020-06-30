@@ -29,7 +29,7 @@ COPYCHANGED = if [ "$$(md5sum $<|cut -c 1-32)" != "$$(md5sum $@|cut -c 1-32)" ] 
 COPYNEW = if [ "$$(md5sum $$NEW|cut -c 1-32)" != "$$(md5sum $(notdir $@)|cut -c 1-32)" ] ; then cp -fp $$NEW $(notdir $@); fi
 
 # accepting zipped encoding may require unzipping (although when used would be better)
-GUNZIP_INSITU = [[ $(gzip -t $@ 2>/dev/null) -eq 0 ]] && zcat $@| sponge -a $@
+GUNZIP_INSITU = if [ !$$(gzip -t $@ 2>/dev/null) ] ; then zcat $@ | sponge $@ ; fi
 
 # May be used in more than one ingest
 OBO = http://purl.obolibrary.org/obo
