@@ -35,6 +35,14 @@ We can take snapshots of the subset of public files we fetch.
 
 It is a Gnu Makefile.
 
-That it for now, thr dipper repo is also included for the scripts we can keep there.
+The Makefile makes heavy use of 'wget' (compression features require Version 1.20)
+
+I am including a binary of wget-1.20 for our current server enviroment
+which supplies wget-1.19 by default.
+
+To build for your enviroment try:
+https://ftp.gnu.org/pub/gnu/wget/wget-1.20.tar.gz
+
+That it for now, the dipper repo is also included for the scripts we can keep there.
 
 

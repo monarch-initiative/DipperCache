@@ -7,12 +7,11 @@ MAKEFLAGS += --no-builtin-variables
 MAKEFLAGS += --keep-going
 
 
+HERE = $(shell pwd)
 # So we can be alerted if our scripts go rogue or are unwelcome
 WGETHEADER  =  --header="User-Agent: info+dipper_cache@monarchinitiative.org"
-# note: accepting gzip may mean needing to unzip
-WGETHEADER +=  --header="Accept-Encoding: compress, gzip"
 
-WGET = /usr/bin/wget --timestamping --no-verbose ${WGETHEADER}
+WGET = $(HERE)/bin/wget --timestamping --no-verbose --compression=auto $(WGETHEADER)
 # additional wget arguments
 FULLPTH := --force-directories --no-host-directories
 # add temporal noise to smooth things out
@@ -28,8 +27,8 @@ CLEAN = rm --force --recursive --verbose --preserve-root --one-file-system
 COPYCHANGED = if [ "$$(md5sum $<|cut -c 1-32)" != "$$(md5sum $@|cut -c 1-32)" ] ; then cp -fp $< $@ ; fi
 COPYNEW = if [ "$$(md5sum $$NEW|cut -c 1-32)" != "$$(md5sum $(notdir $@)|cut -c 1-32)" ] ; then cp -fp $$NEW $(notdir $@); fi
 
-# accepting zipped encoding may require unzipping (although when used would be better)
-GUNZIP_INSITU = if [ !$$(gzip -t $@ 2>/dev/null) ] ; then zcat $@ | sponge $@ ; fi
+# should be obviated
+# GUNZIP_INSITU = if [ !$$(gzip -t $@ 2>/dev/null) ] ; then zcat $@ | sponge $@ ; fi
 
 # May be used in more than one ingest
 OBO = http://purl.obolibrary.org/obo
@@ -302,7 +301,6 @@ eco/: ; mkdir $@
 
 eco/gaf-eco-mapping.txt: eco/
 	cd eco/; $(WGET) $(OBO)/eco/$(notdir $@)
-	#$(GUNZIP_INSITU)
 
 eco/gaf-eco-mapping.yaml: eco/gaf-eco-mapping.txt
 	awk -F'\t' 'BEGIN{print "---"} \
@@ -429,10 +427,8 @@ genereviews: genereviews/ \
 genereviews/: ; mkdir $@
 genereviews/NBKid_shortname_OMIM.txt: FORCE
 	cd genereviews; $(WGET) $(GRDL)/$(notdir $@)
-	$(GUNZIP_INSITU)
 genereviews/GRtitle_shortname_NBKid.txt: FORCE
 	cd genereviews; $(WGET) $(GRDL)/$(notdir $@)
-	$(GUNZIP_INSITU)
 
 genereviews_clean: ; $(CLEAN) genereviews/*
 
@@ -803,13 +799,10 @@ mpd: 	mpd/ \
 mpd/: ; mkdir $@
 mpd/ontology_mappings.csv: FORCE
 	cd mpd; $(WGET) $(MPDDL)/$(notdir $@)
-	$(GUNZIP_INSITU)
 mpd/straininfo.csv: FORCE
 	cd mpd; $(WGET) $(MPDDL)/$(notdir $@)
-	$(GUNZIP_INSITU)
 mpd/measurements.csv: FORCE
 	cd mpd; $(WGET) $(MPDDL)/$(notdir $@)
-	$(GUNZIP_INSITU)
 mpd/strainmeans.csv.gz: FORCE
 	cd mpd; $(WGET) $(MPDDL)/$(notdir $@)
 
@@ -890,7 +883,6 @@ orphanet: orphanet/ \
 orphanet/: ; mkdir $@
 orphanet/en_product6.xml: FORCE
 	cd orphanet/; $(WGET) http://www.orphadata.org/data/xml/$(notdir $@)
-	$(GUNZIP_INSITU)
 
 orphanet_clean: ; $(CLEAN) orphanet/*
 
@@ -946,7 +938,6 @@ owl/geno.owl: owl/obo/geno.owl
 owl/obo/sepio.owl: FORCE
 	cd owl; $(WGET) $(FULLPTH) $(OBO)/$(notdir $@)
 owl/sepio.owl: owl/obo/sepio.owl
-	$(COPYCHANGED)
 owl/OBF/FALDO/master/faldo.ttl: FORCE
 	cd owl; $(WGET) $(FULLPTH) $(GITRAW)/OBF/FALDO/master/$(notdir $@)
 owl/faldo.ttl: owl/OBF/FALDO/master/faldo.ttl
@@ -1052,10 +1043,8 @@ reactome: reactome/ \
 reactome/: ; mkdir $@
 reactome/Ensembl2Reactome.txt: FORCE
 	cd reactome; $(WGET) $(RCTDL)/$(notdir $@)
-	$(GUNZIP_INSITU)
 reactome/ChEBI2Reactome.txt: FORCE
 	cd reactome; $(WGET) $(RCTDL)/$(notdir $@)
-	$(GUNZIP_INSITU)
 
 reactome/gaf-eco-mapping.txt: eco/gaf-eco-mapping.txt
 	$(COPYCHANGED)
