@@ -38,7 +38,8 @@ GITMON = $(GITRAW)/monarch-initiative
 
 .PHONY: help cruft recent clean dipper/scripts tree FORCE all
 
-SOURCES = biogrid \
+SOURCES =  animalqtldb \
+		biogrid \
 		bgee \
 		clinvar \
 		ctd \
@@ -66,9 +67,8 @@ SOURCES = biogrid \
 		wormbase \
 		zfin \
 		zfinslim
-		#  animalqtldb \   on timeout, for randomizing filenames
 
-all: $(SOURCES) dipper
+all: $(SOURCES) dipper emptyfile
 
 # unsatisfiable target used as a dependency
 # to force recipes within independent targets
@@ -121,6 +121,8 @@ newest: FORCE  ## Surface the freshest resources present
 	find . -type f -exec stat -c "%Y %n %s" {} \; |sort -nr |head -20 |\
 	awk '{print strftime("%Y %m %d",$$1),$$2}'
 
+emptyfile: FORCE  ##  Reports files of size zero
+	find $(SOURCES) -type f -size 0 -ls
 
 ##########################################
 # animalqtldb
