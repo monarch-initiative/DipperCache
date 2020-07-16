@@ -135,19 +135,20 @@ AQTLGI = gene_info.gz \
 		Equus_caballus.gene_info.gz \
 		Oncorhynchus_mykiss.gene_info.gz
 
-
-# QTL_Btau_4.6.gff.txt.gz \
-#		QTL_EquCab2.0.gff.txt.gz \
-#		QTL_GG_4.0.gff.txt.gz \
-#		QTL_OAR_3.1.gff.txt.gz \
-#		QTL_SS_10.2.gff.txt.gz
-
-AQTLTMP = QTL_GG_5.0.gff.txt.gz \
+AQTLTMP = QTL_ARS-UCD_1.2.gff.txt.gz \
+		QTL_GG_5.0.gff.txt.gz \
 		QTL_UMD_3.1.gff.txt.gz \
 		QTL_Btau_4.6.gff.txt.gz \
 		QTL_OAR_4.0.gff.txt.gz \
 		QTL_EquCab2.0.gff.txt.gz \
 		QTL_SS_11.1.gff.txt.gz
+# pre 2020 Apr
+# 		QTL_Btau_4.6.gff.txt.gz \
+#		QTL_EquCab2.0.gff.txt.gz \
+#		QTL_GG_4.0.gff.txt.gz \
+#		QTL_OAR_3.1.gff.txt.gz \
+#		QTL_SS_10.2.gff.txt.gz
+
 
 AQTLVER = pig_QTLdata.txt \
 		sheep_QTLdata.txt \
@@ -1036,7 +1037,7 @@ reactome/gaf-eco-mapping.yaml: eco/gaf-eco-mapping.yaml
 
 # curl -X GET "https://reactome.org/ContentService/data/diseases/doid" -H "accept: text/plain"
 
-reactome_clean: ; $(CLEAN) rectome/*
+reactome_clean: ; $(CLEAN) reactome/*
 ##########################################
 
 RGDFTP = ftp://ftp.rgd.mcw.edu/pub/data_release/annotated_rgd_objects_by_ontology
