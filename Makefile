@@ -136,11 +136,18 @@ AQTLGI = gene_info.gz \
 		Oncorhynchus_mykiss.gene_info.gz
 
 
-#AQTLTMP =  QTL_Btau_4.6.gff.txt.gz \
+# QTL_Btau_4.6.gff.txt.gz \
 #		QTL_EquCab2.0.gff.txt.gz \
 #		QTL_GG_4.0.gff.txt.gz \
 #		QTL_OAR_3.1.gff.txt.gz \
 #		QTL_SS_10.2.gff.txt.gz
+
+AQTLTMP = QTL_GG_5.0.gff.txt.gz \
+		QTL_UMD_3.1.gff.txt.gz \
+		QTL_Btau_4.6.gff.txt.gz \
+		QTL_OAR_4.0.gff.txt.gz \
+		QTL_EquCab2.0.gff.txt.gz \
+		QTL_SS_11.1.gff.txt.gz
 
 AQTLVER = pig_QTLdata.txt \
 		sheep_QTLdata.txt \
@@ -149,58 +156,34 @@ AQTLVER = pig_QTLdata.txt \
 		horse_QTLdata.txt \
 		rainbow_trout_QTLdata.txt
 
-AQTLWTF = qdwnld36733FHNN.txt.gz \
-		qdwnld71856WZCV.txt.gz \
-		qdwnld89753EDJH.txt.gz \
-		qdwnld99343QYJI.txt.gz \
-		mapDwnLd77393ZPPA.txt.gz \
-		mapDwnLd13790IFPT.txt.gz
-
 animalqtldb: ncbigene animalqtldb/ \
 		$(foreach spc, $(AQTLGI), animalqtldb/$(spc)) \
 		$(foreach spc, $(AQTLVER), animalqtldb/$(spc)) \
-		$(foreach spc, $(AQTLWTF), animalqtldb/$(spc)) \
+		$(foreach spc, $(AQTLTMP), animalqtldb/$(spc)) \
 		animalqtldb/trait_mappings.csv
 		#$(foreach spc, $(AQTLTMP), animalqtldb/$(spc)) \
 
 animalqtldb/: ; mkdir $@
 
-#animalqtldb/trait_mappings.csv: FORCE
-#	$(CDAQTL) $(WGET) $(AQTLDL)/export/$(notdir $@)
+animalqtldb/trait_mappings.csv: FORCE
+	$(CDAQTL) $(WGET) $(AQTLDL)/export/$(notdir $@)
 
 # AQTL_TMP_FILES 2020-May hidden by source.
-# $(foreach spc, $(AQTLTMP), animalqtldb/$(spc)): FORCE
-#	@ #$(CDAQTL) $(WGET) $(AQTLDL)/tmp/$(notdir $@)
-
-# expect this to be brittle... I may have underguesstimated how brittle
-# not we also loose horse & fish version info
-
-#$(foreach spc, $(AQTLWTF), animalqtldb/$(spc)): FORCE
-#	$(CDAQTL) $(WGET) $(AQTLDL)/tmp/$(notdir $@)
-
-#animalqtldb/QTL_GG_5.0.gff.txt : animalqtldb/qdwnld36733FHNN.txt.gz
-#	$(COPYCHANGED)
-#animalqtldb/QTL_OAR_4.0.gff.txt : animalqtldb/qdwnld71856WZCV.txt.gz
-#	$(COPYCHANGED)
-#animalqtldb/QTL_SS_11.1.gff.txt : animalqtldb/qdwnld89753EDJH.txt.gz
-#	$(COPYCHANGED)
-#animalqtldb/QTL_Btau_4.6.gff.txt : animalqtldb/qdwnld99343QYJI.txt.gz
-#	$(COPYCHANGED)
-#animalqtldb/eQTL.txt.gz : animalqtldb/mapDwnLd77393ZPPA.txt.gz
-#	$(COPYCHANGED)
-#animalqtldb/RainbowTroutQTL.txt.gz : animalqtldb/mapDwnLd13790IFPT.txt.gz
-#	$(COPYCHANGED)
+# 2020 Jul whitlisted under "/export/MONA76DEk2S/"
+# !!! ONLY works from behind Monarch's gateway  !!!
+$(foreach spc, $(AQTLTMP), animalqtldb/$(spc)): FORCE
+	$(CDAQTL) $(WGET) $(AQTLDL)/export/MONA76DEk2S/$(notdir $@)
 
 # AQTL_VER_FILES
-# $(foreach spc, $(AQTLVER), animalqtldb/$(spc)): FORCE
-#	$(CDAQTL) $(WGET) $(AQTLDL)/export/KSUI8GFHOT6/$(notdir $@)
+$(foreach spc, $(AQTLVER), animalqtldb/$(spc)): FORCE
+	$(CDAQTL) $(WGET) $(AQTLDL)/export/KSUI8GFHOT6/$(notdir $@)
 
 # GENEINFO_FILES
 # these are created under ncbigene first then copied here
 # so the distinction of the locally generated ones becomes moot
 
-#$(foreach spc, $(AQTLGI), animalqtldb/$(spc)): $(foreach spc, $(AQTLGI),ncbigene/$(spc))
-#	$(COPYCHANGED)
+$(foreach spc, $(AQTLGI), animalqtldb/$(spc)): $(foreach spc, $(AQTLGI),ncbigene/$(spc))
+	$(COPYCHANGED)
 
 animalqtldb_clean: ; $(CLEAN) animalqtldb/*
 ##########################################
