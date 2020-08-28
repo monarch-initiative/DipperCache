@@ -493,10 +493,11 @@ hgnc/hgnc_complete_set.txt: FORCE
 
 hgnc_clean: ; $(CLEAN) hgnc/*
 ##########################################
-# fragile
-PNR = http://compbio.charite.de/jenkins/job/hpo.annotations.current
-#HPOADL2 = $(PNR)/lastSuccessfulBuild/artifact/misc_2018
-HPOADL2 = $(PNR)/lastSuccessfulBuild/artifact/current
+# fragile ...
+HPOAPURL := http://purl.obolibrary.org/obo/hp/hpoa
+# PNR = http://compbio.charite.de/jenkins/job/hpo.annotations.current
+# HPOADL2 = $(PNR)/lastSuccessfulBuild/artifact/misc_2018
+# HPOADL2 = $(PNR)/lastSuccessfulBuild/artifact/current
 
 hpoa:	owl \
 		hpoa/ \
@@ -505,7 +506,7 @@ hpoa:	owl \
 
 hpoa/: ; mkdir $@
 hpoa/phenotype.hpoa: FORCE
-	cd hpoa; $(WGET) $(HPOADL2)/$(notdir $@)
+	cd hpoa; $(WGET) $(HPOAPURL)/$(notdir $@)
 
 hpoa/doid.owl: owl/doid.owl
 	$(COPYCHANGED)
