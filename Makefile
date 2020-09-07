@@ -185,8 +185,24 @@ $(foreach spc, $(AQTLVER), animalqtldb/$(spc)): FORCE
 # these are created under ncbigene first then copied here
 # so the distinction of the locally generated ones becomes moot
 
-$(foreach spc, $(AQTLGI), animalqtldb/$(spc)): $(foreach spc, $(AQTLGI),ncbigene/$(spc))
-	$(COPYCHANGED)
+
+animalqtldb/Bos_taurus.gene_info.gz : ncbigene/Bos_taurus.gene_info.gz
+		$(COPYCHANGED)
+animalqtldb/Sus_scrofa.gene_info.gz : ncbigene/Sus_scrofa.gene_info.gz
+		$(COPYCHANGED)
+animalqtldb/Gallus_gallus.gene_info.gz :  ncbigene/Gallus_gallus.gene_info.gz
+		$(COPYCHANGED)
+animalqtldb/Ovis_aries.gene_info.gz : ncbigene/Ovis_aries.gene_info.gz
+		$(COPYCHANGED)
+animalqtldb/Equus_caballus.gene_info.gz : ncbigene/Equus_caballus.gene_info.gz
+		$(COPYCHANGED)
+animalqtldb/Oncorhynchus_mykiss.gene_info.gz : ncbigene/Oncorhynchus_mykiss.gene_info.gz
+		$(COPYCHANGED)
+
+# this appearently resulted in all subsets pointing to the full gene_info file
+# $(foreach spc, $(AQTLGI), animalqtldb/$(spc)): $(foreach spc, $(AQTLGI),ncbigene/$(spc))
+#	$(COPYCHANGED)
+
 
 animalqtldb_clean: ; $(CLEAN) animalqtldb/*
 ##########################################
