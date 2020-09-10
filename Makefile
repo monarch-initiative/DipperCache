@@ -124,6 +124,11 @@ newest: FORCE  ## Surface the freshest resources present
 emptyfile: FORCE  ##  Reports files of size zero
 	find $(SOURCES) -type f -size 0 -ls
 
+# showed up in unit tests. must have worked somewhere ...
+someid/test_file.txt: FORCE
+	mkdir -p someid 
+	touch $@
+
 ##########################################
 # animalqtldb
 AQTLDL = https://www.animalgenome.org/QTLdb
@@ -550,55 +555,34 @@ KEGGK = http://rest.kegg.jp
 
 KGFP =	list/disease \
 		list/pathway \
-		list/orthology \
 		link/disease/omim \
 		link/omim/hsa \
 		list/hsa
 
-KKFP =	link/orthology/mmu \
-		link/orthology/rno \
-		link/orthology/dme \
-		link/orthology/dre \
-		link/orthology/cel \
-		link/pathway/pubmed \
+KKFP =	link/pathway/pubmed \
 		link/pathway/ds \
 		link/pathway/ko \
-		link/orthology/hsa \
 		link/pathway/hsa \
 		link/disease/hsa
 
 kegg:	kegg/ \
 		kegg/list/disease \
 		kegg/list/pathway \
-		kegg/list/orthology \
 		kegg/link/disease/omim \
 		kegg/link/omim/hsa \
 		kegg/list/hsa \
-		kegg/link/orthology/mmu \
-		kegg/link/orthology/rno \
-		kegg/link/orthology/dme \
-		kegg/link/orthology/dre \
-		kegg/link/orthology/cel \
 		kegg/link/pathway/pubmed \
 		kegg/link/pathway/ds \
 		kegg/link/pathway/ko \
-		kegg/link/orthology/hsa \
 		kegg/link/pathway/hsa \
 		kegg/link/disease/hsa \
 		kegg/disease \
 		kegg/pathway \
 		kegg/hsa_genes \
-		kegg/orthology \
 		kegg/disease_gene \
 		kegg/omim \
 		kegg/omim2gene \
-		kegg/human_gene2pathway \
-		kegg/hsa_orthologs \
-		kegg/mmu \
-		kegg/rno \
-		kegg/dme \
-		kegg/dre \
-		kegg/cel \
+		kegg/hsa_gene2pathway \
 		kegg/pubmed \
 		kegg/ds \
 		kegg/ko \
@@ -617,30 +601,17 @@ kegg/list/pathway : FORCE
 	cd kegg; $(WGET) $(JITTER) $(FULLPTH) $(KEGGG)/$(subst kegg/,,$@)
 kegg/list/orthology : FORCE
 	cd kegg; $(WGET) $(JITTER) $(FULLPTH) $(KEGGG)/$(subst kegg/,,$@)
-
 kegg/link/disease/omim : FORCE
 	cd kegg; $(WGET) $(JITTER) $(FULLPTH) $(KEGGG)/$(subst kegg/,,$@)
 kegg/link/omim/hsa : FORCE
 	cd kegg; $(WGET) $(JITTER) $(FULLPTH) $(KEGGG)/$(subst kegg/,,$@)
 kegg/list/hsa : FORCE
 	cd kegg; $(WGET) $(JITTER) $(FULLPTH) $(KEGGG)/$(subst kegg/,,$@)
-kegg/link/orthology/mmu : FORCE
-	cd kegg; $(WGET) $(JITTER) $(FULLPTH) $(KEGGK)/$(subst kegg/,,$@)
-kegg/link/orthology/rno : FORCE
-	cd kegg; $(WGET) $(JITTER) $(FULLPTH) $(KEGGK)/$(subst kegg/,,$@)
-kegg/link/orthology/dme : FORCE
-	cd kegg; $(WGET) $(JITTER) $(FULLPTH) $(KEGGK)/$(subst kegg/,,$@)
-kegg/link/orthology/dre : FORCE
-	cd kegg; $(WGET) $(JITTER) $(FULLPTH) $(KEGGK)/$(subst kegg/,,$@)
-kegg/link/orthology/cel : FORCE
-	cd kegg; $(WGET) $(JITTER) $(FULLPTH) $(KEGGK)/$(subst kegg/,,$@)
 kegg/link/pathway/pubmed: FORCE
 	cd kegg; $(WGET) $(JITTER) $(FULLPTH) $(KEGGK)/$(subst kegg/,,$@)
 kegg/link/pathway/ds : FORCE
 	cd kegg; $(WGET) $(JITTER) $(FULLPTH) $(KEGGK)/$(subst kegg/,,$@)
 kegg/link/pathway/ko : FORCE
-	cd kegg; $(WGET) $(JITTER) $(FULLPTH) $(KEGGK)/$(subst kegg/,,$@)
-kegg/link/orthology/hsa : FORCE
 	cd kegg; $(WGET) $(JITTER) $(FULLPTH) $(KEGGK)/$(subst kegg/,,$@)
 kegg/link/pathway/hsa : FORCE
 	cd kegg; $(WGET) $(JITTER) $(FULLPTH) $(KEGGK)/$(subst kegg/,,$@)
@@ -667,19 +638,7 @@ kegg/omim2gene: kegg/link/omim/hsa
 	$(COPYCHANGED)
 kegg/ncbi: kegg/conv/ncbi-geneid/hsa
 	$(COPYCHANGED)
-kegg/human_gene2pathway: kegg/link/pathway/hsa
-	$(COPYCHANGED)
-kegg/hsa_orthologs: kegg/link/orthology/hsa
-	$(COPYCHANGED)
-kegg/mmu: kegg/link/orthology/mmu
-	$(COPYCHANGED)
-kegg/rno: kegg/link/orthology/rno
-	$(COPYCHANGED)
-kegg/dme: kegg/link/orthology/dme
-	$(COPYCHANGED)
-kegg/dre: kegg/link/orthology/dre
-	$(COPYCHANGED)
-kegg/cel: kegg/link/orthology/cel
+kegg/hsa_gene2pathway: kegg/link/pathway/hsa
 	$(COPYCHANGED)
 kegg/pubmed: kegg/link/pathway/pubmed
 	$(COPYCHANGED)
