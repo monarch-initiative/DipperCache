@@ -174,6 +174,7 @@ animalqtldb/trait_mappings.csv: FORCE
 # AQTL_TMP_FILES 2020-May hidden by source.
 # 2020 Jul whitlisted under "/export/MONA76DEk2S/"
 # !!! ONLY works from behind Monarch's gateway  !!!
+# Broke the end of August 2020
 $(foreach spc, $(AQTLTMP), animalqtldb/$(spc)): FORCE
 	$(CDAQTL) $(WGET) $(AQTLDL)/export/MONA76DEk2S/$(notdir $@)
 
@@ -600,7 +601,8 @@ kegg:	kegg/ \
 		kegg/cel \
 		kegg/pubmed \
 		kegg/ds \
-		kegg/ko
+		kegg/ko \
+		kegg/ortholog_classes
 
 kegg/: 	; mkdir $@
 
@@ -615,6 +617,7 @@ kegg/list/pathway : FORCE
 	cd kegg; $(WGET) $(JITTER) $(FULLPTH) $(KEGGG)/$(subst kegg/,,$@)
 kegg/list/orthology : FORCE
 	cd kegg; $(WGET) $(JITTER) $(FULLPTH) $(KEGGG)/$(subst kegg/,,$@)
+
 kegg/link/disease/omim : FORCE
 	cd kegg; $(WGET) $(JITTER) $(FULLPTH) $(KEGGG)/$(subst kegg/,,$@)
 kegg/link/omim/hsa : FORCE
@@ -654,7 +657,7 @@ kegg/pathway: kegg/list/pathway
 	$(COPYCHANGED)
 kegg/hsa_genes: kegg/list/hsa
 	$(COPYCHANGED)
-kegg/orthology: kegg/list/orthology
+kegg/ortholog_classes: kegg/list/orthology
 	$(COPYCHANGED)
 kegg/disease_gene: kegg/link/disease/hsa
 	$(COPYCHANGED)
