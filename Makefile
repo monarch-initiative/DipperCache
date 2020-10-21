@@ -535,16 +535,23 @@ hpoa/doid.owl: owl/doid.owl
 
 hpoa_clean: ; $(CLEAN) hpoa/*
 ##########################################
-IMPCDL = ftp://ftp.ebi.ac.uk/pub/databases/impc/latest/csv
+# dir structure and file change 2020 fall
+# IMPCDL = ftp://ftp.ebi.ac.uk/pub/databases/impc/latest/csv
+
+IMPC = ftp://ftp.ebi.ac.uk/pub/databases/impc
+IMPCV12=$(IMPC)/all-data-releases/release-12.0/results
+
+IMPCG2P = genotype-phenotype-assertions-ALL.csv.tgz
 impc:	impc/ \
-		impc/checksum.md5 \
-		impc/ALL_genotype_phenotype.csv.gz
+		impc/$(IMPCG2P).md5 \
+		impc/$(IMPCG2P)
 
 impc/: ; mkdir $@
-impc/checksum.md5: FORCE
-	cd impc; $(WGET) $(IMPCDL)/$(notdir $@)
-impc/ALL_genotype_phenotype.csv.gz: impc/checksum.md5
-	cd impc; $(WGET) $(IMPCDL)/$(notdir $@)
+impc/$(IMPCG2P).md5:  FORCE
+	cd impc; $(WGET) $(IMPCV12)/$(notdir $@)
+impc/$(IMPCG2P): $(IMPCG2P).md5
+	cd impc; $(WGET) $(IMPCV12)/$(notdir $@)
+	# && $(md5sum --check $(IMPCG2P).md5  # path is their absolute (for now)
 
 impc_clean: ; $(CLEAN) impc/*
 ##########################################
@@ -1108,9 +1115,9 @@ string_clean: ; $(CLEAN) string/*
 WBFTP = ftp://ftp.wormbase.org
 #WBDEV = /pub/wormbase/releases//current-development-release unused?
 WBPROD = pub/wormbase/releases/current-production-release
-WBSPC = c_elegans/PRJNA13758
+WBSPC = species/c_elegans/PRJNA13758
 CDWB = cd wormbase/ ;
-WSNUM = sed -n '1 s|.*\.\(WS[0-9]\{3\}\)\..*|\1|p' CHECKSUMS
+WSNUM = sed -n '1 s|.*\.\(WS[0-9]\{3\}\).*|\1|p' CHECKSUMS
 wormbase: wormbase/ \
 		wormbase/CHECKSUMS \
 		wormbase/letter \
