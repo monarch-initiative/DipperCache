@@ -549,7 +549,7 @@ impc:	impc/ \
 impc/: ; mkdir $@
 impc/$(IMPCG2P).md5:  FORCE
 	cd impc; $(WGET) $(IMPCV12)/$(notdir $@)
-impc/$(IMPCG2P): $(IMPCG2P).md5
+impc/$(IMPCG2P): impc/$(IMPCG2P).md5
 	cd impc; $(WGET) $(IMPCV12)/$(notdir $@)
 	# && $(md5sum --check $(IMPCG2P).md5  # path is their absolute (for now)
 
