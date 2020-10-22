@@ -1115,7 +1115,7 @@ string_clean: ; $(CLEAN) string/*
 WBFTP = ftp://ftp.wormbase.org
 #WBDEV = /pub/wormbase/releases//current-development-release unused?
 WBPROD = pub/wormbase/releases/current-production-release
-WBSPC = species/c_elegans/PRJNA13758
+WBSPC = c_elegans/PRJNA13758
 CDWB = cd wormbase/ ;
 WSNUM = sed -n '1 s|.*\.\(WS[0-9]\{3\}\).*|\1|p' CHECKSUMS
 wormbase: wormbase/ \
@@ -1130,6 +1130,7 @@ wormbase: wormbase/ \
 		wormbase/pub_xrefs.txt \
 		wormbase/gaf-eco-mapping.yaml
 
+
 wormbase/: ; mkdir $@
 wormbase/CHECKSUMS: FORCE
 	$(CDWB) $(WGET) $(WBFTP)/$(WBPROD)/$(notdir $@)
@@ -1138,12 +1139,14 @@ wormbase/letter: wormbase/CHECKSUMS
 	NEW=$(WBPROD)/letter.$$wsnum ; \
 	$(WGET) $(WBFTP)/$$NEW ; \
 	$(COPYNEW)
+
 wormbase/c_elegans.PRJNA13758.geneIDs.txt.gz: wormbase/CHECKSUMS
 	#species/c_elegans/PRJNA13758/annotation/c_elegans.PRJNA13758.WS273.geneIDs.txt.gz
 	$(CDWB) wsnum=$$($(WSNUM)) ; \
 	NEW=$(WBPROD)/species/$(WBSPC)/annotation/$(subst /,.,$(WBSPC)).$$wsnum.geneIDs.txt.gz ; \
 	$(WGET) $(FULLPTH) $(WBFTP)/$$NEW ;\
 	$(COPYNEW)
+
 wormbase/c_elegans.PRJNA13758.annotations.gff3.gz: wormbase/CHECKSUMS
 	# species/c_elegans/PRJNA13758/c_elegans.PRJNA13758.WS273.annotations.gff3.gz
 	$(CDWB) wsnum=$$($(WSNUM)) ; \
