@@ -133,6 +133,8 @@ someid/test_file.txt: FORCE
 # animalqtldb
 AQTLDL = https://www.animalgenome.org/QTLdb
 CDAQTL = cd animalqtldb ;
+COOKIE1 = MONA76DEk2S
+COOKIE2 = KSUI8GFHOT6
 
 AQTLGI = gene_info.gz \
 		Bos_taurus.gene_info.gz \
@@ -142,20 +144,13 @@ AQTLGI = gene_info.gz \
 		Equus_caballus.gene_info.gz \
 		Oncorhynchus_mykiss.gene_info.gz
 
-AQTLTMP = QTL_ARS-UCD_1.2.gff.txt.gz \
+AQTLTMP = QTL_ARS-UCD1.gff.txt.gz \
 		QTL_GG_5.0.gff.txt.gz \
 		QTL_UMD_3.1.gff.txt.gz \
 		QTL_Btau_4.6.gff.txt.gz \
 		QTL_OAR_4.0.gff.txt.gz \
 		QTL_EquCab2.0.gff.txt.gz \
 		QTL_SS_11.1.gff.txt.gz
-# pre 2020 Apr
-# 		QTL_Btau_4.6.gff.txt.gz \
-#		QTL_EquCab2.0.gff.txt.gz \
-#		QTL_GG_4.0.gff.txt.gz \
-#		QTL_OAR_3.1.gff.txt.gz \
-#		QTL_SS_10.2.gff.txt.gz
-
 
 AQTLVER = pig_QTLdata.txt \
 		sheep_QTLdata.txt \
@@ -176,21 +171,19 @@ animalqtldb/: ; mkdir $@
 animalqtldb/trait_mappings.csv: FORCE
 	$(CDAQTL) $(WGET) $(AQTLDL)/export/$(notdir $@)
 
-# AQTL_TMP_FILES 2020-May hidden by source.
-# 2020 Jul whitlisted under "/export/MONA76DEk2S/"
-# !!! ONLY works from behind Monarch's gateway  !!!
-# Broke the end of August 2020
+# AQTL_TMP_FILES 2020-May behind recaptcha.
+# 2020 Jul works from behind Monarch's gateway again
+
 $(foreach spc, $(AQTLTMP), animalqtldb/$(spc)): FORCE
-	$(CDAQTL) $(WGET) $(AQTLDL)/export/MONA76DEk2S/$(notdir $@)
+	$(CDAQTL) $(WGET) $(AQTLDL)/export/$(COOKIE1)/$(notdir $@)
 
 # AQTL_VER_FILES
 $(foreach spc, $(AQTLVER), animalqtldb/$(spc)): FORCE
-	$(CDAQTL) $(WGET) $(AQTLDL)/export/KSUI8GFHOT6/$(notdir $@)
+	$(CDAQTL) $(WGET) $(AQTLDL)/export/$(COOKIE2)$(notdir $@)
 
 # GENEINFO_FILES
 # these are created under ncbigene first then copied here
 # so the distinction of the locally generated ones becomes moot
-
 
 animalqtldb/Bos_taurus.gene_info.gz : ncbigene/Bos_taurus.gene_info.gz
 		$(COPYCHANGED)
