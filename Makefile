@@ -136,8 +136,7 @@ CDAQTL = cd animalqtldb ;
 COOKIE1 = MONA76DEk2S
 COOKIE2 = KSUI8GFHOT6
 
-AQTLGI = gene_info.gz \
-		Bos_taurus.gene_info.gz \
+AQTLGI = Bos_taurus.gene_info.gz \
 		Sus_scrofa.gene_info.gz \
 		Gallus_gallus.gene_info.gz \
 		Ovis_aries.gene_info.gz \
@@ -194,6 +193,7 @@ animalqtldb/Equus_caballus.gene_info.gz : ncbigene/Equus_caballus.gene_info.gz
 		$(COPYCHANGED)
 animalqtldb/Oncorhynchus_mykiss.gene_info.gz : ncbigene/Oncorhynchus_mykiss.gene_info.gz
 		$(COPYCHANGED)
+
 
 # this appearently resulted in all subsets pointing to the full gene_info file
 # $(foreach spc, $(AQTLGI), animalqtldb/$(spc)): $(foreach spc, $(AQTLGI),ncbigene/$(spc))
