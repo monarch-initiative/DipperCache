@@ -164,22 +164,19 @@ animalqtldb: ncbigene animalqtldb/ \
 		$(foreach spc, $(AQTLVER), animalqtldb/$(spc)) \
 		$(foreach spc, $(AQTLTMP), animalqtldb/$(spc)) \
 		animalqtldb/trait_mappings.csv
-		#$(foreach spc, $(AQTLTMP), animalqtldb/$(spc)) \
 
 animalqtldb/: ; mkdir $@
 
 animalqtldb/trait_mappings.csv: FORCE
 	$(CDAQTL) $(WGET) $(AQTLDL)/export/$(notdir $@)
 
-# AQTL_TMP_FILES 2020-May behind recaptcha.
-# 2020 Jul works from behind Monarch's gateway again
-
+# AQTL_TMP Monarch files
 $(foreach spc, $(AQTLTMP), animalqtldb/$(spc)): FORCE
 	$(CDAQTL) $(WGET) $(AQTLDL)/export/$(COOKIE1)/$(notdir $@)
 
-# AQTL_VER_FILES
+# AQTL_VER_FILES NCBI
 $(foreach spc, $(AQTLVER), animalqtldb/$(spc)): FORCE
-	$(CDAQTL) $(WGET) $(AQTLDL)/export/$(COOKIE2)$(notdir $@)
+	$(CDAQTL) $(WGET) $(AQTLDL)/export/$(COOKIE2)/$(notdir $@)
 
 # GENEINFO_FILES
 # these are created under ncbigene first then copied here
@@ -1048,7 +1045,7 @@ STRDL = $(STRSTA)/download
 STRMAP = $(STRING)/mapping_files/entrez
 
 # not hard coding these would be better ...
-STRVER = 11.0
+STRVER = 11.0  # 20201017 they added a `b` ?
 STRYR = 2018
 
 SRTPTH = protein.links.detailed.v$(STRVER)
@@ -1061,13 +1058,20 @@ STRFP = api/tsv-no-header
 string: string/ \
 		string/$(STRFP)/version \
 		string/version \
+		string/$(SRTPTH).txt.gz \
 		$(foreach txid, $(STRTAX), string/$(txid).$(SRTPTH).txt.gz) \
 		$(foreach species, $(STRSPC), string/$(species).entrez_2_string.$(STRYR).tsv.gz)
+
 
 string/: ; mkdir $@
 
 string/$(STRFP)/version: FORCE
 	cd string ; $(WGET) $(FULLPTH) $(STRING)/$(STRFP)/$(notdir $@)
+
+# https://stringdb-static.org/download/protein.links.detailed.v11.0.txt.gz
+string/$(SRTPTH).txt.gz:  string/
+	cd string ; $(WGET) $(STRDL)/$(notdir $@)
+
 string/version: string/$(STRFP)/version
 	$(COPYCHANGED); cd string ;\
 	if [ "$(STRVER)" != "$$(cut -f 1 version)" ] ;then echo "NEW VERSION of STRING!" ; \
