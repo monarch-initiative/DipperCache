@@ -144,13 +144,13 @@ AQTLGI = gene_info.gz \
 		Equus_caballus.gene_info.gz \
 		Oncorhynchus_mykiss.gene_info.gz
 
-AQTLTMP = QTL_ARS-UCD1.gff.txt.gz \
-		QTL_GG_5.0.gff.txt.gz \
-		QTL_UMD_3.1.gff.txt.gz \
+AQTLTMP = QTL_GG_5.0.gff.txt.gz \
 		QTL_Btau_4.6.gff.txt.gz \
 		QTL_OAR_4.0.gff.txt.gz \
 		QTL_EquCab2.0.gff.txt.gz \
 		QTL_SS_11.1.gff.txt.gz
+		# QTL_UMD_3.1.gff.txt.gz \
+		# QTL_ARS-UCD1.gff.txt.gz \
 
 AQTLVER = pig_QTLdata.txt \
 		sheep_QTLdata.txt \
