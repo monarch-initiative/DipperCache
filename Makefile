@@ -1045,7 +1045,8 @@ STRDL = $(STRSTA)/download
 STRMAP = $(STRING)/mapping_files/entrez
 
 # not hard coding these would be better ...
-STRVER = 11.0  # 20201017 they added a `b` ?
+# 2020 10 17 they added a `b` but only sort-of in the api?
+STRVER = 11.0
 STRYR = 2018
 
 SRTPTH = protein.links.detailed.v$(STRVER)
@@ -1058,19 +1059,13 @@ STRFP = api/tsv-no-header
 string: string/ \
 		string/$(STRFP)/version \
 		string/version \
-		string/$(SRTPTH).txt.gz \
 		$(foreach txid, $(STRTAX), string/$(txid).$(SRTPTH).txt.gz) \
 		$(foreach species, $(STRSPC), string/$(species).entrez_2_string.$(STRYR).tsv.gz)
-
 
 string/: ; mkdir $@
 
 string/$(STRFP)/version: FORCE
 	cd string ; $(WGET) $(FULLPTH) $(STRING)/$(STRFP)/$(notdir $@)
-
-# https://stringdb-static.org/download/protein.links.detailed.v11.0.txt.gz
-string/$(SRTPTH).txt.gz:  string/
-	cd string ; $(WGET) $(STRDL)/$(notdir $@)
 
 string/version: string/$(STRFP)/version
 	$(COPYCHANGED); cd string ;\
