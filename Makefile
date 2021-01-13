@@ -527,21 +527,18 @@ hpoa_clean: ; $(CLEAN) hpoa/*
 ##########################################
 # dir structure and file change 2020 fall
 # IMPCDL = ftp://ftp.ebi.ac.uk/pub/databases/impc/latest/csv
+# stopped providing .md5 files around end of 2020
 
 IMPC = ftp://ftp.ebi.ac.uk/pub/databases/impc
-IMPCV12=$(IMPC)/all-data-releases/release-12.0/results
+IMPCREL=$(IMPC)/all-data-releases/latest/results
 
-IMPCG2P = genotype-phenotype-assertions-ALL.csv.tgz
+IMPCG2P = genotype-phenotype-assertions-ALL.csv.gz
 impc:	impc/ \
-		impc/$(IMPCG2P).md5 \
 		impc/$(IMPCG2P)
 
 impc/: ; mkdir $@
-impc/$(IMPCG2P).md5:  FORCE
-	cd impc; $(WGET) $(IMPCV12)/$(notdir $@)
-impc/$(IMPCG2P): impc/$(IMPCG2P).md5
-	cd impc; $(WGET) $(IMPCV12)/$(notdir $@)
-	# && $(md5sum --check $(IMPCG2P).md5  # path is their absolute (for now)
+impc/$(IMPCG2P):  FORCE
+	cd impc; $(WGET) $(IMPCREL)/$(notdir $@)
 
 impc_clean: ; $(CLEAN) impc/*
 ##########################################
