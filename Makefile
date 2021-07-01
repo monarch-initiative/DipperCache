@@ -21,10 +21,20 @@ RM := rm --force --recursive --verbose --preserve-root --one-file-system
 
 CLEAN = rm --force --recursive --verbose --preserve-root --one-file-system
 
+# COPYCHANGED
 # when a remote server does not set last-modified headers we can only test
 # if a new file is the same or different from the one we already have.
 # Last-modified header missing workaround
 COPYCHANGED = if [ "$$(md5sum $<|cut -c 1-32)" != "$$(md5sum $@|cut -c 1-32)" ] ; then cp -fp $< $@ ; fi
+
+# COPYNEW does the same job as COPYCHANGED but a from a directory deeper
+# also used when a remote source uses the exact same name for different
+# files in a tree which would collide when brought into the same dippercache directory
+# for being fetched from our (dipper) side
+
+# fetching into sub directories with the original names for checking,
+# then writing into the common directory with new augmented names
+# is something to keep in mind for why the COPY[CHANGED|NEW] both need to exist
 COPYNEW = if [ "$$(md5sum $$NEW|cut -c 1-32)" != "$$(md5sum $(notdir $@)|cut -c 1-32)" ] ; then cp -fp $$NEW $(notdir $@); fi
 
 # should be obviated
